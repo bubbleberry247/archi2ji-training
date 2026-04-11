@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>建築2次 過去問学習</title>
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--surface-2:#f9f8f5;--border:#dedad4;--border-2:#c4bfb8;--text-1:#1a1916;--text-2:#6b6560;--text-3:#a09b95;--accent:#5c4f3d;--accent-lt:#ede9e3;--btn:#3c3530;--ok:#4a7c59;--ok-lt:#e4ede6;--ng:#7c4a4a;--ng-lt:#ede4e4;--warn:#7c6a3a;--warn-lt:#edead8}
+*{box-sizing:border-box}html{font-size:5.8vw}
+body{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;margin:0;background:var(--bg);color:var(--text-1);font-size:1rem;line-height:1.65;-webkit-text-size-adjust:100%}
+header{background:var(--surface);color:var(--text-1);padding:3vw 2.5vw;font-size:.85rem;position:sticky;top:0;z-index:100;text-align:center;font-weight:500;letter-spacing:.1em;border-bottom:1px solid var(--border)}
+main{padding:0 0 12px}
+h2{font-size:1rem;margin:0 0 12px;font-weight:500;letter-spacing:.03em}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:3.7vw 2.6vw;margin:2vw 1vw}
+.btn{background:var(--btn);color:#fff;border:none;padding:3.5vw 4vw;border-radius:2px;cursor:pointer;font-size:.9rem;font-weight:500;letter-spacing:.05em;min-height:13.5vw;width:100%;text-align:center;display:block}
+.btn.secondary{background:transparent;color:var(--text-2);border:1px solid var(--border-2)}
+.btn-sm{padding:2vw 3.5vw;font-size:.85rem;min-height:auto;width:auto;display:inline-block}
+.tag{display:inline-block;background:var(--accent-lt);color:var(--accent);padding:4px 12px;margin:3px;border-radius:2px;font-size:.8rem;letter-spacing:.03em}
+.small{font-size:.8rem;color:var(--text-2)}
+.loading-overlay{position:fixed;inset:0;background:rgba(245,244,240,.88);display:flex;align-items:center;justify-content:center;z-index:9999}
+.spinner{width:8vw;height:8vw;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.year-card{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:4vw 3vw;margin:2vw 1vw;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:border-color .15s}
+.year-card:active{border-color:var(--accent)}
+.year-label{font-size:1.1rem;font-weight:500;letter-spacing:.05em}
+.year-count{font-size:.78rem;color:var(--text-2)}
+.q-row{padding:3.5vw 2.5vw;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:flex-start;gap:2.5vw;cursor:pointer}
+.q-num{font-size:.78rem;color:var(--text-2);white-space:nowrap;padding-top:2px}
+.q-stem{font-size:.85rem;color:var(--text-1);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.stem-box{background:var(--surface-2);border:1px solid var(--border);border-radius:2px;padding:3.5vw 2.5vw;margin:2vw 1vw;font-size:.9rem;line-height:1.8;white-space:pre-wrap}
+.answer-section{margin:2vw 1vw}
+.answer-toggle{width:100%;padding:3vw;background:var(--accent-lt);color:var(--accent);border:1px solid var(--border-2);border-radius:2px;font-size:.85rem;font-weight:500;cursor:pointer;letter-spacing:.05em;text-align:center}
+.answer-box{display:none;background:var(--ok-lt);border:1px solid var(--ok);border-radius:2px;padding:3.5vw 2.5vw;margin-top:1.5vw;font-size:.85rem;line-height:1.8;white-space:pre-wrap}
+.answer-box.visible{display:block}
+.note-area{width:100%;border:1px solid var(--border);border-radius:2px;padding:2.5vw;font-size:.85rem;font-family:inherit;resize:vertical;min-height:24vw;background:var(--surface);color:var(--text-1);line-height:1.6}
+.self-score{display:flex;gap:1.5vw;flex-wrap:wrap;margin:2vw 0}
+.score-btn{padding:2vw 3vw;border:1px solid var(--border-2);border-radius:2px;font-size:.8rem;background:var(--surface);color:var(--text-2);cursor:pointer;transition:border-color .15s,background .15s}
+.score-btn.active{border-color:var(--accent);background:var(--accent-lt);color:var(--accent)}
+.section-label{font-size:.72rem;color:var(--text-2);letter-spacing:.1em;padding:3vw 2.5vw 1vw;font-weight:500}
+.back-btn{background:none;border:none;color:var(--accent);font-size:.85rem;cursor:pointer;padding:0;letter-spacing:.03em}
+.header-inner{display:flex;align-items:center;justify-content:center;position:relative;min-height:6vw}
+.header-back{position:absolute;left:0;top:50%;transform:translateY(-50%)}
+.toast{position:fixed;bottom:6vw;left:50%;transform:translateX(-50%);background:var(--btn);color:#fff;padding:2.5vw 5vw;border-radius:2px;font-size:.85rem;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="loading-overlay" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<header id="app-header">
+  <div class="header-inner">
+    <span id="header-back-area"></span>
+    <span id="header-title">建築2次</span>
+  </div>
+</header>
+
+<main id="app-main"></main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ─── State ────────────────────────────────────────────────
+var state = {
+  screen: 'home',
+  home: null,
+  year: null,
+  questions: [],
+  question: null,
+  note: null,
+  selectedScore: 0
+};
+
+var USER_KEY = localStorage.getItem('archi2ji_userKey') || generateUUID_();
+localStorage.setItem('archi2ji_userKey', USER_KEY);
+
+// ─── Utilities ────────────────────────────────────────────
+function generateUUID_() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0;
+    var v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function showLoading(v) {
+  document.getElementById('loading-overlay').style.display = v ? 'flex' : 'none';
+}
+
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2200);
+}
+
+function escHtml(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ─── API bridge ───────────────────────────────────────────
+function callApi(funcName, args, cb) {
+  var allArgs = (args || []).concat([USER_KEY]);
+  var runner = google.script.run
+    .withSuccessHandler(function(res) { cb(null, res); })
+    .withFailureHandler(function(e) { cb(e); });
+  runner[funcName].apply(runner, allArgs);
+}
+
+// ─── Router ───────────────────────────────────────────────
+function navigate(screen, params) {
+  state.screen = screen;
+  if (params) Object.assign(state, params);
+  render();
+}
+
+function render() {
+  showLoading(false);
+  switch (state.screen) {
+    case 'home':     renderHome(); break;
+    case 'year':     renderYear(); break;
+    case 'question': renderQuestion(); break;
+  }
+}
+
+// ─── Header helpers ───────────────────────────────────────
+function setHeader(title, backLabel, backFn) {
+  document.getElementById('header-title').textContent = title;
+  var backArea = document.getElementById('header-back-area');
+  if (backFn) {
+    backArea.innerHTML = '<button class="back-btn" id="header-back-btn">← ' + escHtml(backLabel) + '</button>';
+    document.getElementById('header-back-btn').addEventListener('click', backFn);
+  } else {
+    backArea.innerHTML = '';
+  }
+}
+
+// ─── Screen: Home ─────────────────────────────────────────
+function renderHome() {
+  setHeader('建築2次');
+
+  if (state.home) {
+    drawHome(state.home);
+    return;
+  }
+
+  document.getElementById('app-main').innerHTML = '';
+  showLoading(true);
+
+  callApi('apiGetHome', [], function(err, res) {
+    showLoading(false);
+    if (err || (res && res._error)) {
+      document.getElementById('app-main').innerHTML =
+        '<div class="card"><p style="color:var(--ng)">データ読み込みエラー</p></div>';
+      return;
+    }
+    state.home = res;
+    drawHome(res);
+  });
+}
+
+function drawHome(data) {
+  var years = data.years || [];
+  var html = '<div class="section-label">年度を選択</div>';
+  if (years.length === 0) {
+    html += '<div class="card"><p class="small">問題データが登録されていません。</p></div>';
+  } else {
+    years.forEach(function(y) {
+      html +=
+        '<div class="year-card" data-year="' + escHtml(y.year) + '">' +
+          '<span class="year-label">' + escHtml(y.year) + '年度</span>' +
+          '<span class="year-count">' + y.count + '問</span>' +
+        '</div>';
+    });
+  }
+  document.getElementById('app-main').innerHTML = html;
+
+  document.querySelectorAll('.year-card').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var year = el.getAttribute('data-year');
+      loadYear(year);
+    });
+  });
+}
+
+// ─── Screen: Year question list ───────────────────────────
+function loadYear(year) {
+  showLoading(true);
+  callApi('apiGetQuestionsByYear', [year], function(err, res) {
+    showLoading(false);
+    if (err || (res && res._error)) {
+      showToast('読み込みに失敗しました');
+      return;
+    }
+    navigate('year', { year: year, questions: res });
+  });
+}
+
+function renderYear() {
+  setHeader(state.year + '年度', 'ホーム', function() { navigate('home'); });
+
+  var qs = state.questions || [];
+  var html = '';
+  if (qs.length === 0) {
+    html = '<div class="card"><p class="small">問題がありません。</p></div>';
+  } else {
+    qs.forEach(function(q) {
+      html +=
+        '<div class="q-row" data-qid="' + escHtml(q.qId) + '">' +
+          '<span class="q-num">問' + escHtml(String(q.number)) + '</span>' +
+          '<span class="q-stem">' + escHtml(q.stemShort) + '…</span>' +
+        '</div>';
+    });
+  }
+  document.getElementById('app-main').innerHTML = html;
+
+  document.querySelectorAll('.q-row').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var qId = el.getAttribute('data-qid');
+      loadQuestion(qId);
+    });
+  });
+}
+
+// ─── Screen: Question detail ──────────────────────────────
+function loadQuestion(qId) {
+  showLoading(true);
+  callApi('apiGetQuestion', [qId], function(err, res) {
+    showLoading(false);
+    if (err || (res && res._error)) {
+      showToast('読み込みに失敗しました');
+      return;
+    }
+    state.selectedScore = res.note ? (Number(res.note.selfScore) || 0) : 0;
+    navigate('question', { question: res.question, note: res.note });
+  });
+}
+
+function renderQuestion() {
+  var q = state.question;
+  if (!q) { navigate('home'); return; }
+
+  var backLabel = (state.year ? state.year + '年度' : '一覧');
+  setHeader('問' + escHtml(String(q.number)), backLabel, function() {
+    navigate('year');
+  });
+
+  var noteText = state.note ? escHtml(String(state.note.note || '')) : '';
+
+  var scoreButtons = '';
+  for (var i = 1; i <= 5; i++) {
+    var labels = ['', '×', '△', '○', '◎', '完璧'];
+    var active = state.selectedScore === i ? ' active' : '';
+    scoreButtons +=
+      '<button class="score-btn' + active + '" data-score="' + i + '">' +
+        labels[i] + ' ' + i +
+      '</button>';
+  }
+
+  var modelAnswerHtml = q.modelAnswer
+    ? '<div class="answer-section">' +
+        '<button class="answer-toggle" id="answer-toggle-btn">模範解答を見る</button>' +
+        '<div class="answer-box" id="answer-box">' + escHtml(String(q.modelAnswer)) + '</div>' +
+      '</div>'
+    : '';
+
+  var html =
+    '<div class="stem-box">' + escHtml(String(q.stem || '')) + '</div>' +
+    modelAnswerHtml +
+    '<div class="section-label">メモ</div>' +
+    '<div class="card" style="padding-bottom:3vw">' +
+      '<textarea class="note-area" id="note-input" placeholder="気づき・キーワードを記入…">' + noteText + '</textarea>' +
+    '</div>' +
+    '<div class="section-label">自己採点</div>' +
+    '<div class="card">' +
+      '<div class="self-score" id="score-btns">' + scoreButtons + '</div>' +
+    '</div>' +
+    '<div style="margin:3vw 1vw">' +
+      '<button class="btn" id="save-btn">保存</button>' +
+    '</div>';
+
+  document.getElementById('app-main').innerHTML = html;
+
+  // Toggle answer visibility
+  var toggleBtn = document.getElementById('answer-toggle-btn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function() {
+      var box = document.getElementById('answer-box');
+      var visible = box.classList.toggle('visible');
+      toggleBtn.textContent = visible ? '模範解答を隠す' : '模範解答を見る';
+    });
+  }
+
+  // Score selection
+  document.querySelectorAll('.score-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      state.selectedScore = Number(btn.getAttribute('data-score'));
+      document.querySelectorAll('.score-btn').forEach(function(b) {
+        b.classList.toggle('active', Number(b.getAttribute('data-score')) === state.selectedScore);
+      });
+    });
+  });
+
+  // Save
+  document.getElementById('save-btn').addEventListener('click', function() {
+    var noteVal = document.getElementById('note-input').value;
+    var saveBtn = document.getElementById('save-btn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = '保存中…';
+    callApi('apiSaveNote', [q.qId, noteVal, state.selectedScore], function(err, res) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = '保存';
+      if (err || (res && res._error)) {
+        showToast('保存に失敗しました');
+        return;
+      }
+      showToast('保存しました');
+      // Update local note cache
+      state.note = { note: noteVal, selfScore: state.selectedScore };
+    });
+  });
+}
+
+// ─── Boot ─────────────────────────────────────────────────
+window.addEventListener('load', function() {
+  render();
+});
+</script>
+</body>
+</html>
