@@ -1,8 +1,15 @@
 function doGet(e) {
+  // Auto-setup on first access
+  if (!getDbId_()) { setup_(); }
+
   var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : '';
   if (action === 'setup') {
     setup_();
     return ContentService.createTextOutput(JSON.stringify({ ok: true, dbId: getDbId_() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  if (action === 'diag') {
+    return ContentService.createTextOutput(JSON.stringify({ dbId: getDbId_() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
   return HtmlService.createHtmlOutputFromFile('index')
