@@ -1,4 +1,10 @@
 function doGet(e) {
+  var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : '';
+  if (action === 'setup') {
+    setup_();
+    return ContentService.createTextOutput(JSON.stringify({ ok: true, dbId: getDbId_() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('建築2次 過去問学習')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
