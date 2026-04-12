@@ -54,6 +54,29 @@ function appendRow_(sheetName, obj) {
   sh.appendRow(headers.map(function(h) { return obj[h] !== undefined ? obj[h] : ''; }));
 }
 
+// ─── Config helpers ───────────────────────────────────────
+
+function getConfigMap_() {
+  try {
+    var sh = getSheet_(SHEETS.Config);
+    var vals = sh.getDataRange().getValues();
+    if (vals.length < 2) return {};
+    var map = {};
+    for (var i = 1; i < vals.length; i++) {
+      var k = String(vals[i][0] || '').trim();
+      var v = vals[i][1];
+      if (k) map[k] = v;
+    }
+    return map;
+  } catch (e) { return {}; }
+}
+
+function getConfigValue_(map, key, defVal) {
+  return map.hasOwnProperty(key) ? map[key] : defVal;
+}
+
+// ─── Serialization ────────────────────────────────────────
+
 function toSerializable_(obj) {
   if (obj === null || obj === undefined) return obj;
   if (obj instanceof Date) return obj.toISOString();

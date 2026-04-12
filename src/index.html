@@ -6,7 +6,7 @@
 <title>建築2次 過去問学習</title>
 <style>
 :root{--bg:#f5f4f0;--surface:#fff;--surface-2:#f9f8f5;--border:#dedad4;--border-2:#c4bfb8;--text-1:#1a1916;--text-2:#6b6560;--text-3:#a09b95;--accent:#5c4f3d;--accent-lt:#ede9e3;--btn:#3c3530;--ok:#4a7c59;--ok-lt:#e4ede6;--ng:#7c4a4a;--ng-lt:#ede4e4;--warn:#7c6a3a;--warn-lt:#edead8}
-*{box-sizing:border-box}html{font-size:5.8vw}
+*{box-sizing:border-box}html{font-size:min(5.8vw,16px)}
 body{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;margin:0;background:var(--bg);color:var(--text-1);font-size:1rem;line-height:1.65;-webkit-text-size-adjust:100%}
 header{background:var(--surface);color:var(--text-1);padding:3vw 2.5vw;font-size:.85rem;position:sticky;top:0;z-index:100;text-align:center;font-weight:500;letter-spacing:.1em;border-bottom:1px solid var(--border)}
 main{padding:0 0 12px}
@@ -42,6 +42,7 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:500;letter-spacing:.03em}
 .header-back{position:absolute;left:0;top:50%;transform:translateY(-50%)}
 .toast{position:fixed;bottom:6vw;left:50%;transform:translateX(-50%);background:var(--btn);color:#fff;padding:2.5vw 5vw;border-radius:2px;font-size:.85rem;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
+.user-name{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:.72rem;color:var(--text-3);max-width:24vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -54,6 +55,7 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:500;letter-spacing:.03em}
   <div class="header-inner">
     <span id="header-back-area"></span>
     <span id="header-title">建築2次</span>
+    <span id="header-user" class="user-name"></span>
   </div>
 </header>
 
@@ -62,9 +64,17 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:500;letter-spacing:.03em}
 <div id="toast" class="toast"></div>
 
 <script>
+// ─── Server auth result (injected by GAS template) ────────
+var _serverAuth = null;
+try {
+  var _raw = '<?= serverAuthResult ?>';
+  if (_raw) _serverAuth = JSON.parse(_raw);
+} catch (e) {}
+var _appExecUrl = '<?= appExecUrl ?>';
+
 // ─── State ────────────────────────────────────────────────
 var state = {
-  screen: 'home',
+  screen: 'login',
   home: null,
   year: null,
   questions: [],
@@ -73,8 +83,8 @@ var state = {
   selectedScore: 0
 };
 
-var USER_KEY = localStorage.getItem('archi2ji_userKey') || generateUUID_();
-localStorage.setItem('archi2ji_userKey', USER_KEY);
+var USER_KEY = '';
+var USER_DISPLAY = '';
 
 // ─── Utilities ────────────────────────────────────────────
 function generateUUID_() {
@@ -104,6 +114,37 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+// ─── Auth ────────────────────────────────────────────────
+function initAuth() {
+  // 1. OAuth callback result from server
+  if (_serverAuth && _serverAuth.userKey) {
+    USER_KEY = _serverAuth.userKey;
+    USER_DISPLAY = _serverAuth.displayName || _serverAuth.email || '';
+    localStorage.setItem('archi2ji_userKey', USER_KEY);
+    localStorage.setItem('archi2ji_userDisplay', USER_DISPLAY);
+    navigate('home');
+    return;
+  }
+  // 2. Returning user (localStorage)
+  var storedKey = localStorage.getItem('archi2ji_userKey');
+  if (storedKey) {
+    USER_KEY = storedKey;
+    USER_DISPLAY = localStorage.getItem('archi2ji_userDisplay') || '';
+    navigate('home');
+    return;
+  }
+  // 3. Not logged in → show login screen
+  navigate('login');
+}
+
+function logout_() {
+  localStorage.removeItem('archi2ji_userKey');
+  localStorage.removeItem('archi2ji_userDisplay');
+  USER_KEY = '';
+  USER_DISPLAY = '';
+  navigate('login');
+}
+
 // ─── API bridge ───────────────────────────────────────────
 function callApi(funcName, args, cb) {
   var allArgs = (args || []).concat([USER_KEY]);
@@ -116,13 +157,20 @@ function callApi(funcName, args, cb) {
 // ─── Router ───────────────────────────────────────────────
 function navigate(screen, params) {
   state.screen = screen;
-  if (params) Object.assign(state, params);
+  if (params) {
+    Object.keys(params).forEach(function(k) { state[k] = params[k]; });
+  }
   render();
 }
 
 function render() {
   showLoading(false);
+  // Update user name in header
+  var userEl = document.getElementById('header-user');
+  if (userEl) userEl.textContent = USER_DISPLAY ? USER_DISPLAY : '';
+
   switch (state.screen) {
+    case 'login':    renderLogin(); break;
     case 'home':     renderHome(); break;
     case 'year':     renderYear(); break;
     case 'question': renderQuestion(); break;
@@ -139,6 +187,25 @@ function setHeader(title, backLabel, backFn) {
   } else {
     backArea.innerHTML = '';
   }
+}
+
+// ─── Screen: Login ────────────────────────────────────────
+function renderLogin() {
+  setHeader('建築2次');
+  document.getElementById('header-user').textContent = '';
+  var html =
+    '<div style="padding:8vw 4vw;text-align:center">' +
+      '<div style="font-size:3.5rem;margin-bottom:4vw">📝</div>' +
+      '<p style="font-size:.95rem;font-weight:500;margin:0 0 2vw;color:var(--text-1)">建築2次 過去問学習</p>' +
+      '<p style="font-size:.82rem;color:var(--text-2);margin-bottom:7vw;line-height:1.6">' +
+        '学習記録を保存するには<br>Googleアカウントでログインしてください' +
+      '</p>' +
+      '<a class="btn" href="' + escHtml(_appExecUrl) + '?oauthStart=1" target="_top" ' +
+        'style="display:block;text-decoration:none;padding:3.5vw 4vw">' +
+        'Googleでログイン' +
+      '</a>' +
+    '</div>';
+  document.getElementById('app-main').innerHTML = html;
 }
 
 // ─── Screen: Home ─────────────────────────────────────────
@@ -179,6 +246,9 @@ function drawHome(data) {
         '</div>';
     });
   }
+  html += '<div style="padding:4vw 2.5vw 2vw;text-align:right">'
+    + '<button class="btn secondary btn-sm" onclick="logout_()">ログアウト</button>'
+    + '</div>';
   document.getElementById('app-main').innerHTML = html;
 
   document.querySelectorAll('.year-card').forEach(function(el) {
@@ -287,7 +357,6 @@ function renderQuestion() {
 
   document.getElementById('app-main').innerHTML = html;
 
-  // Toggle answer visibility
   var toggleBtn = document.getElementById('answer-toggle-btn');
   if (toggleBtn) {
     toggleBtn.addEventListener('click', function() {
@@ -297,7 +366,6 @@ function renderQuestion() {
     });
   }
 
-  // Score selection
   document.querySelectorAll('.score-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       state.selectedScore = Number(btn.getAttribute('data-score'));
@@ -307,7 +375,6 @@ function renderQuestion() {
     });
   });
 
-  // Save
   document.getElementById('save-btn').addEventListener('click', function() {
     var noteVal = document.getElementById('note-input').value;
     var saveBtn = document.getElementById('save-btn');
@@ -321,7 +388,6 @@ function renderQuestion() {
         return;
       }
       showToast('保存しました');
-      // Update local note cache
       state.note = { note: noteVal, selfScore: state.selectedScore };
     });
   });
@@ -329,7 +395,7 @@ function renderQuestion() {
 
 // ─── Boot ─────────────────────────────────────────────────
 window.addEventListener('load', function() {
-  render();
+  initAuth();
 });
 </script>
 </body>
