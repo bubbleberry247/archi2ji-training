@@ -1,0 +1,134 @@
+{
+  "policyVersion": "2026-06-23-r7-curated-reference-v1",
+  "project": "archi2ji-training",
+  "exam": "1級建築施工管理技術検定 第二次検定",
+  "year": "R7",
+  "contentPolicy": {
+    "thirdPartyOriginalStored": false,
+    "storeVerbatimAnswersInRepo": false,
+    "publicDisplayLabel": "学習用参考答案",
+    "internalReferenceStatus": "curated_reference",
+    "notice": "この参考答案は公式解答ではありません。公開問題、民間解答例、一般的な施工管理知識を参考に、学習用に独自作成したものです。"
+  },
+  "officialSources": [
+    {
+      "sourceId": "fcip_about",
+      "name": "建設業振興基金 試験研修本部 検定問題・正答肢",
+      "url": "https://www.fcip-shiken.jp/about/",
+      "usage": "official_problem_and_published_answer_scope",
+      "note": "解答形式が記述の設問は正答非公表。マークシート部分のみ正答肢確認対象。"
+    },
+    {
+      "sourceId": "fcip_r7_pdf",
+      "name": "令和7年度 1級建築施工管理技術検定 第二次検定問題",
+      "url": "https://www.fcip-shiken.jp/pdf/r07_1kj_mondai.pdf",
+      "usage": "official_problem_text_and_figures"
+    }
+  ],
+  "referenceSourceCandidates": [
+    {
+      "sourceId": "tac_r7_answer_examples",
+      "name": "TAC 令和7年度 1級建築施工管理技士 二次検定 答案例",
+      "url": "https://www.tac-school.co.jp/file/tac/kouza_sekokan/2025renew-img/202510/R7_2ji-touanrei.pdf",
+      "usage": "reference_only_no_verbatim_storage",
+      "coverageEstimate": "R7 written and calculation questions"
+    },
+    {
+      "sourceId": "ias_r7_archi速報",
+      "name": "地域開発研究所 令和7年度 1級建築二次検定 解答速報",
+      "url": "https://www.ias.or.jp/topic/2025/1009_1226.html",
+      "usage": "reference_only_no_verbatim_storage",
+      "coverageEstimate": "R7 answer example page"
+    },
+    {
+      "sourceId": "nikken_r7_archi",
+      "name": "日建学院 2025年度 1級建築施工管理技士 二次検定 検証",
+      "url": "https://www.ksknet.co.jp/nikken/guidance/construction1q/road/2ji_verify/index.aspx",
+      "usage": "reference_request_or_summary_only",
+      "coverageEstimate": "R7 answer reference examples by request"
+    },
+    {
+      "sourceId": "cic_r7_archi",
+      "name": "CIC 1級建築施工管理技士 検定問題と総評",
+      "url": "https://www.cic-ct.co.jp/sohyo/kenchiku/",
+      "usage": "summary_and_publication_scope_check",
+      "coverageEstimate": "R7 summary and official link guidance"
+    },
+    {
+      "sourceId": "ias_book_2026_archi",
+      "name": "地域開発研究所 1級建築施工管理第二次検定問題解説集 2026年版",
+      "url": "https://prtimes.jp/main/html/rd/p/000000091.000157640.html",
+      "usage": "purchased_book_reference_only_no_verbatim_storage",
+      "coverageEstimate": "H28-R7 all 60 questions"
+    }
+  ],
+  "estimatedCoverage": {
+    "officialProblemQuestions": 6,
+    "officialDeterministicAnswerQuestions": 2,
+    "curatedReferenceCandidateQuestions": 6,
+    "alreadyInAppReferenceQuestions": 6,
+    "needsCuratedReviewQuestions": 4
+  },
+  "targetQuestions": [
+    {
+      "qId": "Q_R7_1",
+      "questionNumber": 1,
+      "currentQuestionType": "experience_essay",
+      "currentScoreMode": "rubric_ai",
+      "currentStatus": "reference_answer_present_needs_curated_review",
+      "targetStatus": "curated_reference",
+      "priority": "high",
+      "referencePlan": "固定工事概要に適合する品質管理項目、理由、実施内容、組織的品質管理活動を論点整理する。"
+    },
+    {
+      "qId": "Q_R7_2",
+      "questionNumber": 2,
+      "currentQuestionType": "technical_short_answer",
+      "currentScoreMode": "rubric_ai",
+      "currentStatus": "reference_answer_present_needs_curated_review",
+      "targetStatus": "curated_reference",
+      "priority": "high",
+      "referencePlan": "仮設物ごとの設置計画時の検討事項と理由を、除外条件に抵触しない形で整理する。"
+    },
+    {
+      "qId": "Q_R7_3",
+      "questionNumber": 3,
+      "currentQuestionType": "mixed",
+      "currentScoreMode": "ai_estimate",
+      "currentStatus": "image_registered_reference_answer_present_needs_curated_review",
+      "targetStatus": "curated_reference",
+      "priority": "high",
+      "referencePlan": "工程表・施工条件の読み取り、作業内容、総所要日数、EST/LST、フロートを図表付きで確認する。"
+    },
+    {
+      "qId": "Q_R7_4",
+      "questionNumber": 4,
+      "currentQuestionType": "technical_short_answer",
+      "currentScoreMode": "rubric_ai",
+      "currentStatus": "reference_answer_present_needs_curated_review",
+      "targetStatus": "curated_reference",
+      "priority": "high",
+      "referencePlan": "施工上の留意事項を、設問ごとの対象工種、除外条件、理由、確認方法に分けて整理する。"
+    },
+    {
+      "qId": "Q_R7_5",
+      "questionNumber": 5,
+      "currentQuestionType": "multiple_choice",
+      "currentScoreMode": "deterministic",
+      "currentStatus": "answer_key_present",
+      "targetStatus": "official_or_verified_key_plus_reference_explanation",
+      "priority": "medium",
+      "referencePlan": "正答キーを維持し、各小問の確認ポイントだけを独自説明として整備する。"
+    },
+    {
+      "qId": "Q_R7_6",
+      "questionNumber": 6,
+      "currentQuestionType": "multiple_choice",
+      "currentScoreMode": "deterministic",
+      "currentStatus": "answer_key_present",
+      "targetStatus": "official_or_verified_key_plus_reference_explanation",
+      "priority": "medium",
+      "referencePlan": "法文穴埋めの正答キーを維持し、条文理解の確認ポイントを独自説明として整備する。"
+    }
+  ]
+}

@@ -4,3 +4,11 @@ node_modules/
 **/__pycache__/
 *.pyc
 .claude/settings.local.json
+_private-research/
+private-exam-notes/
+third-party-reference/
+.playwright-cli/
+.playwright-mcp/
+output/
+test-results/
+$LOG_FILE

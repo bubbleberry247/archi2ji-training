@@ -5,45 +5,185 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>建築2次 過去問学習</title>
 <style>
-:root{--bg:#f5f4f0;--surface:#fff;--surface-2:#f9f8f5;--border:#dedad4;--border-2:#c4bfb8;--text-1:#1a1916;--text-2:#6b6560;--text-3:#a09b95;--accent:#5c4f3d;--accent-lt:#ede9e3;--btn:#3c3530;--ok:#4a7c59;--ok-lt:#e4ede6;--ng:#7c4a4a;--ng-lt:#ede4e4;--warn:#7c6a3a;--warn-lt:#edead8}
+:root{--bg:#F7FEE7;--surface:#fff;--surface-2:#F7FEE7;--border:#e2e8f0;--border-2:#cbd5e1;--text-1:#1e293b;--text-2:#64748b;--text-3:#9ca3af;--accent:#4D7C0F;--accent-2:#365314;--accent-lt:#ECFCCB;--btn:#4D7C0F;--ok:#16a34a;--ok-lt:#dcfce7;--ng:#dc2626;--ng-lt:#fee2e2;--warn:#d97706;--warn-lt:#fef3c7}
 *{box-sizing:border-box}html{font-size:min(5.8vw,16px)}
-body{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;margin:0;background:var(--bg);color:var(--text-1);font-size:1rem;line-height:1.65;-webkit-text-size-adjust:100%}
-header{background:var(--surface);color:var(--text-1);padding:3vw 2.5vw;font-size:.85rem;position:sticky;top:0;z-index:100;text-align:center;font-weight:500;letter-spacing:.1em;border-bottom:1px solid var(--border)}
+body{font-family:"Meiryo","メイリオ",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;margin:0;background:#F7FEE7;color:#1e293b;font-size:1rem;line-height:1.5;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+header{background:#4D7C0F;color:#fff;padding:3vw 2.5vw;font-size:1rem;position:sticky;top:0;z-index:100;text-align:center;font-weight:600;letter-spacing:0;border-bottom:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,0.1)}
 main{padding:0 0 12px}
-h2{font-size:1rem;margin:0 0 12px;font-weight:500;letter-spacing:.03em}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:3.7vw 2.6vw;margin:2vw 1vw}
-.btn{background:var(--btn);color:#fff;border:none;padding:3.5vw 4vw;border-radius:2px;cursor:pointer;font-size:.9rem;font-weight:500;letter-spacing:.05em;min-height:13.5vw;width:100%;text-align:center;display:block}
-.btn.secondary{background:transparent;color:var(--text-2);border:1px solid var(--border-2)}
-.btn-sm{padding:2vw 3.5vw;font-size:.85rem;min-height:auto;width:auto;display:inline-block}
-.tag{display:inline-block;background:var(--accent-lt);color:var(--accent);padding:4px 12px;margin:3px;border-radius:2px;font-size:.8rem;letter-spacing:.03em}
+h2{font-size:1rem;margin:0 0 12px;font-weight:600}
+.card{background:#ffffff;border-radius:3vw;padding:3.7vw 2.6vw;margin:1vw 1vw;box-shadow:0 1px 3px rgba(0,0,0,0.06);border:1px solid #e2e8f0}
+.btn{background:#4D7C0F;color:#fff;border:none;padding:3.7vw 4.2vw;border-radius:3vw;cursor:pointer;font-size:1rem;font-weight:600;letter-spacing:0;min-height:13.8vw;width:100%;text-align:center;display:block;line-height:1.2;-webkit-tap-highlight-color:transparent}
+.btn.secondary{background:#ECFCCB;color:#1e293b}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-sm{padding:8px 12px;font-size:.82rem;min-height:36px;width:auto;display:inline-flex;align-items:center;justify-content:center}
+.btn.btn-action{width:auto;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 22px;border-radius:12px;font-size:.94rem;line-height:1.1}
+.tag{display:inline-block;background:#ECFCCB;color:#4D7C0F;padding:6px 14px;margin:4px;border-radius:20px;font-size:0.85rem;font-weight:500}
 .small{font-size:.8rem;color:var(--text-2)}
 .loading-overlay{position:fixed;inset:0;background:rgba(245,244,240,.88);display:flex;align-items:center;justify-content:center;z-index:9999}
 .spinner{width:8vw;height:8vw;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.year-card{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:4vw 3vw;margin:2vw 1vw;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:border-color .15s}
-.year-card:active{border-color:var(--accent)}
-.year-label{font-size:1.1rem;font-weight:500;letter-spacing:.05em}
-.year-count{font-size:.78rem;color:var(--text-2)}
-.q-row{padding:3.5vw 2.5vw;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:flex-start;gap:2.5vw;cursor:pointer}
-.q-num{font-size:.78rem;color:var(--text-2);white-space:nowrap;padding-top:2px}
-.q-stem{font-size:.85rem;color:var(--text-1);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.stem-box{background:var(--surface-2);border:1px solid var(--border);border-radius:2px;padding:3.5vw 2.5vw;margin:2vw 1vw;font-size:.9rem;line-height:1.8;white-space:pre-wrap}
+.year-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin:8px 4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:border-color .15s,box-shadow .15s;box-shadow:0 1px 4px rgba(0,0,0,0.07);-webkit-tap-highlight-color:transparent}
+.year-card:active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt)}
+.year-label{font-size:1.1rem;font-weight:600;letter-spacing:.03em}
+.year-count{font-size:.82rem;color:var(--text-2)}
+.q-row{padding:4vw 3vw;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:flex-start;gap:3vw;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.q-num{font-size:.78rem;color:var(--text-2);white-space:nowrap;padding-top:2px;min-width:8vw}
+.q-stem{font-size:.88rem;color:var(--text-1);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.result-list{display:grid;gap:14px;margin-top:12px}
+.result-item{border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.05);overflow:hidden}
+.result-row{width:100%;border:none;border-radius:0;background:var(--surface);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;min-height:0}
+.result-main{display:flex;flex-direction:column;gap:4px;min-width:0}
+.result-title{font-weight:800;color:var(--text-1);font-size:.95rem}
+.result-sub{font-size:.78rem;color:var(--text-3);line-height:1.5}
+.result-score{font-weight:900;color:var(--accent);font-size:.95rem;white-space:nowrap}
+.result-detail-panel{display:block;border-top:1px solid var(--border);padding:14px 16px;background:#fbfdff}
+.result-detail-section{margin-top:12px}
+.result-detail-section:first-child{margin-top:0}
+.result-detail-title{font-size:.78rem;font-weight:800;color:var(--text-2);letter-spacing:.04em;margin-bottom:6px}
+.result-answer-box{border:1px solid var(--border);border-radius:8px;background:#fff;padding:10px;font-size:.84rem;line-height:1.75;white-space:pre-wrap;max-height:none;overflow:visible}
+.result-ai-summary{border:1px solid var(--border);border-radius:8px;background:#fff;padding:10px;font-size:.84rem;line-height:1.65}
+.result-ai-summary .ai-result{border-top:0;margin-top:0;padding-top:0}
+.stem-box{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:4vw 3.5vw;margin:2vw 1vw;font-size:.92rem;line-height:1.85;white-space:pre-wrap}
+.underline-token{display:inline;border-bottom:2px solid var(--accent);background:#fff7cc;font-weight:700;padding:0 2px}
+.underline-badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.35em;height:1.35em;border-radius:999px;background:var(--accent);color:#fff;font-size:.72em;font-weight:800;line-height:1;margin:0 2px;vertical-align:.08em}
+.question-media{background:#fff;border:1px solid var(--border);border-radius:10px;margin:2vw 1vw;padding:2vw;display:grid;gap:2vw}
+.question-media a{display:block}
+.question-media img{width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:8px;background:#fff}
+.question-media-empty{background:var(--warn-lt);border:1px solid #facc15;color:#854d0e;border-radius:8px;margin:2vw 1vw;padding:10px 12px;font-size:.82rem;line-height:1.6}
 .answer-section{margin:2vw 1vw}
-.answer-toggle{width:100%;padding:3vw;background:var(--accent-lt);color:var(--accent);border:1px solid var(--border-2);border-radius:2px;font-size:.85rem;font-weight:500;cursor:pointer;letter-spacing:.05em;text-align:center}
-.answer-box{display:none;background:var(--ok-lt);border:1px solid var(--ok);border-radius:2px;padding:3.5vw 2.5vw;margin-top:1.5vw;font-size:.85rem;line-height:1.8;white-space:pre-wrap}
+.answer-toggle{width:100%;padding:10px 14px;min-height:42px;background:var(--accent-lt);color:var(--accent);border:1.5px solid var(--border-2);border-radius:10px;font-size:.86rem;font-weight:600;cursor:pointer;letter-spacing:.03em;text-align:center}
+.answer-box{display:none;background:var(--ok-lt);border:1px solid var(--ok);border-radius:10px;padding:3.5vw 3vw;margin-top:1.5vw;font-size:.88rem;line-height:1.85;white-space:pre-wrap}
 .answer-box.visible{display:block}
-.note-area{width:100%;border:1px solid var(--border);border-radius:2px;padding:2.5vw;font-size:.85rem;font-family:inherit;resize:vertical;min-height:24vw;background:var(--surface);color:var(--text-1);line-height:1.6}
-.self-score{display:flex;gap:1.5vw;flex-wrap:wrap;margin:2vw 0}
-.score-btn{padding:2vw 3vw;border:1px solid var(--border-2);border-radius:2px;font-size:.8rem;background:var(--surface);color:var(--text-2);cursor:pointer;transition:border-color .15s,background .15s}
-.score-btn.active{border-color:var(--accent);background:var(--accent-lt);color:var(--accent)}
-.section-label{font-size:.72rem;color:var(--text-2);letter-spacing:.1em;padding:3vw 2.5vw 1vw;font-weight:500}
-.back-btn{background:none;border:none;color:var(--accent);font-size:.85rem;cursor:pointer;padding:0;letter-spacing:.03em}
-.header-inner{display:flex;align-items:center;justify-content:center;position:relative;min-height:6vw}
+.note-area{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:3vw;font-size:.9rem;font-family:inherit;resize:vertical;min-height:24vw;background:var(--surface);color:var(--text-1);line-height:1.65}
+.question-main-pane{min-width:0}
+.question-media-pane{display:none}
+.mobile-media-slot{display:block}
+.answer-tools{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.draft-status{font-size:.78rem;color:var(--text-2);line-height:1.55;margin:0 1vw 8px}
+.submission-tools{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.question-actions{display:flex;gap:2vw;margin:2vw 1vw;align-items:stretch}
+.question-actions .btn{flex:1;min-width:0}
+.ai-panel{background:#fff;border:1px solid var(--border);border-radius:10px;margin:1vw;padding:3.4vw 3vw}
+.ai-notice{background:var(--warn-lt);border:1px solid #facc15;color:#854d0e;border-radius:8px;padding:9px 10px;font-size:.78rem;line-height:1.55;margin-bottom:10px}
+.ai-result{border-top:1px solid var(--border);margin-top:12px;padding-top:12px}
+.ai-score{font-size:1.35rem;font-weight:800;color:var(--accent);line-height:1.2}
+.ai-meta{font-size:.74rem;color:var(--text-2);margin-top:2px}
+.ai-usage{font-size:.72rem;color:var(--text-3);line-height:1.5;margin-top:4px}
+.ai-criteria{display:grid;gap:8px;margin-top:10px}
+.ai-criterion{border:1px solid var(--border);border-radius:8px;padding:9px;background:var(--surface-2)}
+.ai-criterion-head{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;font-weight:700;color:var(--text-1)}
+.ai-list{margin:8px 0 0;padding-left:1.2em;font-size:.78rem;color:var(--text-2);line-height:1.6}
+.ai-upgrade{margin-top:12px;border:1px solid #bef264;background:#f7fee7;border-radius:10px;padding:10px}
+.ai-upgrade-title{font-size:.8rem;font-weight:800;color:var(--accent);margin-bottom:4px}
+.ai-upgrade .ai-list{color:var(--text-1)}
+.ai-flow-actions{border-top:1px solid var(--border);margin-top:12px;padding-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ai-flow-note{flex-basis:100%;font-size:.78rem;color:var(--text-2);line-height:1.55}
+.section-label{font-size:.72rem;color:var(--text-2);letter-spacing:.12em;padding:3vw 2.5vw 1.5vw;font-weight:600}
+.back-btn{background:none;border:none;color:var(--accent);font-size:.88rem;cursor:pointer;padding:0;letter-spacing:.03em;font-weight:500}
+.header-inner{display:flex;align-items:center;justify-content:center;position:relative;min-height:0}
 .header-back{position:absolute;left:0;top:50%;transform:translateY(-50%)}
-.toast{position:fixed;bottom:6vw;left:50%;transform:translateX(-50%);background:var(--btn);color:#fff;padding:2.5vw 5vw;border-radius:2px;font-size:.85rem;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast{position:fixed;bottom:6vw;left:50%;transform:translateX(-50%);background:var(--btn);color:#fff;padding:2.5vw 5vw;border-radius:10px;font-size:.85rem;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 .user-name{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:.72rem;color:var(--text-3);max-width:24vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-</style>
+.scroll-top-btn{position:fixed;bottom:24px;right:14px;width:44px;height:44px;border-radius:50%;background:rgba(77,124,15,0.3);color:rgba(255,255,255,0.8);border:1px solid #A3E635;font-size:22px;cursor:pointer;z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,visibility .2s,transform .2s;-webkit-tap-highlight-color:transparent}
+.scroll-top-btn.visible{opacity:1;visibility:visible;transform:translateY(0)}
+.scroll-top-btn:active{background:rgba(77,124,15,0.5)}
+.admin-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 4px}
+.admin-kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.admin-kpi strong{display:block;font-size:1.25rem;color:var(--text-1)}
+.admin-list{margin:8px 4px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.admin-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px;border-bottom:1px solid var(--border)}
+.admin-row:last-child{border-bottom:none}
+.admin-name{font-size:.9rem;font-weight:700}
+.admin-progress{text-align:right;font-size:.78rem;color:var(--text-2);white-space:nowrap}
+.tab-nav{display:flex;gap:0;background:#fff;border-bottom:1px solid var(--border);margin:0;position:sticky;top:11.7vw;z-index:99}
+.tab-btn{background:none;border:none;padding:10px 16px;cursor:pointer;font-size:.9rem;color:#9ca3af;border-bottom:3px solid transparent;margin-bottom:-1px;font-weight:500;min-height:40px}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.tab-btn.disabled,.tab-btn:disabled{color:#c7cbd1;cursor:default}
+.summary-bar{padding:6px 8px;font-size:.8rem;color:#666;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px}
+.summary-bar .exam-badge{grid-column:1 / -1;justify-self:start}
+.summary-user{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exam-badge{background:#fff3cd;color:#1a1a1a;border-radius:8px;font-size:.75rem;font-weight:600;padding:2px 8px}
+.logout-btn{border-radius:4px;background:#f0f0f0;border:1px solid #ccc;color:#666;font-size:.7rem;min-height:26px;padding:2px 8px;cursor:pointer}
+.next-action-card{background:linear-gradient(135deg,#84A736 0%,#4D7C0F 100%);color:#fff;border-radius:1.5vw;padding:3.7vw 2.6vw;display:flex;align-items:center;gap:2.6vw;margin:0 1vw}
+.next-action-content{flex:1;min-width:0;display:grid;gap:6px}
+.char-img{width:18vw;min-width:58px;max-width:74px;height:auto;object-fit:contain;flex-shrink:0}
+.next-action-card h3{margin:0 0 4px;font-size:.8rem;opacity:.8;font-weight:400}
+.next-action-card .action-label{font-size:1.2rem;font-weight:700;letter-spacing:0;line-height:1.35}
+.next-action-info{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.next-action-meta{border-radius:8px;background:rgba(255,255,255,.18);border:0;color:rgba(255,255,255,.86);font-size:.72rem;padding:4px 10px}
+.next-action-card .btn{background:rgba(255,255,255,.95);color:var(--accent);font-weight:700;width:auto;display:inline-flex;align-items:center;justify-content:center;justify-self:start;padding:8px 22px;min-height:44px;border-radius:10px;margin-top:8px;line-height:1}
+.section-title{font-size:1rem;font-weight:700;color:#555;letter-spacing:.3px;margin:0 0 10px}
+.section-desc{font-size:.78rem;color:#888;line-height:1.5;margin-bottom:10px}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.year-exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.year-exam-card{min-height:62px;background:var(--accent);color:#fff;border:0;border-radius:8px;padding:10px 8px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.35;font-weight:800;-webkit-tap-highlight-color:transparent}
+.year-exam-card:active{background:#3f680d}
+.year-exam-card-label{font-size:.92rem;font-weight:800}
+.year-exam-card-meta{font-size:.65rem;color:rgba(255,255,255,.78);font-weight:700;margin-top:3px}
+.test-card{display:block;background:#f8f9fa;border:2px solid transparent;border-radius:8px;padding:8px;text-align:center;cursor:pointer;box-shadow:none;-webkit-tap-highlight-color:transparent}
+.test-card:active{background:#e8eaed}
+.test-card-label{font-size:.78rem;font-weight:700;color:var(--accent);line-height:1.35}
+.test-card-meta{font-size:.65rem;color:var(--text-2);line-height:1.35;margin-top:2px}
+.test-card .btn,.test-card .btn-sm{width:100%;padding:4px 0;font-size:.7rem;min-height:0}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5vw}
+.kpi-card{background:#f8f9fa;border:0;border-radius:3vw;padding:3.7vw 2.6vw}
+.kpi-label{font-size:.75rem;color:#888;font-weight:500;letter-spacing:0}
+.kpi-value{font-size:2rem;font-weight:800;color:var(--text-1);line-height:1.25}
+.overview-list{margin:0;padding-left:1.2em;color:var(--text-2);font-size:.84rem;line-height:1.8}
+.overview-list strong{color:var(--text-1)}
+.overview-title{font-size:.9rem;font-weight:800;color:var(--text-1);margin:0 0 8px}
+.overview-subtitle{font-size:.86rem;font-weight:800;color:var(--text-1);margin:12px 0 6px}
+.overview-note{margin:4px 0 8px;color:var(--text-2);font-size:.78rem;line-height:1.65}
+.overview-table{width:100%;border-collapse:collapse;margin:6px 0 8px;font-size:.78rem;line-height:1.55}
+.overview-table th,.overview-table td{border:1px solid var(--border);padding:6px 7px;text-align:left;vertical-align:top}
+.overview-table th{background:var(--surface-2);color:var(--text-1);font-weight:800;white-space:nowrap}
+.overview-table td{color:var(--text-2)}
+.overview-highlight{color:var(--accent);font-weight:800}
+.section-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:0;min-height:2rem}
+.section-header .section-title{margin:0;font-size:1rem;color:#555}
+.section-toggle{font-size:10px;color:var(--text-3);transition:transform .2s;padding:8px}
+.section-toggle.open{transform:rotate(180deg)}
+.section-body{overflow:hidden}
+.section-body.collapsed{display:none}
+    /* === Doboku 1st teacher UI parity overrides === */
+    @media (min-width:768px){
+      html{font-size:16px}
+      main{max-width:600px;margin:0 auto;padding:0 16px 24px}
+      header{font-size:15px;padding:14px 24px}
+      .card{margin:10px 0;padding:20px;border-radius:14px}
+      .btn{width:auto;display:inline-block;padding:12px 28px;font-size:15px;min-height:44px;border-radius:12px}
+      .btn-sm{padding:8px 16px;font-size:13px;min-height:36px;border-radius:10px}
+      .question-actions{gap:10px;margin:12px 0}
+      .question-actions .btn{width:auto}
+      .answer-tools,.submission-tools{display:flex;flex-wrap:wrap;gap:10px}
+      .tab-btn{padding:10px 20px;min-height:40px;font-size:14px}
+      .summary-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+      .summary-bar .exam-badge{grid-column:auto}
+      .scroll-top-btn{right:calc(50% - 286px);left:auto;bottom:24px}
+      .tab-nav{top:48px}
+      .next-action-card{padding:18px;gap:12px;margin:0;border-radius:14px}
+      .next-action-card .action-label{font-size:18px}
+      .char-img{width:72px;min-width:72px;max-width:72px}
+      .kpi-grid{grid-template-columns:repeat(4,1fr);gap:10px}
+      .kpi-card{padding:12px;border-radius:14px}
+      .kpi-value{font-size:20px}
+      .kpi-label{font-size:11px}
+      .test-card{padding:8px 10px}
+      .test-card-label{font-size:12px}
+      .test-card .btn,.test-card .btn-sm{padding:4px 8px;font-size:12px;min-height:0}
+    }
+    @media (min-width:1024px){
+      main.question-screen{max-width:1180px}
+      .question-detail-layout.has-media{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,420px);gap:18px;align-items:start}
+      .question-media-pane{display:block;position:sticky;top:64px;max-height:calc(100vh - 80px);overflow:auto}
+      .question-detail-layout.has-media .question-media{margin:0}
+      .mobile-media-slot{display:none}
+      .question-detail-layout.has-media .stem-box,.question-detail-layout.has-media .card,.question-detail-layout.has-media .ai-panel,.question-detail-layout.has-media .answer-section,.question-detail-layout.has-media .section-label,.question-detail-layout.has-media .question-actions,.question-detail-layout.has-media .draft-status{margin-left:0;margin-right:0}
+    }
+    .login-btn{text-decoration:none;display:inline-flex;width:auto;padding:10px 22px;min-height:42px;border-radius:10px}
+    @media (min-width:768px){.login-btn{padding:12px 28px;min-height:44px;width:auto;display:inline-block;border-radius:12px}}
+  </style>
 </head>
 <body>
 
@@ -54,7 +194,7 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:500;letter-spacing:.03em}
 <header id="app-header">
   <div class="header-inner">
     <span id="header-back-area"></span>
-    <span id="header-title">建築2次</span>
+    <span id="header-title">1級建築施工管理技士 第二次検定 過去問演習</span>
     <span id="header-user" class="user-name"></span>
   </div>
 </header>
@@ -63,28 +203,79 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:500;letter-spacing:.03em}
 
 <div id="toast" class="toast"></div>
 
+<script type="application/json" id="server-auth-result"><?!= serverAuthResult || '' ?></script>
+<script type="application/json" id="app-exec-url"><?!= appExecUrl || '""' ?></script>
 <script>
 // ─── Server auth result (injected by GAS template) ────────
 var _serverAuth = null;
 try {
-  var _raw = '<?= serverAuthResult ?>';
-  if (_raw) _serverAuth = JSON.parse(_raw);
+  var _serverAuthEl = document.getElementById('server-auth-result');
+  var _serverAuthRaw = _serverAuthEl ? _serverAuthEl.textContent.trim() : '';
+  if (_serverAuthRaw) _serverAuth = JSON.parse(_serverAuthRaw);
 } catch (e) {}
-var _appExecUrl = '<?= appExecUrl ?>';
+try {
+  if (!_serverAuth) {
+    var _storedAuth = localStorage.getItem('archi2ji_serverAuthResult') || sessionStorage.getItem('archi2ji_serverAuthResult');
+    if (_storedAuth) _serverAuth = JSON.parse(_storedAuth);
+    localStorage.removeItem('archi2ji_serverAuthResult');
+    sessionStorage.removeItem('archi2ji_serverAuthResult');
+  }
+} catch (e) {}
+var _appExecUrl = '';
+try {
+  var _appExecUrlEl = document.getElementById('app-exec-url');
+  var _appExecUrlRaw = _appExecUrlEl ? _appExecUrlEl.textContent.trim() : '';
+  if (_appExecUrlRaw) _appExecUrl = JSON.parse(_appExecUrlRaw);
+} catch (e) {}
+try {
+  if (document.referrer && document.referrer.indexOf('https://script.google.com/macros/s/') === 0) {
+    _appExecUrl = document.referrer.split('?')[0].split('#')[0];
+  }
+  if (!_appExecUrl && window.location && window.location.href && window.location.href.indexOf('https://script.google.com/macros/s/') === 0) {
+    _appExecUrl = window.location.href.split('?')[0].split('#')[0];
+  }
+  if (!_appExecUrl) {
+    _appExecUrl = 'https://script.google.com/macros/s/AKfycbxtZzcKpx0DTlBEMfyBQECD66bjfeMKdw6pSPdRuEF9gJWSurHHmbybGOIEFd5kHgS4/exec';
+  }
+} catch (e) {}
+
+var HOME_CHARACTER_IMAGE = 'data:image/png;base64,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';
+var APP_TITLE_ = '1級建築施工管理技士 第二次検定 過去問演習';
+var APP_EXAM_DATE_ = '2026-10-18';
 
 // ─── State ────────────────────────────────────────────────
 var state = {
   screen: 'login',
   home: null,
   year: null,
+  practiceKind: '',
   questions: [],
+  questionIndex: 0,
   question: null,
   note: null,
-  selectedScore: 0
+  draft: null,
+  latestSubmission: null,
+  submissionHistory: [],
+  rubricStatus: null,
+  aiGrading: null,
+  latestAiGrading: null,
+  draftAnswer: '',
+  practiceResult: null,
+  sessionAnswers: {},
+  savedDraftAnswers: {},
+  gradedAnswers: {},
+  resultGradeErrors: [],
+  auth: null,
+  admin: null
 };
 
 var USER_KEY = '';
 var USER_DISPLAY = '';
+var USER_ROLE = 'user';
+
+// Score display (1=×, 2=△, 3=○, 4=◎, 5=完)
+var SCORE_LABEL = ['', '×', '△', '○', '◎', '完'];
+var SCORE_COLOR = ['', 'var(--ng)', 'var(--warn)', 'var(--ok)', 'var(--ok)', 'var(--ok)'];
 
 // ─── Utilities ────────────────────────────────────────────
 function generateUUID_() {
@@ -114,14 +305,109 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+function renderStemHtml_(q) {
+  var text = normalizeStemUnderlinesForDisplay_(q);
+  var placeholders = [];
+  text = String(text || '').replace(/\[([a-e]):([^\]\n]+)\]/g, function(_, label, value) {
+    var key = '___ARCHI_UNDERLINE_' + placeholders.length + '___';
+    placeholders.push({
+      key: key,
+      html: '<span class="underline-token">' + escHtml(value) + '</span><span class="underline-badge">' + escHtml(label) + '</span>'
+    });
+    return key;
+  });
+  var html = escHtml(text);
+  placeholders.forEach(function(item) {
+    html = html.split(item.key).join(item.html);
+  });
+  return html;
+}
+
+function normalizeStemUnderlinesForDisplay_(q) {
+  var text = String(q && q.stem || '');
+  if (!q || String(q.qId || '') !== 'Q_R3_5') return text;
+  [
+    ['負[a]圧', '[a:負]圧'],
+    ['幅300[b]mm', '幅[b:300]mm'],
+    ['防水層の[c]層目', '防水層の[c:1]層目'],
+    ['入隅[d]部', '[d:入隅]部'],
+    ['100[e]mm', '[e:100]mm'],
+    ['庇先端下部[a]', '[a:庇先端下部]'],
+    ['小口[b]タイル', '[b:小口]タイル'],
+    ['0.6[c]mm', '[c:0.6]mm'],
+    ['なまし鉄[d]線', 'なまし[d:鉄]線'],
+    ['24[e]時間', '[e:24]時間'],
+    ['平行[a]に', '[a:平行]に'],
+    ['100[b]mm', '[b:100]mm'],
+    ['150[c]mm', '[c:150]mm'],
+    ['入れないで[d]折り曲げる', '[d:入れないで]折り曲げる'],
+    ['雨水[e]の', '[e:雨水]の'],
+    ['軟[a]度', '[a:軟]度'],
+    ['良くして[b]作業', '[b:良くして]作業'],
+    ['常温で4[c]日以上', '常温で[c:7]日以上'],
+    ['14[d]日', '[d:14]日'],
+    ['5[e]℃', '[e:5]℃'],
+    ['ファスナー[a]方式', '[a:ファスナー]方式'],
+    ['回転させる[b]こと', '[b:回転させる]こと'],
+    ['両方[c]を', '[c:両方]を'],
+    ['滑らせる[d]こと', '[d:滑らせる]こと'],
+    ['層間変位[e]に', '[e:層間変位]に'],
+    ['塵埃[a]を', '[a:塵埃]を'],
+    ['粗面[b]に', '[b:粗面]に'],
+    ['付着性[c]を', '[c:付着性]を'],
+    ['良く[d]する', '[d:良く]する'],
+    ['下層塗膜[e]が', '[e:下層塗膜]が'],
+    ['壁紙[a]及び', '[a:壁紙]及び'],
+    ['でん粉系接着剤[b]の', '[b:でん粉系接着剤]の'],
+    ['F☆☆☆☆[c]', '[c:F☆☆☆☆]'],
+    ['防火製品表示ラベル[d]を', '[d:防火製品表示ラベル]を'],
+    ['1区分（1室）[e]ごと', '[e:1区分（1室）]ごと'],
+    ['0.2[a]mm', '[a:0.2]mm'],
+    ['U[b]カット', '[b:U]カット'],
+    ['耐久[c]性', '[c:耐久]性'],
+    ['軟[d]質形', '[d:軟]質形'],
+    ['低[e]粘度形', '[e:低]粘度形'],
+    ['③c-（PDF上の数値要確認）', '③c-2'],
+    ['注: 1の③はPDF抽出上、数値の判読に追加確認が必要です。正答キー未確認のため、この問題は復習用として扱います。', '注: PDF本文の下線部は確認済みです。正答キー未確認のため、この問題は復習用として扱います。']
+  ].forEach(function(pair) {
+    text = text.split(pair[0]).join(pair[1]);
+  });
+  return text;
+}
+
+function initScrollTopButton() {
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'scroll-top-btn';
+  btn.setAttribute('aria-label', 'トップへ戻る');
+  btn.innerHTML = '&#9650;';
+  btn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  document.body.appendChild(btn);
+  function update() {
+    btn.classList.toggle('visible', window.scrollY > 260);
+  }
+  window.addEventListener('scroll', update);
+  update();
+}
+
+function scrollToPageTop_() {
+  requestAnimationFrame(function() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
+}
+
 // ─── Auth ────────────────────────────────────────────────
 function initAuth() {
   // 1. OAuth callback result from server
   if (_serverAuth && _serverAuth.userKey) {
     USER_KEY = _serverAuth.userKey;
     USER_DISPLAY = _serverAuth.displayName || _serverAuth.email || '';
+    USER_ROLE = _serverAuth.role || 'user';
     localStorage.setItem('archi2ji_userKey', USER_KEY);
     localStorage.setItem('archi2ji_userDisplay', USER_DISPLAY);
+    localStorage.setItem('archi2ji_userRole', USER_ROLE);
     navigate('home');
     return;
   }
@@ -130,6 +416,7 @@ function initAuth() {
   if (storedKey) {
     USER_KEY = storedKey;
     USER_DISPLAY = localStorage.getItem('archi2ji_userDisplay') || '';
+    USER_ROLE = localStorage.getItem('archi2ji_userRole') || 'user';
     navigate('home');
     return;
   }
@@ -140,8 +427,10 @@ function initAuth() {
 function logout_() {
   localStorage.removeItem('archi2ji_userKey');
   localStorage.removeItem('archi2ji_userDisplay');
+  localStorage.removeItem('archi2ji_userRole');
   USER_KEY = '';
   USER_DISPLAY = '';
+  USER_ROLE = 'user';
   navigate('login');
 }
 
@@ -157,23 +446,35 @@ function callApi(funcName, args, cb) {
 // ─── Router ───────────────────────────────────────────────
 function navigate(screen, params) {
   state.screen = screen;
+  if (screen === 'home') {
+    state.practiceKind = '';
+    state.sessionAnswers = {};
+    state.savedDraftAnswers = {};
+    state.gradedAnswers = {};
+    state.resultGradeErrors = [];
+  }
   if (params) {
     Object.keys(params).forEach(function(k) { state[k] = params[k]; });
   }
   render();
+  scrollToPageTop_();
 }
 
 function render() {
   showLoading(false);
+  var mainEl = document.getElementById('app-main');
+  if (mainEl) mainEl.className = '';
   // Update user name in header
   var userEl = document.getElementById('header-user');
-  if (userEl) userEl.textContent = USER_DISPLAY ? USER_DISPLAY : '';
+  if (userEl) userEl.textContent = state.screen === 'home' ? '' : (USER_DISPLAY ? USER_DISPLAY : '');
 
   switch (state.screen) {
     case 'login':    renderLogin(); break;
     case 'home':     renderHome(); break;
     case 'year':     renderYear(); break;
     case 'question': renderQuestion(); break;
+    case 'result':   renderPracticeResult(); break;
+    case 'admin':    renderAdmin(); break;
   }
 }
 
@@ -191,26 +492,22 @@ function setHeader(title, backLabel, backFn) {
 
 // ─── Screen: Login ────────────────────────────────────────
 function renderLogin() {
-  setHeader('建築2次');
+  setHeader(APP_TITLE_);
   document.getElementById('header-user').textContent = '';
+  var loginUrl = _appExecUrl ? (_appExecUrl + '?oauthStart=1') : '#';
   var html =
-    '<div style="padding:8vw 4vw;text-align:center">' +
-      '<div style="font-size:3.5rem;margin-bottom:4vw">📝</div>' +
-      '<p style="font-size:.95rem;font-weight:500;margin:0 0 2vw;color:var(--text-1)">建築2次 過去問学習</p>' +
-      '<p style="font-size:.82rem;color:var(--text-2);margin-bottom:7vw;line-height:1.6">' +
-        '学習記録を保存するには<br>Googleアカウントでログインしてください' +
-      '</p>' +
-      '<a class="btn" href="' + escHtml(_appExecUrl) + '?oauthStart=1" target="_top" ' +
-        'style="display:block;text-decoration:none;padding:3.5vw 4vw">' +
-        'Googleでログイン' +
-      '</a>' +
+    '<div class="card" style="margin-top:8vw;text-align:center">' +
+      '<div class="login-icon">📝</div>' +
+      '<h2>Googleアカウントでログイン</h2>' +
+      '<p class="small" style="margin-bottom:6vw">Googleのログイン画面に移動します。</p>' +
+      '<a target="_top" href="' + escHtml(loginUrl) + '" class="btn login-btn" style="text-decoration:none">Googleでログイン</a>' +
     '</div>';
   document.getElementById('app-main').innerHTML = html;
 }
 
 // ─── Screen: Home ─────────────────────────────────────────
 function renderHome() {
-  setHeader('建築2次');
+  setHeader(APP_TITLE_);
 
   if (state.home) {
     drawHome(state.home);
@@ -232,26 +529,272 @@ function renderHome() {
   });
 }
 
+function yearOrderValue_(year) {
+  var m = String(year || '').match(/^([HR])(\d+)$/);
+  if (!m) return 0;
+  var n = Number(m[2] || 0);
+  return m[1] === 'H' ? 1988 + n : 2018 + n;
+}
+
+function getDisplayYears_(years) {
+  return (years || []).slice().sort(function(a, b) {
+    return yearOrderValue_(b.year) - yearOrderValue_(a.year);
+  });
+}
+
+function getHomeTotals_(years) {
+  var total = 0;
+  var answered = 0;
+  (years || []).forEach(function(y) {
+    total += Number(y.count || 0);
+    answered += Number(y.answered || 0);
+  });
+  return { total: total, answered: answered, pct: total > 0 ? Math.round(answered / total * 100) : 0 };
+}
+
+function getNextYear_(years) {
+  var list = getDisplayYears_(years);
+  for (var i = 0; i < list.length; i++) {
+    if (Number(list[i].answered || 0) < Number(list[i].count || 0)) return list[i];
+  }
+  return list[0] || null;
+}
+
+function formatListTitle_(title) {
+  var s = String(title || '');
+  return /^[HR]\d+$/.test(s) ? s + '年度' : s;
+}
+
+function parseDateOnly_(value) {
+  var m = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+}
+
+function formatExamBadge_(config) {
+  var raw = (config && config.EXAM_DATE) || APP_EXAM_DATE_;
+  var exam = parseDateOnly_(raw);
+  if (!exam) return '試験日 未設定';
+  var today = new Date();
+  today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  var days = Math.ceil((exam.getTime() - today.getTime()) / 86400000);
+  var dayText = days >= 0 ? 'あと' + days + '日' : Math.abs(days) + '日経過';
+  return '試験日 ' + exam.getFullYear() + '年' + (exam.getMonth() + 1) + '月' + exam.getDate() + '日 （' + dayText + '）';
+}
+
+function renderPracticeCard_(kind, key, label, meta) {
+  return '<div class="test-card" onclick="loadPractice(\'' + escapeJsArg_(kind) + '\',\'' + escapeJsArg_(key) + '\',\'' + escapeJsArg_(label) + '\')">' +
+    '<div class="test-card-label">' + escHtml(label) + '</div>' +
+    '<div class="test-card-meta">' + escHtml(meta || '') + '</div>' +
+    '</div>';
+}
+
+function formatFieldCardMeta_(stats, key, fallback) {
+  var count = Number((stats || {})[key] || 0);
+  if (count > 0) return '全' + count + '大問';
+  return fallback || '';
+}
+
+function getDefaultMiniPlan_() {
+  var years = ['R7', 'R6', 'R5', 'R4', 'R3'];
+  var rows = [];
+  var idx = 1;
+  years.forEach(function(year) {
+    for (var from = 1; from <= 6; from += 2) {
+      var to = from + 1;
+      rows.push({
+        testIndex: idx,
+        label: '第' + idx + '回 ' + year + ' 問' + from + '〜' + to,
+        key: 'range:' + year + ':' + from + '-' + to,
+        questionsPerTest: 2,
+        unlockWeek: idx - 1,
+        recommended: idx === 1
+      });
+      idx++;
+    }
+  });
+  return rows;
+}
+
+function normalizeMiniPlan_(plan) {
+  var list = (plan && plan.length) ? plan : getDefaultMiniPlan_();
+  return list.map(function(item, idx) {
+    return {
+      testIndex: item.testIndex || idx + 1,
+      label: item.label || ('第' + (idx + 1) + '回'),
+      key: item.key || item.targetSegments || 'range:R7:1-2',
+      questionsPerTest: Number(item.questionsPerTest || 2),
+      unlockWeek: item.unlockWeek !== undefined ? item.unlockWeek : idx,
+      recommended: !!item.recommended,
+      dateRange: item.dateRange || ''
+    };
+  });
+}
+
+function renderNextActionCard_(action, miniPlan) {
+  var first = (miniPlan && miniPlan.length) ? miniPlan[0] : null;
+  var a = action || first;
+  if (!a) return '';
+  var key = a.key || a.targetSegments || (first && first.key) || 'range:R7:1-2';
+  var label = a.label || (first && first.label) || '第1回 R7 問1〜2';
+  var qCount = Number(a.questionsPerTest || (first && first.questionsPerTest) || 2);
+  var dateRange = a.dateRange || (first && first.dateRange) || '';
+  var h3 = a.type === 'upcoming' ? '次回のミニテスト' : '今週のミニテスト';
+  return '<div class="next-action-card">' +
+    '<img src="' + HOME_CHARACTER_IMAGE + '" class="char-img" alt="">' +
+    '<div class="next-action-content">' +
+      '<h3>' + escHtml(h3) + '</h3>' +
+      '<div class="action-label">' + escHtml(label) + '</div>' +
+      '<div class="next-action-info">' +
+        (dateRange ? '<span class="next-action-meta">' + escHtml(dateRange) + '</span>' : '') +
+        '<span class="next-action-meta">' + escHtml(String(qCount)) + '大問</span>' +
+        '<span class="next-action-meta">記述式二次対策</span>' +
+      '</div>' +
+      '<button type="button" class="btn" onclick="loadPractice(\'mini\',\'' + escapeJsArg_(key) + '\',\'' + escapeJsArg_(label) + '\')">開始</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderMiniPlanCards_(miniPlan) {
+  return normalizeMiniPlan_(miniPlan).map(function(item) {
+    var meta = [];
+    if (item.dateRange) meta.push(item.dateRange);
+    meta.push(item.questionsPerTest + '大問');
+    return renderPracticeCard_('mini', item.key, item.label, meta.join(' / '));
+  }).join('');
+}
+
+function renderExamOverview_() {
+  return '<div class="card overview-card">' +
+    '<div class="section-header" onclick="toggleSection(this)"><div class="section-title">📋 検定試験の概要</div><div class="section-toggle">&#9660;</div></div>' +
+    '<div class="section-body collapsed">' +
+      '<div class="overview-title">1級建築施工管理技士 第二次検定</div>' +
+      '<div class="overview-subtitle">試験の概要</div>' +
+      '<p class="overview-note">建築工事における施工管理能力を確認する試験です。第一次検定が知識確認型であるのに対し、第二次検定では施工計画、工程管理、品質管理、安全管理、法規、施工経験に基づく判断力を文章で説明する力が問われます。</p>' +
+      '<p class="overview-note">記述式が中心なので、「なぜその対策を行ったのか」「どのように管理したのか」「結果として何が改善されたのか」を、施工管理者として具体的に書ける状態を目指します。</p>' +
+      '<table class="overview-table"><tbody>' +
+        '<tr><th>合格ライン</th><td><span class="overview-highlight">公式基準は原則60%以上</span>。記述式は採点がぶれやすいため、学習上は70%程度を安全目標にします。</td></tr>' +
+        '<tr><th>最低限の方針</th><td>施工経験・施工管理記述で大きく崩れないこと。知識問題で取れても、施工管理の考え方が伝わらない答案では合格が難しくなります。</td></tr>' +
+        '<tr><th>勉強時間</th><td>実務経験があり第一次検定の知識が残っている人で80〜120時間。記述対策に不安がある人、現場経験を文章にまとめるのが苦手な人は150時間以上を見込みます。</td></tr>' +
+      '</tbody></table>' +
+      '<div class="overview-subtitle">重点分野</div>' +
+      '<table class="overview-table"><thead><tr><th>区分</th><th>取り方</th></tr></thead><tbody>' +
+        '<tr><td>施工経験・施工管理記述</td><td>最重要。工種、課題、原因、対策、確認方法、結果をセットで具体化し、必ず安定させます。</td></tr>' +
+        '<tr><td>品質管理・安全管理・工程管理</td><td>得点の柱。抽象語ではなく、管理基準、確認方法、是正行動まで書けるようにします。</td></tr>' +
+        '<tr><td>仮設計画・躯体工事・仕上げ工事</td><td>頻出の施工手順、注意点、管理上のリスクを短文で説明できるようにします。</td></tr>' +
+        '<tr><td>法規</td><td>建設業法、労働安全衛生法などを、現場管理と結びつけて確認します。</td></tr>' +
+      '</tbody></table>' +
+      '<div class="overview-subtitle">合格に直結する勉強法</div>' +
+      '<ul class="overview-list">' +
+        '<li>最初に過去問へ入る前に、品質管理・安全管理・工程管理の3テーマで自分の答案の型を作ります。</li>' +
+        '<li>答案は「課題 → 原因・リスク → 実施した対策 → 管理基準・確認方法 → 結果」の順で整理します。</li>' +
+        '<li>「安全管理を徹底した」だけでなく、作業床端部の手すり、開口部養生確認など、実際の管理行動まで書きます。</li>' +
+        '<li>暗記した文章を再現するのではなく、工事条件が変わっても施工管理者として妥当な判断を書ける状態を目指します。</li>' +
+      '</ul>' +
+      '<div class="overview-subtitle">よくある失敗</div>' +
+      '<ul class="overview-list">' +
+        '<li>経験記述を丸暗記し、与えられた工事概要に合わせて説明を組み替えられないこと。</li>' +
+        '<li>知識はあっても、「なぜその対策を行ったのか」「結果として何が改善されたのか」が答案に出ないこと。</li>' +
+      '</ul>' +
+    '</div>' +
+    '</div>';
+}
+
+function renderHomeNav_(active) {
+  active = active || 'home';
+  var canAdmin = USER_ROLE === 'admin' || USER_ROLE === 'manager';
+  return '<nav class="tab-nav">' +
+    '<button type="button" class="tab-btn' + (active === 'home' ? ' active' : '') + '" onclick="navigate(\'home\')">🏠 Home</button>' +
+    (canAdmin ? '<button type="button" class="tab-btn' + (active === 'admin' ? ' active' : '') + '" onclick="navigate(\'admin\')">📊 ダッシュボード</button>' : '<button type="button" class="tab-btn disabled" disabled>📊 ダッシュボード</button>') +
+    '<button type="button" class="tab-btn disabled" disabled>⚙️ 管理</button>' +
+    '</nav>';
+}
+
 function drawHome(data) {
-  var years = data.years || [];
-  var html = '<div class="section-label">年度を選択</div>';
+  state.auth = data.auth || state.auth || null;
+  if (state.auth && state.auth.role) {
+    USER_ROLE = state.auth.role;
+    localStorage.setItem('archi2ji_userRole', USER_ROLE);
+    if (state.auth.displayName) {
+      USER_DISPLAY = state.auth.displayName;
+      localStorage.setItem('archi2ji_userDisplay', USER_DISPLAY);
+    }
+  }
+  var years = getDisplayYears_(data.years || []);
+  var totals = getHomeTotals_(years);
+  var nextYear = getNextYear_(years);
+  var miniPlan = normalizeMiniPlan_(data.miniPlan);
+  var canAdmin = USER_ROLE === 'admin' || USER_ROLE === 'manager';
+  var html = renderHomeNav_();
+  html += '<div class="summary-bar">' +
+    '<span class="exam-badge">' + escHtml(formatExamBadge_(data.config || {})) + '</span>' +
+    '<span class="summary-user">' + escHtml(USER_DISPLAY ? USER_DISPLAY + ' さん' : '') + '</span>' +
+    '<button type="button" class="logout-btn" onclick="logout_()">ログアウト</button>' +
+    '</div>';
+  html += renderNextActionCard_(data.nextAction, miniPlan);
+  html += '<div class="card">' +
+    '<div class="section-title">🧭 週次記述ミニテスト</div>' +
+    '<div class="section-desc">直近5年30問を、週2問ずつ15回で反復します。</div>' +
+    '<div class="test-grid">' +
+      renderMiniPlanCards_(miniPlan) +
+    '</div>' +
+    '</div>';
+
+  html += '<div class="card">' +
+    '<div class="section-title">📝 年度別記述演習</div>' +
+    '<div class="section-desc">年度ごとに6問を通し演習します。経験記述と短文記述の時間配分を確認します。</div>';
   if (years.length === 0) {
-    html += '<div class="card"><p class="small">問題データが登録されていません。</p></div>';
+    html += '<p class="small">問題データが登録されていません。</p>';
   } else {
+    html += '<div class="year-exam-grid">';
     years.forEach(function(y) {
+      var answered = y.answered || 0;
       html +=
-        '<div class="year-card" data-year="' + escHtml(y.year) + '">' +
-          '<span class="year-label">' + escHtml(y.year) + '年度</span>' +
-          '<span class="year-count">' + y.count + '問</span>' +
+        '<div class="year-exam-card" data-year="' + escHtml(y.year) + '">' +
+          '<div class="year-exam-card-label">' + escHtml(y.year) + '年度</div>' +
+          '<div class="year-exam-card-meta">' + escHtml(String(answered || 0)) + '/' + escHtml(String(y.count || 0)) + '大問</div>' +
         '</div>';
     });
+    html += '</div>';
   }
-  html += '<div style="padding:4vw 2.5vw 2vw;text-align:right">'
-    + '<button class="btn secondary btn-sm" onclick="logout_()">ログアウト</button>'
-    + '</div>';
+  html += '</div>';
+  html += '<div class="card">' +
+    '<div class="section-title">📚 分野別ミニテスト</div>' +
+    '<div class="section-desc">所有データの問題番号・タグ・本文から、出題範囲別に問題を抽出します。</div>' +
+    '<div class="test-grid">' +
+      renderPracticeCard_('field', 'experience', '経験記述', formatFieldCardMeta_(data.fieldStats, 'experience', '問題番号1')) +
+      renderPracticeCard_('field', 'temporary', '仮設・安全', formatFieldCardMeta_(data.fieldStats, 'temporary', '問題番号2')) +
+      renderPracticeCard_('field', 'management', '施工管理', formatFieldCardMeta_(data.fieldStats, 'management', '工程・品質')) +
+      renderPracticeCard_('field', 'structure', '躯体施工', formatFieldCardMeta_(data.fieldStats, 'structure', '鉄筋・型枠等')) +
+      renderPracticeCard_('field', 'finish', '仕上施工', formatFieldCardMeta_(data.fieldStats, 'finish', '内外装・防水等')) +
+      renderPracticeCard_('field', 'law', '法規', formatFieldCardMeta_(data.fieldStats, 'law', '建設業法等')) +
+    '</div>' +
+    '</div>';
+
+  html += '<div class="card">' +
+    '<div class="section-title">💪 未提出復習</div>' +
+    '<div class="section-desc">まだ提出していない問題を優先表示します。採点観点未整備の採点対象外問題は除外します。</div>' +
+    '<div class="test-grid">' +
+      renderPracticeCard_('weak', 'low', '未提出復習', '未提出を優先') +
+      renderPracticeCard_('weak', 'unanswered', '未提出確認', '採点対象から抽出') +
+    '</div>' +
+    '</div>';
+
+  html += '<div class="card">' +
+    '<div class="section-title">📊 学習状況</div>' +
+    '<div class="section-desc">提出済みの大問数と年度別の完了状況を確認します。</div>' +
+    '<div class="kpi-grid">' +
+      '<div class="kpi-card"><div class="kpi-label">演習済み</div><div class="kpi-value">' + escHtml(String(totals.answered)) + '</div><div class="small">/' + escHtml(String(totals.total)) + '大問</div></div>' +
+      '<div class="kpi-card"><div class="kpi-label">進捗率</div><div class="kpi-value">' + escHtml(String(totals.pct)) + '%</div></div>' +
+      '<div class="kpi-card"><div class="kpi-label">収録年度</div><div class="kpi-value">' + escHtml(String(years.length)) + '</div><div class="small">年度</div></div>' +
+      '<div class="kpi-card"><div class="kpi-label">確認待ち</div><div class="kpi-value">' + escHtml(String(data.excludedQuestionCount || 0)) + '</div><div class="small">採点観点未整備</div></div>' +
+    '</div>' +
+    '<p class="small" style="margin:10px 0 0">収録は全' + escHtml(String(data.totalQuestions || totals.total)) + '問。採点観点未整備の問題は演習対象から外しています。</p>' +
+    '</div>';
+  html += renderExamOverview_();
   document.getElementById('app-main').innerHTML = html;
 
-  document.querySelectorAll('.year-card').forEach(function(el) {
+  document.querySelectorAll('.year-exam-card[data-year]').forEach(function(el) {
     el.addEventListener('click', function() {
       var year = el.getAttribute('data-year');
       loadYear(year);
@@ -259,8 +802,405 @@ function drawHome(data) {
   });
 }
 
+// ─── Screen: Admin dashboard ──────────────────────────────
+function renderAdmin() {
+  setHeader(APP_TITLE_);
+  if (state.admin) {
+    drawAdmin(state.admin);
+    return;
+  }
+  document.getElementById('app-main').innerHTML = renderHomeNav_('admin');
+  showLoading(true);
+  callApi('apiAdminDashboard', [], function(err, res) {
+    showLoading(false);
+    if (err || (res && res._error)) {
+      document.getElementById('app-main').innerHTML =
+        renderHomeNav_('admin') +
+        '<div class="card"><p style="color:var(--ng)">管理データを読み込めませんでした。</p><p class="small">' +
+        escHtml((res && res.message) || (err && err.message) || err || '') + '</p></div>';
+      return;
+    }
+    state.admin = res;
+    drawAdmin(res);
+  });
+}
+
+function getAdminCompletionColumns_() {
+  var cols = (state.admin && state.admin.completionColumns) || [];
+  return cols.filter(function(c) { return c && String(c.key || '').trim(); });
+}
+
+function getCompletionRecord_(member, col) {
+  var key = String(col.key || '');
+  var progress = ((member && member.unitProgress) || {})[key] || {};
+  var answered = Number(progress.answered || 0);
+  var total = Number(progress.total || col.total || 0);
+  var completed = !!(((member && member.completedByUnit) || {})[key]);
+  if (completed || answered > 0) return { completed: completed, answered: answered, total: total };
+  return null;
+}
+
+function getCompletionStats_(member, cols) {
+  var done = 0;
+  cols.forEach(function(c) { var rec = getCompletionRecord_(member, c); if (rec && rec.completed) done += 1; });
+  var totalQuestions = Number((member && member.totalQuestions) || (state.admin && state.admin.totalQuestions) || 0);
+  var answered = Number((member && member.answeredCount) || 0);
+  return { done: done, totalPct: totalQuestions > 0 ? Math.round(answered / totalQuestions * 100) : 0, basisPct: cols.length > 0 ? Math.round(done / cols.length * 100) : 0 };
+}
+
+function getAdminDisplayName_(member) {
+  var name = member && (member.displayName || member.name || member.fullName || member.userName);
+  name = String(name || '').trim();
+  return name || '氏名未設定';
+}
+
+function shouldShowDashboardMember_(member) {
+  if (!member) return false;
+  return String(member.showInDashboard || 'true').toLowerCase() !== 'false';
+}
+
+function buildCompletionMatrix_(data) {
+  data = data || state.admin || {};
+  var list = (data.users || []).filter(shouldShowDashboardMember_);
+  if (!list.length) return '<div class="card"><p class="small">表示できる利用者がありません。</p></div>';
+  var cols = getAdminCompletionColumns_();
+  if (!cols.length) return '';
+  var unitCount = cols.length;
+  var appLabel = '建築2次';
+  var sectionBg = '#6A8F2A';
+  var sectionDark = '#4D7C0F';
+  var nameBg = '#fff6a5';
+  var gridBorder = '1px dotted #6b7280';
+  var qHeaderCells = '';
+  var unitHeaderCells = '';
+  cols.forEach(function(c) {
+    qHeaderCells += '<th style="min-width:62px;padding:3px 4px;font-size:0.68rem;font-weight:500;white-space:nowrap;text-align:center;background:#fff;border:' + gridBorder + ';color:#111827">' + escHtml(String(c.total || 0)) + '問</th>';
+    unitHeaderCells += '<th style="min-width:58px;padding:5px 4px;font-size:0.78rem;font-weight:800;white-space:nowrap;text-align:center;background:' + sectionBg + ';border:' + gridBorder + ';color:#fff">' + escHtml(String(c.label || c.key) + '年度') + '</th>';
+  });
+  var avgPlaceholder = '__AVG__';
+  var perfectPlaceholder = '__PERFECT__';
+  var topSummaryCells = '';
+  cols.forEach(function(c, idx) {
+    var pos = idx - Math.max(0, unitCount - 4);
+    if (pos === 0) topSummaryCells += '<td style="background:#ffd7d7;border:1px solid #e5e7eb;text-align:center;font-size:0.75rem;font-weight:700;white-space:nowrap;min-width:96px">全体平均進捗</td>';
+    else if (pos === 1) topSummaryCells += '<td style="background:#ff9b9b;border:1px solid #e5e7eb;text-align:center;font-size:0.78rem;font-weight:800;white-space:nowrap;min-width:56px">' + avgPlaceholder + '%</td>';
+    else if (pos === 2) topSummaryCells += '<td style="background:#ffd7d7;border:1px solid #e5e7eb;text-align:center;font-size:0.75rem;font-weight:700;white-space:nowrap;min-width:100px">100%達成人数</td>';
+    else if (pos === 3) topSummaryCells += '<td style="background:#ff9b9b;border:1px solid #e5e7eb;text-align:center;font-size:0.78rem;font-weight:800;white-space:nowrap;min-width:56px">' + perfectPlaceholder + '名</td>';
+    else topSummaryCells += '<td style="background:#fff;border:1px solid #e5e7eb"></td>';
+  });
+  var rows = list.map(function(u) {
+    var cells = '';
+    cols.forEach(function(c) {
+      var rec = getCompletionRecord_(u, c);
+      var title = rec ? ' title="' + escHtml(String(rec.answered || 0) + '/' + String(rec.total || 0) + '問 提出済み') + '"' : '';
+      var bg = rec && rec.completed ? '#f4fbef' : (rec ? '#fffdf0' : '#fff');
+      cells += '<td style="height:24px;min-width:58px;padding:2px 4px;text-align:center;font-size:0.95rem;color:#2f557f;font-weight:800;border:' + gridBorder + ';background:' + bg + '"' + title + '>' + (rec && rec.completed ? '○' : '') + '</td>';
+    });
+    var stats = getCompletionStats_(u, cols);
+    var basisColor = stats.basisPct >= 100 ? '#10b981' : stats.basisPct >= 70 ? '#4D7C0F' : '#ef4444';
+    return '<tr><td style="position:sticky;left:0;z-index:1;height:24px;padding:3px 6px;font-size:0.8rem;font-weight:700;color:#111827;border:' + gridBorder + ';background:' + nameBg + ';white-space:nowrap;text-align:left">' + escHtml(getAdminDisplayName_(u)) + '</td>' + cells + '<td style="padding:3px 6px;text-align:center;font-size:0.8rem;font-weight:700;border:' + gridBorder + ';background:#fff;color:#111827">' + stats.totalPct + '%</td><td style="padding:3px 6px;text-align:center;font-size:0.8rem;font-weight:800;border:' + gridBorder + ';background:#ffe2e2;color:' + basisColor + '">' + stats.basisPct + '%</td></tr>';
+  }).join('');
+  var avg = 0, perfect = 0, basisAvg = 0;
+  list.forEach(function(u) { var stats = getCompletionStats_(u, cols); avg += stats.totalPct; basisAvg += stats.basisPct; if (stats.done === unitCount && unitCount > 0) perfect += 1; });
+  avg = list.length ? Math.round(avg / list.length) : 0;
+  basisAvg = list.length ? Math.round(basisAvg / list.length) : 0;
+  topSummaryCells = topSummaryCells.replace(avgPlaceholder + '%', avg + '%').replace(perfectPlaceholder + '名', perfect + '名');
+  return '<div id="completion-matrix-print-area" style="background:#ffffff;border:1px solid #d1d5db;border-radius:4px;padding:0;margin:0 4px 14px;overflow:hidden"><div id="completion-matrix-scroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="border-collapse:collapse;min-width:' + (160 + unitCount * 58 + 148) + 'px;width:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:#fff"><thead><tr><td style="height:24px;padding:2px 6px;background:#fff;border:1px solid #e5e7eb;font-size:0.9rem;font-weight:700;text-align:left;white-space:nowrap">eラーニング　進捗表</td>' + topSummaryCells + '<td class="completion-no-print" style="background:#fff;border:1px solid #e5e7eb;text-align:center;white-space:nowrap"><button type="button" onclick="downloadCompletionCsv_()" style="background:#1e293b;color:#fff;border:0;border-radius:4px;padding:2px 8px;font-size:0.7rem;font-weight:700;cursor:pointer">CSV</button> <button type="button" onclick="printCompletionMatrix_()" style="background:#4D7C0F;color:#fff;border:0;border-radius:4px;padding:2px 8px;font-size:0.7rem;font-weight:700;cursor:pointer">印刷</button></td><td style="background:#fff;border:1px solid #e5e7eb"></td></tr><tr><th style="position:sticky;left:0;z-index:2;background:#fff;padding:2px 6px;border:' + gridBorder + ';font-size:0.7rem;text-align:left;color:#111827;white-space:nowrap"></th>' + qHeaderCells + '<th style="padding:2px 5px;border:' + gridBorder + ';background:#fff;font-size:0.68rem;color:#4D7C0F;white-space:nowrap;text-align:center">全' + escHtml(String(data.totalQuestions || 0)) + '問<br>進捗率</th><th style="padding:2px 5px;border:' + gridBorder + ';background:#fff;font-size:0.68rem;color:#4D7C0F;white-space:nowrap;text-align:center">年度完了率<br>(' + unitCount + '年度)</th></tr><tr><th style="position:sticky;left:0;z-index:2;padding:5px 6px;background:' + sectionBg + ';border:' + gridBorder + ';font-size:0.95rem;text-align:left;color:#fff;white-space:nowrap">' + appLabel + '</th>' + unitHeaderCells + '<th style="padding:4px 6px;border:' + gridBorder + ';background:' + sectionDark + ';font-size:0.9rem;color:#fff;text-align:center">' + avg + '%</th><th style="padding:4px 6px;border:' + gridBorder + ';background:' + sectionDark + ';font-size:0.9rem;color:#fff;text-align:center">' + basisAvg + '%</th></tr></thead><tbody>' + rows + '</tbody><tfoot><tr><td colspan="' + (unitCount + 3) + '" style="height:24px;padding:3px 8px;border:1px solid #e5e7eb;background:#fff;text-align:right;font-size:0.78rem;color:#374151">年度内の全問題を提出すると○</td></tr></tfoot></table></div></div>';
+}
+
+function ensureCompletionPrintStyles_() {
+  if (document.getElementById('completion-print-styles')) return;
+  var css = '#completion-print-root{display:none;}@media print{@page{size:A4 landscape;margin:6mm;}body.completion-printing > :not(#completion-print-root){display:none!important;}body.completion-printing #completion-print-root{display:block!important;width:285mm!important;background:#fff!important;}body.completion-printing #completion-print-root table{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important;}body.completion-printing #completion-print-root th,body.completion-printing #completion-print-root td{height:4.6mm!important;padding:.45mm .7mm!important;font-size:6.1pt!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;}body.completion-printing #completion-print-root .completion-no-print,body.completion-printing #completion-print-root button{display:none!important;}}';
+  var style = document.createElement('style');
+  style.id = 'completion-print-styles';
+  style.type = 'text/css';
+  style.appendChild(document.createTextNode(css));
+  document.head.appendChild(style);
+}
+
+function printCompletionMatrix_() {
+  ensureCompletionPrintStyles_();
+  var source = document.getElementById('completion-matrix-print-area');
+  if (!source) return;
+  var old = document.getElementById('completion-print-root');
+  if (old && old.parentNode) old.parentNode.removeChild(old);
+  var root = document.createElement('div');
+  root.id = 'completion-print-root';
+  root.appendChild(source.cloneNode(true));
+  document.body.appendChild(root);
+  document.body.classList.add('completion-printing');
+  window.print();
+  setTimeout(function() { document.body.classList.remove('completion-printing'); if (root && root.parentNode) root.parentNode.removeChild(root); }, 1000);
+}
+
+function csvCell_(value) {
+  var s = String(value === null || value === undefined ? '' : value);
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function downloadCompletionCsv_() {
+  var data = state.admin || {};
+  var list = (data.users || []).filter(shouldShowDashboardMember_);
+  var cols = getAdminCompletionColumns_();
+  var header = ['氏名'].concat(cols.map(function(c) { return String(c.label || c.key) + '年度'; })).concat(['全' + String(data.totalQuestions || 0) + '問進捗率', '年度完了率']);
+  var rows = list.map(function(u) { var stats = getCompletionStats_(u, cols); var cells = cols.map(function(c) { var rec = getCompletionRecord_(u, c); return rec && rec.completed ? '○' : ''; }); return [getAdminDisplayName_(u)].concat(cells).concat([stats.totalPct + '%', stats.basisPct + '%']); });
+  var csv = '\ufeff' + [header].concat(rows).map(function(row) { return row.map(csvCell_).join(','); }).join('\r\n');
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var a = document.createElement('a');
+  var d = new Date();
+  a.href = URL.createObjectURL(blob);
+  a.download = '受講完了表_' + d.getFullYear() + ('0' + (d.getMonth() + 1)).slice(-2) + ('0' + d.getDate()).slice(-2) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() { URL.revokeObjectURL(a.href); document.body.removeChild(a); }, 200);
+}
+
+function clampPct_(value) {
+  var n = Number(value || 0);
+  if (!isFinite(n)) n = 0;
+  return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+function getAdminProgressPct_(member, totalQuestions) {
+  if (!member) return 0;
+  if (member.progressPct !== undefined && member.progressPct !== null && member.progressPct !== '') return clampPct_(member.progressPct);
+  var total = Number(member.totalQuestions || totalQuestions || 0);
+  return total > 0 ? clampPct_(Number(member.answeredCount || 0) / total * 100) : 0;
+}
+
+function getAdminRecentCount_(member) {
+  var direct = Number(member && member.last7DaysCount || 0);
+  if (direct > 0) return direct;
+  var raw = String((member && member.lastActivity) || '').trim();
+  if (!raw) return 0;
+  var d = new Date(raw.replace(' ', 'T'));
+  if (isNaN(d.getTime())) return 0;
+  var sevenDays = 7 * 24 * 60 * 60 * 1000;
+  return (Date.now() - d.getTime()) <= sevenDays ? 1 : 0;
+}
+
+function getAdminCompletedUnits_(member) {
+  var done = (member && member.completedByUnit) || {};
+  return Object.keys(done).filter(function(k) { return done[k]; }).length;
+}
+
+function buildAdminStatusCards_(users, totalQuestions) {
+  var excellent = 0, growth = 0, support = 0, stalled = 0;
+  users.forEach(function(u) {
+    var pct = getAdminProgressPct_(u, totalQuestions);
+    var recent = getAdminRecentCount_(u);
+    if (pct >= 80) excellent += 1;
+    if (recent > 0 && pct < 80) growth += 1;
+    if (pct > 0 && pct < 30) support += 1;
+    if (pct === 0 || recent === 0) stalled += 1;
+  });
+  return '<div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 4px 14px">' +
+    '<div class="kpi-card" style="border:1px solid #fde68a;background:#fffdf4;text-align:center"><div style="font-size:1.4rem">⭐</div><div class="kpi-value" style="font-size:1.35rem;color:#f59e0b">' + excellent + '<span style="font-size:.75rem">名</span></div><div class="kpi-label">優秀</div></div>' +
+    '<div class="kpi-card" style="border:1px solid #a7f3d0;background:#f7fffb;text-align:center"><div style="font-size:1.4rem">📈</div><div class="kpi-value" style="font-size:1.35rem;color:#10b981">' + growth + '<span style="font-size:.75rem">名</span></div><div class="kpi-label">急成長</div></div>' +
+    '<div class="kpi-card" style="border:1px solid #fed7aa;background:#fffaf7;text-align:center"><div style="font-size:1.4rem">🔄</div><div class="kpi-value" style="font-size:1.35rem;color:#f97316">' + support + '<span style="font-size:.75rem">名</span></div><div class="kpi-label">要サポート</div></div>' +
+    '<div class="kpi-card" style="border:1px solid #d1d5db;background:#f8fafc;text-align:center"><div style="font-size:1.4rem">💤</div><div class="kpi-value" style="font-size:1.35rem;color:#94a3b8">' + stalled + '<span style="font-size:.75rem">名</span></div><div class="kpi-label">停滞中</div></div>' +
+    '</div>';
+}
+
+function getAdminScorePct_(member) {
+  var score = Number(member && member.avgScorePct || 0);
+  if (!isFinite(score)) return 0;
+  return Math.round(score * 10) / 10;
+}
+
+function getAdminBarValue_(member, mode, totalQuestions) {
+  if (mode === 'recent') return getAdminRecentCount_(member);
+  if (mode === 'score') return getAdminScorePct_(member);
+  return getAdminProgressPct_(member, totalQuestions);
+}
+
+function buildAdminBarSection_(title, users, mode, totalQuestions) {
+  var rows = users.slice().sort(function(a, b) {
+    var av = getAdminBarValue_(a, mode, totalQuestions);
+    var bv = getAdminBarValue_(b, mode, totalQuestions);
+    return bv - av;
+  }).slice(0, 6);
+  if (!rows.length) return '';
+  var maxValue = mode === 'recent' ? Math.max(1, Math.max.apply(null, rows.map(function(u) { return getAdminBarValue_(u, mode, totalQuestions); }))) : 100;
+  var html = '<div style="background:#f8fafc;border-radius:14px;padding:14px;margin:10px 4px"><div class="section-title" style="margin-bottom:12px">' + escHtml(title) + '</div>';
+  rows.forEach(function(u) {
+    var value = getAdminBarValue_(u, mode, totalQuestions);
+    var width = Math.max(value > 0 ? 4 : 2, Math.min(100, Math.round(value / maxValue * 100)));
+    var suffix = mode === 'recent' ? '回' : '%';
+    var shown = mode === 'score' ? String(value.toFixed(1)).replace(/\.0$/, '') : String(value);
+    var barColor = mode === 'score'
+      ? (value >= 75 ? '#22c55e' : value >= 60 ? '#eab308' : value > 0 ? '#ef4444' : '#94a3b8')
+      : (mode === 'recent' ? '#0ea5e9' : '#6b5ca5');
+    html += '<div style="display:grid;grid-template-columns:74px 1fr 38px;gap:8px;align-items:center;margin:8px 0">' +
+      '<div style="font-size:.72rem;color:#8b7cf6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(getAdminDisplayName_(u)) + '</div>' +
+      '<div style="height:14px;background:#e2e8f0;border-radius:999px;overflow:hidden"><div style="height:100%;width:' + width + '%;background:' + barColor + ';border-radius:999px"></div></div>' +
+      '<div style="font-size:.72rem;color:#334155;text-align:right">' + escHtml(shown) + suffix + '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function buildAdminProgressDistribution_(users, totalQuestions) {
+  var bins = [
+    { label: '~0', min: 0, max: 0, count: 0, color: '#cbd5e1' },
+    { label: '1-24', min: 1, max: 24, count: 0, color: '#fb7185' },
+    { label: '25-49', min: 25, max: 49, count: 0, color: '#fb923c' },
+    { label: '50-74', min: 50, max: 74, count: 0, color: '#a3e635' },
+    { label: '75~', min: 75, max: 100, count: 0, color: '#22c55e' }
+  ];
+  users.forEach(function(u) {
+    var pct = getAdminProgressPct_(u, totalQuestions);
+    bins.some(function(b) {
+      if (pct >= b.min && pct <= b.max) { b.count += 1; return true; }
+      return false;
+    });
+  });
+  var max = Math.max(1, Math.max.apply(null, bins.map(function(b) { return b.count; })));
+  var bars = bins.map(function(b) {
+    var h = Math.max(4, Math.round((b.count / max) * 88));
+    return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:118px;gap:4px">' +
+      '<div style="font-size:.68rem;color:' + b.color + ';font-weight:700">' + b.count + '</div>' +
+      '<div style="width:34px;height:' + h + 'px;background:' + b.color + ';border-radius:5px 5px 0 0"></div>' +
+      '<div style="font-size:.62rem;color:#64748b">' + escHtml(b.label) + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div style="background:#f8fafc;border-radius:14px;padding:14px;margin:10px 4px"><div class="section-title">📉 進捗分布</div><div style="display:flex;align-items:flex-end;justify-content:space-around;border-bottom:2px solid #6b5ca5;padding-top:6px">' + bars + '</div></div>';
+}
+
+function buildAdminScoreDistribution_(users) {
+  var bins = [
+    { label: '0', min: 0, max: 0, count: 0, color: '#94a3b8' },
+    { label: '1-49', min: 1, max: 49, count: 0, color: '#ef4444' },
+    { label: '50-59', min: 50, max: 59, count: 0, color: '#f97316' },
+    { label: '60-74', min: 60, max: 74, count: 0, color: '#eab308' },
+    { label: '75~', min: 75, max: 100, count: 0, color: '#22c55e' }
+  ];
+  users.forEach(function(u) {
+    var pct = getAdminScorePct_(u);
+    bins.some(function(b) {
+      if (pct >= b.min && pct <= b.max) { b.count += 1; return true; }
+      return false;
+    });
+  });
+  var max = Math.max(1, Math.max.apply(null, bins.map(function(b) { return b.count; })));
+  var bars = bins.map(function(b) {
+    var h = Math.max(4, Math.round((b.count / max) * 88));
+    return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:118px;gap:4px">' +
+      '<div style="font-size:.68rem;color:' + b.color + ';font-weight:700">' + b.count + '</div>' +
+      '<div style="width:34px;height:' + h + 'px;background:' + b.color + ';border-radius:5px 5px 0 0"></div>' +
+      '<div style="font-size:.62rem;color:#64748b">' + escHtml(b.label) + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div style="background:#f8fafc;border-radius:14px;padding:14px;margin:10px 4px"><div class="section-title">📉 スコア分布</div><div style="display:flex;align-items:flex-end;justify-content:space-around;border-bottom:2px solid #6b5ca5;padding-top:6px">' + bars + '</div></div>';
+}
+
+function buildAdminMemberPills_(users, totalQuestions) {
+  var pills = users.slice(0, 12).map(function(u) {
+    var pct = getAdminProgressPct_(u, totalQuestions);
+    return '<span style="display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:7px 11px;margin:3px 4px;font-size:.82rem;color:#334155">👤 ' + escHtml(getAdminDisplayName_(u)) + ' <strong style="color:#4D7C0F">' + pct + '%</strong></span>';
+  }).join('');
+  return '<div style="background:#fff;border-radius:14px;padding:12px 8px;margin:10px 4px"><div class="section-title" style="margin-left:4px">👥 メンバー一覧</div>' + pills + '</div>';
+}
+
+function buildAdminTypeStatsTable_(users) {
+  var labelMap = {};
+  users.forEach(function(u) {
+    (u.typeStats || []).forEach(function(s) {
+      var label = String(s.label || '').trim();
+      if (label) labelMap[label] = true;
+    });
+  });
+  var labels = Object.keys(labelMap);
+  if (!labels.length) return '';
+  var header = labels.map(function(label) {
+    return '<th style="min-width:92px;padding:6px;border:1px solid #e5e7eb;background:#f8fafc;font-size:.7rem;color:#475569;text-align:center">' + escHtml(label) + '</th>';
+  }).join('');
+  var rows = users.map(function(u) {
+    var byLabel = {};
+    (u.typeStats || []).forEach(function(s) { byLabel[String(s.label || '')] = s; });
+    var cells = labels.map(function(label) {
+      var s = byLabel[label] || {};
+      var answered = Number(s.answered || 0);
+      var total = Number(s.total || 0);
+      var pct = total > 0 ? Math.round(answered / total * 1000) / 10 : 0;
+      var scoreText = answered > 0 ? String(pct.toFixed(1)).replace(/\.0$/, '') + '%' : '-';
+      var countText = total > 0 ? answered + '/' + total : String(answered);
+      return '<td style="padding:6px;border:1px solid #e5e7eb;font-size:.72rem;color:#334155;text-align:center;white-space:nowrap"><strong>' + escHtml(scoreText) + '</strong><br><span style="color:#94a3b8">' + escHtml(countText) + '</span></td>';
+    }).join('');
+    return '<tr><td style="position:sticky;left:0;z-index:1;background:#fff;padding:6px 8px;border:1px solid #e5e7eb;font-size:.74rem;font-weight:700;color:#111827;white-space:nowrap">' + escHtml(getAdminDisplayName_(u)) + '</td>' + cells + '</tr>';
+  }).join('');
+  return '<div style="background:#fff;border-radius:14px;padding:12px 8px;margin:10px 4px"><div class="section-title" style="margin-left:4px">📋 区分別 提出進捗</div><div class="small" style="margin:2px 4px 8px;color:#64748b">各区分の提出率と提出済み数</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="border-collapse:collapse;min-width:' + (130 + labels.length * 94) + 'px;width:100%"><thead><tr><th style="position:sticky;left:0;z-index:2;background:#fff;min-width:120px;padding:6px;border:1px solid #e5e7eb;font-size:.7rem;color:#475569;text-align:left">氏名</th>' + header + '</tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+}
+
+function buildAdminInsights_(users, totalQuestions) {
+  if (!users.length) return '';
+  return buildAdminStatusCards_(users, totalQuestions) +
+    buildAdminBarSection_('📊 提出進捗率', users, 'progress', totalQuestions) +
+    buildAdminBarSection_('🔥 直近7日 活動回数', users, 'recent', totalQuestions) +
+    buildAdminMemberPills_(users, totalQuestions) +
+    buildAdminTypeStatsTable_(users);
+}
+function drawAdmin(data) {
+  var users = (data.users || []).filter(shouldShowDashboardMember_);
+  var totalQuestions = data.totalQuestions || 0;
+  var html = renderHomeNav_('admin') +
+    '<div class="card">' +
+    '<div class="section-title">📊 ダッシュボード</div>' +
+    '<div class="section-desc">メンバーの学習進捗（進捗 = 提出済み問題数 / 全問題数）</div>';
+  html += buildCompletionMatrix_(data);
+  html += buildAdminInsights_(users, totalQuestions);
+  html += '<div class="section-label" style="padding-left:0">利用者データ</div>' +
+    '<div class="admin-summary">' +
+      '<div class="admin-kpi"><strong>' + users.length + '</strong><span class="small">表示対象</span></div>' +
+      '<div class="admin-kpi"><strong>' + totalQuestions + '</strong><span class="small">問題数</span></div>' +
+    '</div>' +
+    '<div style="padding:0 4px 8px">' +
+      '<button class="btn secondary btn-sm" onclick="syncRoster_()">名簿を同期</button>' +
+    '</div>';
+  if (!users.length) {
+    html += '<div class="card"><p class="small">表示対象の利用者がいません。</p></div>';
+  } else {
+    html += '<div class="admin-list">';
+    users.forEach(function(u) {
+      html += '<div class="admin-row">' +
+        '<div>' +
+          '<div class="admin-name">' + escHtml(getAdminDisplayName_(u)) + '</div>' +
+        '</div>' +
+        '<div class="admin-progress">' +
+          escHtml(String(u.answeredCount || 0)) + '/' + escHtml(String(u.totalQuestions || 0)) + '<br>' +
+          escHtml(String(u.progressPct || 0)) + '%' +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  document.getElementById('app-main').innerHTML = html;
+}
+
+function syncRoster_() {
+  showLoading(true);
+  callApi('apiSyncDashboardRoster', [], function(err, res) {
+    showLoading(false);
+    if (err || (res && res._error)) {
+      showToast('名簿同期に失敗しました');
+      return;
+    }
+    state.admin = null;
+    state.home = null;
+    showToast('名簿を同期しました');
+    renderAdmin();
+  });
+}
+
 // ─── Screen: Year question list ───────────────────────────
 function loadYear(year) {
+  state.practiceKind = 'year';
+  state.sessionAnswers = {};
+  state.savedDraftAnswers = {};
+  state.gradedAnswers = {};
+  state.resultGradeErrors = [];
   showLoading(true);
   callApi('apiGetQuestionsByYear', [year], function(err, res) {
     showLoading(false);
@@ -272,19 +1212,190 @@ function loadYear(year) {
   });
 }
 
+function loadPractice(kind, key, title) {
+  state.practiceKind = String(kind || '');
+  state.sessionAnswers = {};
+  state.savedDraftAnswers = {};
+  state.gradedAnswers = {};
+  state.resultGradeErrors = [];
+  showLoading(true);
+  callApi('apiGetPracticeQuestions', [kind, key, title], function(err, res) {
+    showLoading(false);
+    if (err || (res && res._error)) {
+      showToast('読み込みに失敗しました');
+      return;
+    }
+    var list = (res && res.questions) ? res.questions : (Array.isArray(res) ? res : []);
+    if (String(kind) === 'mini' && list.length > 0) {
+      navigate('year', { year: (res && res.title) ? res.title : title, questions: list });
+      loadQuestion(list[0].qId, 0);
+      return;
+    }
+    navigate('year', { year: (res && res.title) ? res.title : title, questions: list });
+  });
+}
+
+function loadPracticeResult_() {
+  if (isMiniPractice_()) {
+    navigate('year');
+    return;
+  }
+  var qs = state.questions || [];
+  if (!qs.length) {
+    navigate('home');
+    return;
+  }
+  var qIds = qs.map(function(q) { return q.qId; }).filter(Boolean);
+  captureCurrentAnswer_();
+  gradeSessionAnswersForResult_(qIds, state.year || '演習結果', function() {
+    showLoading(true);
+    callApi('apiGetPracticeResult', [qIds, state.year || '演習結果'], function(err, res) {
+      showLoading(false);
+      if (err || (res && res._error)) {
+        showToast((res && res.message) || '結果の読み込みに失敗しました');
+        return;
+      }
+      navigate('result', { practiceResult: res });
+    });
+  });
+}
+
+function hasSessionAnswer_(qId) {
+  return !!state.sessionAnswers && Object.prototype.hasOwnProperty.call(state.sessionAnswers, String(qId || ''));
+}
+
+function captureCurrentAnswer_() {
+  var q = state.question;
+  var input = document.getElementById('note-input');
+  if (!q || !input) return '';
+  var text = String(input.value || '');
+  if (!state.sessionAnswers) state.sessionAnswers = {};
+  state.sessionAnswers[String(q.qId)] = text;
+  return text;
+}
+
+function normalizeAnswerForGradingMatch_(value) {
+  return String(value || '').replace(/\r\n/g, '\n').trim();
+}
+
+function isAiGradingForAnswer_(grading, answerText) {
+  if (!grading) return false;
+  var current = normalizeAnswerForGradingMatch_(answerText);
+  if (!current) return false;
+  var graded = normalizeAnswerForGradingMatch_(grading.answerText || '');
+  return !!graded && graded === current;
+}
+
+function selectCurrentAnswerAiGrading_(grading, answerText) {
+  return isAiGradingForAnswer_(grading, answerText) ? grading : null;
+}
+
+function syncCurrentQuestionGrading_(answerText) {
+  var next = selectCurrentAnswerAiGrading_(state.latestAiGrading, answerText);
+  if (state.aiGrading === next) return;
+  state.aiGrading = next;
+  refreshAiPanel_();
+  if (isMiniPractice_()) refreshQuestionFlowAndFeedback_();
+}
+
+function rememberGradedAnswer_(qId, answerText) {
+  if (!state.gradedAnswers) state.gradedAnswers = {};
+  state.gradedAnswers[String(qId || '')] = String(answerText || '');
+}
+
+function hasPendingSessionAnswers_() {
+  var answers = state.sessionAnswers || {};
+  var savedDrafts = state.savedDraftAnswers || {};
+  var graded = state.gradedAnswers || {};
+  return Object.keys(answers).some(function(qId) {
+    var text = String(answers[qId] || '');
+    return !!text.trim() && graded[qId] !== text && savedDrafts[qId] !== text;
+  });
+}
+
+function getSessionGradingTasks_(qIds) {
+  var tasks = [];
+  var answers = state.sessionAnswers || {};
+  var graded = state.gradedAnswers || {};
+  qIds.forEach(function(qId) {
+    var key = String(qId || '');
+    var text = String(answers[key] || '');
+    if (!text.trim()) return;
+    if (graded[key] === text) return;
+    tasks.push({ qId: key, answer: text });
+  });
+  return tasks;
+}
+
+function renderResultGradingProgress_(done, total, title, errors) {
+  setHeader('採点中', '', null);
+  var pct = total > 0 ? Math.round(done / total * 100) : 100;
+  var html =
+    '<div class="card">' +
+      '<div class="section-title">' + escHtml(title || '演習結果') + '</div>' +
+      '<p class="small">答案を順番に採点しています。画面を閉じずにお待ちください。</p>' +
+      '<div class="kpi-grid">' +
+        '<div class="kpi-card"><div class="kpi-label">採点進捗</div><div class="kpi-value">' + escHtml(String(done)) + ' / ' + escHtml(String(total)) + '</div></div>' +
+        '<div class="kpi-card"><div class="kpi-label">進捗率</div><div class="kpi-value">' + escHtml(String(pct)) + '%</div></div>' +
+      '</div>' +
+      (errors && errors.length ? '<div class="ai-notice" style="margin-top:12px">一部の問題は採点できませんでした。結果画面で確認してください。</div>' : '') +
+    '</div>';
+  document.getElementById('app-main').innerHTML = html;
+}
+
+function gradeSessionAnswersForResult_(qIds, title, doneFn) {
+  var tasks = getSessionGradingTasks_(qIds);
+  state.resultGradeErrors = [];
+  if (!tasks.length) {
+    doneFn();
+    return;
+  }
+  renderResultGradingProgress_(0, tasks.length, title, []);
+  var idx = 0;
+  var step = function() {
+    if (idx >= tasks.length) {
+      doneFn();
+      return;
+    }
+    var task = tasks[idx];
+    callApi('apiGradeAnswer', [task.qId, task.answer], function(err, res) {
+      if (err || (res && res._error)) {
+        state.resultGradeErrors.push({ qId: task.qId, message: (res && res.message) || String(err || '採点失敗') });
+      } else if (res && res.skipped) {
+        state.resultGradeErrors.push({ qId: task.qId, message: res.message || '採点対象外' });
+      } else {
+        rememberGradedAnswer_(task.qId, task.answer);
+      }
+      idx += 1;
+      renderResultGradingProgress_(idx, tasks.length, title, state.resultGradeErrors);
+      step();
+    });
+  };
+  step();
+}
+
 function renderYear() {
-  setHeader(state.year + '年度', 'ホーム', function() { navigate('home'); });
+  setHeader(formatListTitle_(state.year), 'ホーム', function() { navigate('home'); });
 
   var qs = state.questions || [];
   var html = '';
   if (qs.length === 0) {
     html = '<div class="card"><p class="small">問題がありません。</p></div>';
   } else {
-    qs.forEach(function(q) {
+    html += '<div class="section-label">全' + escHtml(String(qs.length)) + '大問</div>';
+    qs.forEach(function(q, idx) {
+      var badge = '';
+      if (q.submitted) {
+        badge = '<span style="flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--ok);padding-top:2px">提出済み</span>';
+      } else if (q.scoringDisabled) {
+        badge = '<span style="flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--text-3);padding-top:2px">採点対象外</span>';
+      }
+      var qLabel = (q.year && String(q.year) !== String(state.year)) ? String(q.year) + ' 問' + String(q.number) : '問' + String(q.number);
       html +=
-        '<div class="q-row" data-qid="' + escHtml(q.qId) + '">' +
-          '<span class="q-num">問' + escHtml(String(q.number)) + '</span>' +
-          '<span class="q-stem">' + escHtml(q.stemShort) + '…</span>' +
+        '<div class="q-row" data-qid="' + escHtml(q.qId) + '" data-idx="' + idx + '">' +
+          '<span class="q-num">' + escHtml(qLabel) + '</span>' +
+          '<span class="q-stem" style="flex:1">' + escHtml(q.stemShort || '') + '…</span>' +
+          badge +
         '</div>';
     });
   }
@@ -293,22 +1404,731 @@ function renderYear() {
   document.querySelectorAll('.q-row').forEach(function(el) {
     el.addEventListener('click', function() {
       var qId = el.getAttribute('data-qid');
-      loadQuestion(qId);
+      var idx = Number(el.getAttribute('data-idx'));
+      loadQuestion(qId, idx);
     });
   });
 }
 
+function renderPracticeResult() {
+  var result = state.practiceResult || {};
+  var rows = result.rows || [];
+  setHeader('演習結果', '一覧', function() { navigate('year'); });
+  var scoreText = Number(result.aiMaxScore || 0) > 0
+    ? formatAiScore_(Number(result.aiScore || 0)) + ' / ' + formatAiScore_(Number(result.aiMaxScore || 0)) + '（' + formatAiScore_(Number(result.aiScorePct || 0)) + '%）'
+    : '-';
+  var costText = Number(result.estimatedCostJpy || 0) || Number(result.estimatedCostUsd || 0)
+    ? formatAiCostJpy_(Number(result.estimatedCostJpy || 0), Number(result.estimatedCostUsd || 0))
+    : '-';
+  var html =
+    '<div class="card">' +
+      '<div class="section-title">' + escHtml(result.title || '演習結果') + '</div>' +
+      '<div class="kpi-grid">' +
+        '<div class="kpi-card"><div class="kpi-label">提出済み</div><div class="kpi-value">' + escHtml(String(result.submittedCount || 0)) + '</div><div class="small">/' + escHtml(String(result.total || 0)) + '問</div></div>' +
+        '<div class="kpi-card"><div class="kpi-label">AI採点済み</div><div class="kpi-value">' + escHtml(String(result.aiGradedCount || 0)) + '</div></div>' +
+        '<div class="kpi-card"><div class="kpi-label">AI推定合計</div><div class="kpi-value" style="font-size:1.2rem">' + escHtml(scoreText) + '</div></div>' +
+        '<div class="kpi-card"><div class="kpi-label">採点対象外</div><div class="kpi-value">' + escHtml(String(result.excludedCount || 0)) + '</div></div>' +
+        '<div class="kpi-card"><div class="kpi-label">AI概算費用</div><div class="kpi-value" style="font-size:1.2rem">' + escHtml(costText) + '</div></div>' +
+      '</div>' +
+      '<p class="small" style="margin:10px 0 0">AI推定点・公式採点ではありません。採点観点未整備の問題は演習と合計から除外します。</p>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="section-title">問題別結果</div>' +
+      '<p class="small" style="margin:0 0 12px">AI採点した問題の答案、採点結果、加点ポイントをまとめて確認できます。</p>';
+  if (!rows.length) {
+    html += '<p class="small">結果を表示できる問題がありません。</p>';
+  } else {
+    html += '<div class="result-list">';
+    rows.forEach(function(row, idx) {
+      var grading = row.aiGrading || null;
+      var status = row.scoringDisabled
+        ? '採点対象外'
+        : grading
+          ? formatAiScore_(Number(grading.score || 0)) + ' / ' + formatAiScore_(Number(grading.maxScore || 10))
+          : 'AI未採点';
+      var submitted = row.submitted ? '答案あり' : '未回答';
+      var gradedLabel = row.scoringDisabled ? '採点対象外' : (grading ? 'AI採点済み' : 'AI未採点');
+      var scoreColor = grading ? 'var(--accent)' : (row.scoringDisabled ? 'var(--text-3)' : 'var(--warn)');
+      html +=
+        '<div class="result-item">' +
+          '<div class="result-row">' +
+            '<span class="result-main">' +
+              '<span class="result-title">' + escHtml(row.title || row.qId || '') + '</span>' +
+              '<span class="result-sub">' + escHtml(submitted + ' ・ ' + gradedLabel) + '</span>' +
+            '</span>' +
+            '<span class="result-score" style="color:' + scoreColor + '">' + escHtml(status) + '</span>' +
+          '</div>' +
+          buildPracticeResultDetailHtml_(row, grading, idx) +
+        '</div>';
+    });
+    html += '</div>';
+  }
+  html +=
+      '<div class="question-actions" style="margin:14px 0 0">' +
+        '<button class="btn secondary btn-sm" id="result-list-btn">一覧へ戻る</button>' +
+        '<button class="btn secondary btn-sm" id="result-home-btn">ホームへ戻る</button>' +
+      '</div>' +
+    '</div>';
+  document.getElementById('app-main').innerHTML = html;
+  document.querySelectorAll('[data-open-result-qid]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var qId = el.getAttribute('data-open-result-qid');
+      var idx = Number(el.getAttribute('data-open-result-idx'));
+      if (qId) loadQuestion(qId, idx);
+    });
+  });
+  var listBtn = document.getElementById('result-list-btn');
+  if (listBtn) listBtn.addEventListener('click', function() { navigate('year'); });
+  var homeBtn = document.getElementById('result-home-btn');
+  if (homeBtn) homeBtn.addEventListener('click', function() { state.home = null; navigate('home'); });
+}
+
+function buildPracticeResultDetailHtml_(row, grading, idx) {
+  row = row || {};
+  var answerText = String(row.answerText || '');
+  var modelAnswer = String(row.modelAnswer || '');
+  var html = '<div class="result-detail-panel" id="result-detail-panel-' + escHtml(String(idx)) + '">';
+
+  html += '<div class="result-detail-section">' +
+    '<div class="result-detail-title">あなたの答案</div>' +
+    '<div class="result-answer-box">' + (answerText.trim() ? escHtml(answerText) : '答案は保存されていません。') + '</div>' +
+    '</div>';
+
+  html += '<div class="result-detail-section">' +
+    '<div class="result-detail-title">AI採点</div>';
+  if (grading) {
+    html += '<div class="result-ai-summary">' + buildAiGradingResultHtml_(grading, { hideFlowActions: true }) + '</div>';
+  } else {
+    html += '<div class="result-ai-summary">AI採点結果はありません。</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="result-detail-section">' +
+    '<div class="result-detail-title">学習用参考答案</div>' +
+    '<div class="result-answer-box">' + (modelAnswer.trim() ? escHtml(modelAnswer) : '学習用参考答案は未登録です。') + '</div>' +
+    '</div>';
+
+  html += '<div class="question-actions" style="margin-top:12px">' +
+    '<button type="button" class="btn secondary btn-sm" data-open-result-qid="' + escHtml(row.qId || '') + '" data-open-result-idx="' + escHtml(String(idx)) + '">問題画面で開く</button>' +
+    '</div>';
+
+  return html + '</div>';
+}
+
 // ─── Screen: Question detail ──────────────────────────────
-function loadQuestion(qId) {
+function loadQuestion(qId, idx) {
   showLoading(true);
+  if (idx !== undefined) state.questionIndex = idx;
   callApi('apiGetQuestion', [qId], function(err, res) {
     showLoading(false);
     if (err || (res && res._error)) {
       showToast('読み込みに失敗しました');
       return;
     }
-    state.selectedScore = res.note ? (Number(res.note.selfScore) || 0) : 0;
-    navigate('question', { question: res.question, note: res.note });
+    var draft = res.draft || null;
+    var answerText = hasSessionAnswer_(qId) ? String(state.sessionAnswers[String(qId)] || '') : (draft ? String(draft.draftText || '') : '');
+    var latestAiGrading = res.latestAiGrading || null;
+    navigate('question', {
+      question: res.question,
+      note: res.latestSubmission || res.note || null,
+      draft: draft,
+      latestSubmission: res.latestSubmission || res.note || null,
+      submissionHistory: res.submissionHistory || [],
+      rubricStatus: res.rubricStatus || null,
+      latestAiGrading: latestAiGrading,
+      aiGrading: selectCurrentAnswerAiGrading_(latestAiGrading, answerText),
+      draftAnswer: answerText
+    });
+  });
+}
+
+function getAiGradeButtonLabel_(status) {
+  return 'AI採点する';
+}
+
+function getDisabledAiGradeLabel_(status) {
+  if (status && (status.reviewStatus === 'needs_answer_key' || status.scoreMode === 'practice_only')) return '採点対象外（採点観点未整備）';
+  if (status && status.reviewStatus === 'needs_image') return '図表未登録';
+  return 'AI採点対象外';
+}
+
+function buildAiGradingHtml_(status, grading) {
+  status = status || {};
+  var notice = status.displayNotice || '';
+  if (!notice && status.sourceQuality === 'reference_only') notice = 'AI推定点・公式採点ではありません。';
+  var canGrade = status.canGrade === true;
+  var button = canGrade
+    ? '<button class="btn btn-action" id="ai-grade-btn">' + escHtml(getAiGradeButtonLabel_(status)) + '</button>'
+    : '<button class="btn secondary btn-action" disabled>' + escHtml(getDisabledAiGradeLabel_(status)) + '</button>';
+  var html =
+    '<div class="section-label">AI採点</div>' +
+    '<div class="ai-panel">' +
+      (notice ? '<div class="ai-notice">' + escHtml(notice) + '</div>' : '') +
+      button;
+  if (grading) html += buildAiGradingResultHtml_(grading);
+  html += '</div>';
+  return html;
+}
+
+function buildAiGradingResultHtml_(grading, options) {
+  options = options || {};
+  var flags = grading.flags || {};
+  var criteria = grading.criteria || [];
+  var score = Number(grading.score || 0);
+  var maxScore = Number(grading.maxScore || 10);
+  var usageHtml = buildAiUsageHtml_(grading);
+  var html =
+    '<div class="ai-result">' +
+      '<div class="ai-score">' + escHtml(formatAiScore_(score)) + ' / ' + escHtml(formatAiScore_(maxScore)) + '</div>' +
+      '<div class="ai-meta">' + escHtml(grading.scoreMode || '') + ' / ' + escHtml(grading.model || '') + '</div>' +
+      usageHtml +
+      (grading.overallComment ? '<p class="small">' + escHtml(grading.overallComment) + '</p>' : '');
+  if (criteria.length) {
+    html += '<div class="ai-criteria">';
+    criteria.forEach(function(c) {
+      html +=
+        '<div class="ai-criterion">' +
+          '<div class="ai-criterion-head">' +
+            '<span>' + escHtml(c.name || '') + '</span>' +
+            '<span>' + escHtml(formatAiScore_(Number(c.score || 0))) + '/' + escHtml(formatAiScore_(Number(c.maxScore || 0))) + '</span>' +
+          '</div>' +
+          (c.comment ? '<div class="small">' + escHtml(c.comment) + '</div>' : '') +
+        '</div>';
+    });
+    html += '</div>';
+  }
+  html += buildAiListHtml_('良い点', flags.strengths);
+  html += buildAiListHtml_('改善点', flags.improvements);
+  html += buildFullScoreGuidanceHtml_(flags);
+  html += buildAiListHtml_('注意', flags.warnings);
+  if (flags.officialNotice) html += '<div class="ai-notice" style="margin-top:10px;margin-bottom:0">' + escHtml(flags.officialNotice) + '</div>';
+  if (!options.hideFlowActions) html += buildAiFlowActionsHtml_();
+  html += '</div>';
+  return html;
+}
+
+function buildAiFlowActionsHtml_() {
+  var qs = state.questions || [];
+  if (!qs.length) return '';
+  var idx = state.questionIndex;
+  var hasNext = idx < qs.length - 1;
+  var primaryLabel = hasNext ? '次へ' : '結果を見る';
+  var draftLabel = hasNext ? '下書き保存して次へ' : '下書き保存して結果へ';
+  return '<div class="ai-flow-actions">' +
+    '<div class="ai-flow-note">AI採点済みの答案は学習履歴に保存済みです。さらに直した途中答案を残したい場合だけ下書き保存してください。</div>' +
+    '<button type="button" class="btn btn-action" id="ai-next-discard-btn">' + escHtml(primaryLabel) + '</button>' +
+    '<button type="button" class="btn secondary btn-action" id="ai-next-draft-btn">' + escHtml(draftLabel) + '</button>' +
+  '</div>';
+}
+
+function buildAiUsageHtml_(grading) {
+  if (!grading) return '';
+  var totalTokens = Number(grading.totalTokens || 0);
+  var inputTokens = Number(grading.inputTokens || 0);
+  var outputTokens = Number(grading.outputTokens || 0);
+  var cachedInputTokens = Number(grading.cachedInputTokens || 0);
+  var reasoningTokens = Number(grading.reasoningTokens || 0);
+  var costJpy = Number(grading.estimatedCostJpy || 0);
+  var costUsd = Number(grading.estimatedCostUsd || 0);
+  if (!totalTokens && !inputTokens && !outputTokens && !costJpy && !costUsd) return '';
+  var parts = [];
+  if (totalTokens) parts.push('tokens ' + formatInteger_(totalTokens));
+  if (inputTokens || outputTokens) parts.push('in ' + formatInteger_(inputTokens) + ' / out ' + formatInteger_(outputTokens));
+  if (cachedInputTokens) parts.push('cached ' + formatInteger_(cachedInputTokens));
+  if (reasoningTokens) parts.push('reasoning ' + formatInteger_(reasoningTokens));
+  if (costJpy || costUsd) parts.push('概算 ' + formatAiCostJpy_(costJpy, costUsd));
+  return '<div class="ai-usage">' + escHtml(parts.join(' ・ ')) + '</div>';
+}
+
+function buildAiListHtml_(label, items) {
+  if (!items || !items.length) return '';
+  var seen = {};
+  var html = '<div class="small" style="font-weight:700;margin-top:10px">' + escHtml(label) + '</div><ul class="ai-list">';
+  items.forEach(function(item) {
+    var text = String(item || '').trim();
+    if (!text || seen[text]) return;
+    seen[text] = true;
+    html += '<li>' + escHtml(text) + '</li>';
+  });
+  return html + '</ul>';
+}
+
+function buildFullScoreGuidanceHtml_(flags) {
+  flags = flags || {};
+  var hints = Array.isArray(flags.fullScoreHints) ? flags.fullScoreHints : [];
+  var examples = Array.isArray(flags.addableExamples) ? flags.addableExamples : [];
+  if (!hints.length && !examples.length) return '';
+  var html = '<div class="ai-upgrade"><div class="ai-upgrade-title">10点に近づける追記ポイント</div>';
+  html += buildAiListHtml_('加点になりやすい観点', hints);
+  html += buildAiListHtml_('そのまま使える追記例', examples);
+  return html + '</div>';
+}
+
+function formatAiScore_(value) {
+  if (!isFinite(value)) return '0';
+  return String(Math.round(value * 10) / 10).replace(/\.0$/, '');
+}
+
+function formatInteger_(value) {
+  if (!isFinite(value)) return '0';
+  return String(Math.round(Number(value || 0))).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function formatAiCostJpy_(jpy, usd) {
+  if (isFinite(jpy) && Number(jpy) > 0) {
+    if (Number(jpy) < 0.01) return '0.01円未満';
+    return (Math.round(Number(jpy) * 100) / 100).toFixed(2).replace(/\.00$/, '') + '円';
+  }
+  if (isFinite(usd) && Number(usd) > 0) {
+    return '$' + (Math.round(Number(usd) * 1000000) / 1000000).toFixed(6).replace(/0+$/, '').replace(/\.$/, '');
+  }
+  return '0円';
+}
+
+function safeQuestionImageUrl_(url) {
+  var s = String(url || '').trim();
+  var driveId = extractQuestionDriveFileId_(s);
+  if (driveId) return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(driveId) + '&sz=w2000';
+  if (/^https?:\/\//i.test(s)) return s;
+  if (/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(s)) return s;
+  return '';
+}
+
+function extractQuestionDriveFileId_(url) {
+  var s = String(url || '').trim();
+  var m = s.match(/[?&]id=([^&]+)/);
+  if (m) return decodeURIComponent(m[1]);
+  m = s.match(/\/file\/d\/([^/]+)/);
+  if (m) return decodeURIComponent(m[1]);
+  m = s.match(/\/d\/([^/=]+)(?:=|\/|$)/);
+  if (m) return decodeURIComponent(m[1]);
+  return '';
+}
+
+function buildQuestionMediaHtml_(q) {
+  q = q || {};
+  var rawUrls = Array.isArray(q.imageUrls) ? q.imageUrls : [];
+  var urls = rawUrls.map(safeQuestionImageUrl_).filter(Boolean);
+  if (urls.length) {
+    var html = '<div class="question-media">';
+    urls.forEach(function(url, idx) {
+      html +=
+        '<a href="' + escHtml(url) + '" target="_blank" rel="noopener">' +
+          '<img src="' + escHtml(url) + '" alt="問題図表 ' + escHtml(String(idx + 1)) + '" loading="lazy" referrerpolicy="no-referrer">' +
+        '</a>';
+    });
+    return html + '</div>';
+  }
+  if (q.imageRequired || q.imageMissing) {
+    return '<div class="question-media-empty">この問題は元PDFの工程表・図表画像が必要です。現在画像が未登録のため、本文だけでは解けない可能性があります。</div>';
+  }
+  return '';
+}
+
+function buildQuestionActionsHtml_() {
+  return '<div class="question-actions">' +
+    '<button type="button" class="btn secondary btn-sm question-pause-btn">中断して一覧へ</button>' +
+    '<button type="button" class="btn secondary btn-sm question-home-btn">ホームへ戻る</button>' +
+  '</div>';
+}
+
+function hasCurrentQuestionGrading_() {
+  var input = document.getElementById('note-input');
+  var text = input ? input.value : String(state.draftAnswer || '');
+  return isAiGradingForAnswer_(state.aiGrading, text);
+}
+
+function buildQuestionFlowHtml_() {
+  var qs = state.questions || [];
+  var idx = state.questionIndex;
+  var isLast = idx >= qs.length - 1;
+  var status = state.rubricStatus || {};
+
+  if (isMiniPractice_()) {
+    if (hasCurrentQuestionGrading_()) {
+      return '<div class="card">' +
+        '<div class="section-title">採点が完了しました</div>' +
+        '<p class="small">AI採点結果と学習用参考答案を確認してから次へ進んでください。</p>' +
+        '<div class="question-actions" style="margin:10px 0 0">' +
+          '<button type="button" class="btn btn-sm mini-next-btn">' + escHtml(isLast ? '演習を終える' : '次の問題へ') + '</button>' +
+        '</div>' +
+      '</div>';
+    }
+    if (status.canGrade !== true) {
+      return '<div class="card">' +
+        '<div class="section-title">AI採点</div>' +
+        '<p class="small">' + escHtml(status.displayNotice || 'この問題はAI採点の対象外です。') + '</p>' +
+        '<button type="button" class="btn secondary btn-sm" disabled>' + escHtml(getDisabledAiGradeLabel_(status)) + '</button>' +
+      '</div>';
+    }
+    return '<div class="card">' +
+      '<div class="section-title">解答確認</div>' +
+      '<p class="small">答案を書いたらAI採点を実行します。採点後に講評、加点ポイント、学習用参考答案を表示します。</p>' +
+      '<button type="button" class="btn btn-action" id="answer-ai-btn">解答してAI採点</button>' +
+    '</div>';
+  }
+
+  return '<div class="card">' +
+    '<div class="section-title">' + escHtml(isLast ? '最後の問題です' : '次の問題へ進む') + '</div>' +
+    '<p class="small">この画面では採点しません。' + escHtml(isLast ? '「結果を見る」を押すと全答案をまとめてAI採点します。' : '最後に「結果を見る」を押すと全答案をまとめてAI採点します。') + '</p>' +
+    '<button type="button" class="btn btn-action" id="answer-next-btn">' + escHtml(isLast ? '結果を見る' : '解答して次へ') + '</button>' +
+  '</div>';
+}
+
+function buildMiniFeedbackHtml_(q) {
+  if (!isMiniPractice_() || !hasCurrentQuestionGrading_()) return '';
+  var qs = state.questions || [];
+  var idx = state.questionIndex;
+  var isLast = idx >= qs.length - 1;
+  var html = '<div class="section-label">AI採点</div><div class="ai-panel">' +
+    buildAiGradingResultHtml_(state.aiGrading, { hideFlowActions: true }) +
+    '</div>';
+  html += '<div class="answer-section">' +
+    '<div class="section-label" style="padding-left:0">学習用参考答案</div>' +
+    '<div class="answer-box visible" style="display:block">' +
+    (q && q.modelAnswer ? escHtml(String(q.modelAnswer)) : '学習用参考答案はまだ登録されていません。') +
+    '</div></div>';
+  html += '<div class="card">' +
+    '<div class="section-title">次へ進む</div>' +
+    '<p class="small">講評と参考答案を確認したら次へ進んでください。</p>' +
+    '<div class="question-actions" style="margin:10px 0 0">' +
+      '<button type="button" class="btn btn-sm mini-next-btn">' + escHtml(isLast ? '演習を終える' : '次の問題へ') + '</button>' +
+    '</div>' +
+  '</div>';
+  return html;
+}
+
+function refreshQuestionFlowAndFeedback_() {
+  var flow = document.getElementById('question-flow-wrap');
+  if (flow) {
+    flow.innerHTML = buildQuestionFlowHtml_();
+    bindQuestionFlowButtons_();
+  }
+  var feedback = document.getElementById('mini-feedback-wrap');
+  if (feedback) {
+    feedback.innerHTML = buildMiniFeedbackHtml_(state.question);
+  }
+}
+
+function hasUnsavedQuestionDraft_() {
+  var input = document.getElementById('note-input');
+  if (!input) return false;
+  var current = String(input.value || '');
+  var saved = String(state.draftAnswer || '');
+  return current !== saved;
+}
+
+function saveCurrentDraftBeforeMove_(nextFn) {
+  var q = state.question;
+  var input = document.getElementById('note-input');
+  if ((!q || !input || !hasUnsavedQuestionDraft_()) && !hasPendingSessionAnswers_()) {
+    nextFn();
+    return;
+  }
+  var ok = window.confirm('下書き保存していない答案は消えます。保存せずに移動しますか？');
+  if (!ok) return;
+  nextFn();
+}
+
+function leaveQuestionToList_() {
+  saveCurrentDraftBeforeMove_(function() {
+    if (state.questions && state.questions.length) {
+      navigate('year');
+    } else {
+      state.home = null;
+      navigate('home');
+    }
+  });
+}
+
+function leaveQuestionToHome_() {
+  saveCurrentDraftBeforeMove_(function() {
+    state.home = null;
+    navigate('home');
+  });
+}
+
+function buildQuestionModelAnswerHtml_(q) {
+  return q.modelAnswer
+    ? '<div class="answer-section">' +
+        '<button class="answer-toggle" id="answer-toggle-btn">解答を見る</button>' +
+        '<div class="answer-box" id="answer-box">' + escHtml(String(q.modelAnswer)) + '</div>' +
+      '</div>'
+    : '<div class="card" style="background:var(--surface-2)">' +
+        '<p class="small">学習用参考答案はまだ登録されていません。</p>' +
+      '</div>';
+}
+
+function bindModelAnswerToggle_() {
+  var toggleBtn = document.getElementById('answer-toggle-btn');
+  if (!toggleBtn) return;
+  toggleBtn.addEventListener('click', function() {
+    var box = document.getElementById('answer-box');
+    var visible = box.classList.toggle('visible');
+    toggleBtn.textContent = visible ? '解答を隠す' : '解答を見る';
+  });
+}
+
+function refreshAiPanel_() {
+  var wrap = document.getElementById('ai-panel-wrap');
+  if (!wrap) {
+    return;
+  }
+  wrap.innerHTML = buildAiGradingHtml_(state.rubricStatus || {}, state.aiGrading);
+  bindAiGradeButton_();
+  bindAiFlowActionButtons_();
+}
+
+function isMiniPractice_() {
+  return String(state.practiceKind || '').toLowerCase() === 'mini';
+}
+
+function bindAiGradeButton_() {
+  var q = state.question;
+  var aiBtn = document.getElementById('ai-grade-btn');
+  if (!q || !aiBtn) return;
+  aiBtn.addEventListener('click', function() {
+    var input = document.getElementById('note-input');
+    var answerVal = input ? input.value : '';
+    if (!String(answerVal || '').trim()) {
+      showToast('答案を入力してください');
+      return;
+    }
+    aiBtn.disabled = true;
+    aiBtn.textContent = '採点中…';
+    callApi('apiGradeAnswer', [q.qId, answerVal], function(err, res) {
+      if (err || (res && res._error)) {
+        aiBtn.disabled = false;
+        aiBtn.textContent = getAiGradeButtonLabel_(state.rubricStatus || {});
+        showToast((res && res.message) || 'AI採点に失敗しました');
+        return;
+      }
+      if (res && res.skipped) {
+        aiBtn.disabled = false;
+        aiBtn.textContent = getAiGradeButtonLabel_(state.rubricStatus || {});
+        showToast(res.message || 'この問題は採点対象外です');
+        return;
+      }
+      state.rubricStatus = res.rubricStatus || state.rubricStatus;
+      state.aiGrading = res.grading || null;
+      if (state.aiGrading && !state.aiGrading.answerText) state.aiGrading.answerText = String(answerVal || '');
+      state.latestAiGrading = state.aiGrading;
+      if (res.submission) {
+        state.note = res.submission;
+        state.latestSubmission = res.submission;
+        state.submissionHistory = [res.submission].concat(state.submissionHistory || []);
+        state.draft = null;
+        state.draftAnswer = String(answerVal || '');
+        var qs = state.questions || [];
+        if (qs[state.questionIndex]) qs[state.questionIndex].submitted = true;
+      }
+      captureCurrentAnswer_();
+      rememberGradedAnswer_(q.qId, answerVal);
+      showToast('採点しました');
+      refreshAiPanel_();
+    });
+  });
+}
+
+function bindAiFlowActionButtons_() {
+  var discardBtn = document.getElementById('ai-next-discard-btn');
+  var draftNextBtn = document.getElementById('ai-next-draft-btn');
+  if (discardBtn) discardBtn.addEventListener('click', function() {
+    moveAfterAiGrading_(false, discardBtn);
+  });
+  if (draftNextBtn) draftNextBtn.addEventListener('click', function() {
+    moveAfterAiGrading_(true, draftNextBtn);
+  });
+}
+
+function moveAfterAiGrading_(saveDraft, sourceBtn) {
+  var q = state.question;
+  var input = document.getElementById('note-input');
+  var text = input ? input.value : '';
+  var proceed = function() {
+    captureCurrentAnswer_();
+    var qs = state.questions || [];
+    var idx = state.questionIndex;
+    if (idx < qs.length - 1 && qs[idx + 1]) {
+      loadQuestion(qs[idx + 1].qId, idx + 1);
+    } else {
+      loadPracticeResult_();
+    }
+  };
+  if (!saveDraft) {
+    state.draftAnswer = String(text || '');
+    proceed();
+    return;
+  }
+  if (!q) {
+    proceed();
+    return;
+  }
+  if (sourceBtn) {
+    sourceBtn.disabled = true;
+    sourceBtn.textContent = '保存中…';
+  }
+  callApi('apiSaveDraft', [q.qId, text], function(err, res) {
+    if (err || (res && res._error)) {
+      if (sourceBtn) {
+        sourceBtn.disabled = false;
+        sourceBtn.textContent = (state.questionIndex < (state.questions || []).length - 1) ? '下書き保存して次へ' : '下書き保存して結果へ';
+      }
+      showToast((res && res.message) || '下書き保存に失敗しました');
+      return;
+    }
+    state.draft = res.draft || null;
+    state.draftAnswer = String(text || '');
+    proceed();
+  });
+}
+
+function bindQuestionDraftButtons_() {
+  var q = state.question;
+  if (!q) return;
+  var draftBtn = document.getElementById('draft-save-btn');
+  var clearBtn = document.getElementById('clear-answer-btn');
+  var input = document.getElementById('note-input');
+
+  if (draftBtn) {
+    draftBtn.addEventListener('click', function() {
+      var text = input ? input.value : '';
+      draftBtn.disabled = true;
+      draftBtn.textContent = '保存中…';
+      callApi('apiSaveDraft', [q.qId, text], function(err, res) {
+        draftBtn.disabled = false;
+        draftBtn.textContent = '下書き保存';
+        if (err || (res && res._error)) {
+          showToast((res && res.message) || '下書き保存に失敗しました');
+          return;
+        }
+        state.draft = res.draft || null;
+        state.draftAnswer = String(text || '');
+        if (!state.savedDraftAnswers) state.savedDraftAnswers = {};
+        state.savedDraftAnswers[String(q.qId)] = String(text || '');
+        captureCurrentAnswer_();
+        showToast(res && res.cleared ? '下書きを削除しました' : '下書きを保存しました');
+      });
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      if (!window.confirm('答案欄を白紙にします。下書きも削除されます。よろしいですか？')) return;
+      var previousText = input ? input.value : '';
+      clearBtn.disabled = true;
+      clearBtn.textContent = '処理中…';
+      if (input) input.value = '';
+      captureCurrentAnswer_();
+      callApi('apiClearDraft', [q.qId], function(err, res) {
+        clearBtn.disabled = false;
+        clearBtn.textContent = '白紙にする';
+        if (err || (res && res._error)) {
+          if (input) input.value = previousText;
+          captureCurrentAnswer_();
+          showToast((res && res.message) || '白紙化に失敗しました');
+          return;
+        }
+        state.draft = null;
+        state.draftAnswer = '';
+        state.aiGrading = null;
+        if (state.savedDraftAnswers) delete state.savedDraftAnswers[String(q.qId)];
+        refreshAiPanel_();
+        refreshQuestionFlowAndFeedback_();
+        showToast('白紙にしました');
+      });
+    });
+  }
+}
+
+function bindQuestionNavButtons_() {
+  document.querySelectorAll('.question-pause-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      leaveQuestionToList_();
+    });
+  });
+  document.querySelectorAll('.question-home-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      leaveQuestionToHome_();
+    });
+  });
+}
+
+function bindQuestionFlowButtons_() {
+  var miniGradeBtn = document.getElementById('answer-ai-btn');
+  if (miniGradeBtn) {
+    miniGradeBtn.addEventListener('click', function() {
+      gradeCurrentMiniQuestion_(miniGradeBtn);
+    });
+  }
+  var nextBtn = document.getElementById('answer-next-btn');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function() {
+      moveToNextQuestionOrResult_();
+    });
+  }
+  document.querySelectorAll('.mini-next-btn').forEach(function(miniNextBtn) {
+    miniNextBtn.addEventListener('click', function() {
+      moveToNextQuestionOrResult_();
+    });
+  });
+}
+
+function moveToNextQuestionOrResult_() {
+  captureCurrentAnswer_();
+  var qs = state.questions || [];
+  var idx = state.questionIndex;
+  if (idx < qs.length - 1 && qs[idx + 1]) {
+    loadQuestion(qs[idx + 1].qId, idx + 1);
+  } else if (isMiniPractice_()) {
+    state.home = null;
+    navigate('home');
+  } else {
+    loadPracticeResult_();
+  }
+}
+
+function gradeCurrentMiniQuestion_(sourceBtn) {
+  var q = state.question;
+  var input = document.getElementById('note-input');
+  var answerVal = input ? input.value : '';
+  if (!q) return;
+  if (!String(answerVal || '').trim()) {
+    showToast('答案を入力してください');
+    return;
+  }
+  sourceBtn.disabled = true;
+  sourceBtn.textContent = '採点中…';
+  callApi('apiGradeAnswer', [q.qId, answerVal], function(err, res) {
+    if (err || (res && res._error)) {
+      sourceBtn.disabled = false;
+      sourceBtn.textContent = '解答してAI採点';
+      showToast((res && res.message) || 'AI採点に失敗しました');
+      return;
+    }
+    if (res && res.skipped) {
+      sourceBtn.disabled = false;
+      sourceBtn.textContent = '解答してAI採点';
+      showToast(res.message || 'この問題は採点対象外です');
+      return;
+    }
+    state.rubricStatus = res.rubricStatus || state.rubricStatus;
+    state.aiGrading = res.grading || null;
+    if (state.aiGrading && !state.aiGrading.answerText) state.aiGrading.answerText = String(answerVal || '');
+    state.latestAiGrading = state.aiGrading;
+    if (res.submission) {
+      state.note = res.submission;
+      state.latestSubmission = res.submission;
+      state.submissionHistory = [res.submission].concat(state.submissionHistory || []);
+      state.draft = null;
+      state.draftAnswer = String(answerVal || '');
+      var qs = state.questions || [];
+      if (qs[state.questionIndex]) qs[state.questionIndex].submitted = true;
+    }
+    captureCurrentAnswer_();
+    rememberGradedAnswer_(q.qId, answerVal);
+    showToast('採点しました');
+    refreshQuestionFlowAndFeedback_();
   });
 }
 
@@ -316,85 +2136,88 @@ function renderQuestion() {
   var q = state.question;
   if (!q) { navigate('home'); return; }
 
-  var backLabel = (state.year ? state.year + '年度' : '一覧');
+  var backLabel = (state.year ? formatListTitle_(state.year) : '一覧');
   setHeader('問' + escHtml(String(q.number)), backLabel, function() {
-    navigate('year');
+    leaveQuestionToList_();
   });
 
-  var noteText = state.note ? escHtml(String(state.note.note || '')) : '';
+  var mainEl = document.getElementById('app-main');
+  if (mainEl) mainEl.className = 'question-screen';
+  var noteText = escHtml(String(state.draftAnswer !== undefined && state.draftAnswer !== null ? state.draftAnswer : ''));
 
-  var scoreButtons = '';
-  for (var i = 1; i <= 5; i++) {
-    var labels = ['', '×', '△', '○', '◎', '完璧'];
-    var active = state.selectedScore === i ? ' active' : '';
-    scoreButtons +=
-      '<button class="score-btn' + active + '" data-score="' + i + '">' +
-        labels[i] + ' ' + i +
-      '</button>';
-  }
+  var modelAnswerHtml = '';
+  var aiPanelHtml = '';
+  var questionActionsHtml = buildQuestionActionsHtml_();
+  var mediaHtml = buildQuestionMediaHtml_(q);
+  var hasMedia = !!mediaHtml;
+  var draftStatusHtml = state.draft
+    ? '<div class="draft-status">保存済みの下書きを復元しています。</div>'
+    : '<div class="draft-status">' + (isMiniPractice_()
+      ? '再挑戦は空欄から開始します。答案を書いたら「解答してAI採点」を押してください。途中で止める場合だけ下書き保存してください。'
+      : '再挑戦は空欄から開始します。各問は「解答して次へ」で進み、最後に「結果を見る」でまとめてAI採点します。途中で止める場合だけ下書き保存してください。') + '</div>';
+  var flowHtml = '<div id="question-flow-wrap">' + buildQuestionFlowHtml_() + '</div>';
+  var feedbackHtml = '<div id="mini-feedback-wrap">' + buildMiniFeedbackHtml_(q) + '</div>';
 
-  var modelAnswerHtml = q.modelAnswer
-    ? '<div class="answer-section">' +
-        '<button class="answer-toggle" id="answer-toggle-btn">模範解答を見る</button>' +
-        '<div class="answer-box" id="answer-box">' + escHtml(String(q.modelAnswer)) + '</div>' +
-      '</div>'
-    : '';
+  var leftHtml =
+    '<div class="question-main-pane">' +
+      '<div class="stem-box">' + renderStemHtml_(q) + '</div>' +
+      (hasMedia ? '<div class="mobile-media-slot">' + mediaHtml + '</div>' : '') +
+      '<div class="section-label">あなたの答案</div>' +
+      draftStatusHtml +
+      '<div class="card" style="padding-bottom:3vw">' +
+        '<textarea class="note-area" id="note-input" placeholder="ここに答案を書いてください。途中で止める場合は下書き保存できます。">' + noteText + '</textarea>' +
+        '<div class="answer-tools">' +
+          '<button class="btn secondary btn-sm" id="draft-save-btn">下書き保存</button>' +
+          '<button class="btn secondary btn-sm" id="clear-answer-btn">白紙にする</button>' +
+        '</div>' +
+      '</div>' +
+      aiPanelHtml +
+      modelAnswerHtml +
+      flowHtml +
+      feedbackHtml +
+      questionActionsHtml +
+    '</div>';
 
   var html =
-    '<div class="stem-box">' + escHtml(String(q.stem || '')) + '</div>' +
-    modelAnswerHtml +
-    '<div class="section-label">メモ</div>' +
-    '<div class="card" style="padding-bottom:3vw">' +
-      '<textarea class="note-area" id="note-input" placeholder="気づき・キーワードを記入…">' + noteText + '</textarea>' +
-    '</div>' +
-    '<div class="section-label">自己採点</div>' +
-    '<div class="card">' +
-      '<div class="self-score" id="score-btns">' + scoreButtons + '</div>' +
-    '</div>' +
-    '<div style="margin:3vw 1vw">' +
-      '<button class="btn" id="save-btn">保存</button>' +
+    '<div class="question-detail-layout' + (hasMedia ? ' has-media' : '') + '">' +
+      leftHtml +
+      (hasMedia ? '<aside class="question-media-pane">' + mediaHtml + '</aside>' : '') +
     '</div>';
 
   document.getElementById('app-main').innerHTML = html;
 
-  var toggleBtn = document.getElementById('answer-toggle-btn');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', function() {
-      var box = document.getElementById('answer-box');
-      var visible = box.classList.toggle('visible');
-      toggleBtn.textContent = visible ? '模範解答を隠す' : '模範解答を見る';
+  var noteInput = document.getElementById('note-input');
+  if (noteInput) {
+    noteInput.addEventListener('input', function() {
+      captureCurrentAnswer_();
+      syncCurrentQuestionGrading_(noteInput.value);
     });
   }
 
-  document.querySelectorAll('.score-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      state.selectedScore = Number(btn.getAttribute('data-score'));
-      document.querySelectorAll('.score-btn').forEach(function(b) {
-        b.classList.toggle('active', Number(b.getAttribute('data-score')) === state.selectedScore);
-      });
-    });
-  });
+  bindModelAnswerToggle_();
+  bindQuestionDraftButtons_();
+  bindQuestionNavButtons_();
+  bindQuestionFlowButtons_();
+}
 
-  document.getElementById('save-btn').addEventListener('click', function() {
-    var noteVal = document.getElementById('note-input').value;
-    var saveBtn = document.getElementById('save-btn');
-    saveBtn.disabled = true;
-    saveBtn.textContent = '保存中…';
-    callApi('apiSaveNote', [q.qId, noteVal, state.selectedScore], function(err, res) {
-      saveBtn.disabled = false;
-      saveBtn.textContent = '保存';
-      if (err || (res && res._error)) {
-        showToast('保存に失敗しました');
-        return;
-      }
-      showToast('保存しました');
-      state.note = { note: noteVal, selfScore: state.selectedScore };
-    });
-  });
+function escapeJsArg_(str) {
+  return String(str || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/[\r\n]+/g, ' ');
+}
+
+function toggleSection(headerEl) {
+  var body = headerEl.nextElementSibling;
+  if (!body) return;
+  var toggle = headerEl.querySelector('.section-toggle');
+  body.classList.toggle('collapsed');
+  if (toggle) toggle.classList.toggle('open', !body.classList.contains('collapsed'));
 }
 
 // ─── Boot ─────────────────────────────────────────────────
 window.addEventListener('load', function() {
+  initScrollTopButton();
   initAuth();
 });
 </script>

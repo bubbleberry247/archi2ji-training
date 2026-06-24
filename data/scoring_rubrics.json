@@ -1,0 +1,1986 @@
+[
+  {
+    "qId": "Q_H28_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "要求品質・管理項目・理由の対応",
+          "points": 3,
+          "description": "要求品質、工種、品質管理項目、取り上げた理由が施工条件と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、品質管理として妥当である。"
+        },
+        {
+          "name": "周知・確認方法と表現の明確性",
+          "points": 2,
+          "description": "協力業者等への周知と施工確認の方法が組織的で、読みやすく説明されている。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、工事概要、要求品質、管理項目、理由、実施内容、周知・確認方法の構造で評価する。",
+      "officialTextVerified": true
+    }
+  },
+  {
+    "qId": "Q_H28_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・設備・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ],
+      "officialTextVerified": true
+    }
+  },
+  {
+    "qId": "Q_H28_3",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。不適当箇所番号と訂正語句・数値は復習用として扱う。",
+      "officialTextVerified": true
+    }
+  },
+  {
+    "qId": "Q_H28_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・設備・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ],
+      "officialTextVerified": true
+    }
+  },
+  {
+    "qId": "Q_H28_5",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、工事概要、作業名、先行後続関係を正しく読み取る。"
+        },
+        {
+          "name": "工程判断の根拠",
+          "points": 3,
+          "description": "作業A・B、不適当工程、外部建具工程の判断根拠を示す。"
+        },
+        {
+          "name": "施工順序との整合",
+          "points": 3,
+          "description": "躯体、外装、建具、防水、内装、検査の一般的な施工順序と整合している。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、月次・旬日など指定形式を守っている。"
+        }
+      ],
+      "parts": [
+        {
+          "partId": "1",
+          "type": "short_answer",
+          "description": "鉄骨工事A及び内装工事Bに該当する作業名"
+        },
+        {
+          "partId": "2",
+          "type": "schedule_reasoning",
+          "description": "終了日が工程上最も不適当な作業名と適切な終了日"
+        },
+        {
+          "partId": "3",
+          "type": "schedule_reasoning",
+          "description": "2〜5F外部建具取付けの開始日及び終了日"
+        }
+      ],
+      "officialTextVerified": true
+    }
+  },
+  {
+    "qId": "Q_H28_6",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。法令語句は復習用として扱う。",
+      "officialTextVerified": true
+    }
+  },
+  {
+    "qId": "Q_H29_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "課題・管理項目・理由の対応",
+          "points": 3,
+          "description": "重点管理項目、設定理由、制約条件が実際の施工状況と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、施工管理として妥当である。"
+        },
+        {
+          "name": "効果・再発防止・表現の明確性",
+          "points": 2,
+          "description": "品質、工程、安全、生産性等の効果が因果関係で説明され、読みやすい。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、構造、具体性、因果関係、施工管理上の妥当性で評価する。"
+    }
+  },
+  {
+    "qId": "Q_H29_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_H29_3",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_H29_4",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_H29_5",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": [
+        {
+          "id": "1",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "2",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "3",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "4",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_H29_6",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_H30_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "課題・管理項目・理由の対応",
+          "points": 3,
+          "description": "重点管理項目、設定理由、制約条件が実際の施工状況と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、施工管理として妥当である。"
+        },
+        {
+          "name": "効果・再発防止・表現の明確性",
+          "points": 2,
+          "description": "品質、工程、安全、生産性等の効果が因果関係で説明され、読みやすい。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、構造、具体性、因果関係、施工管理上の妥当性で評価する。"
+    }
+  },
+  {
+    "qId": "Q_H30_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_H30_3",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_H30_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_H30_5",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": [
+        {
+          "id": "1",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "2",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "3",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_H30_6",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R1_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "課題・管理項目・理由の対応",
+          "points": 3,
+          "description": "重点管理項目、設定理由、制約条件が実際の施工状況と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、施工管理として妥当である。"
+        },
+        {
+          "name": "効果・再発防止・表現の明確性",
+          "points": 2,
+          "description": "品質、工程、安全、生産性等の効果が因果関係で説明され、読みやすい。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、構造、具体性、因果関係、施工管理上の妥当性で評価する。"
+    }
+  },
+  {
+    "qId": "Q_R1_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R1_3",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R1_4",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R1_5",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": []
+    }
+  },
+  {
+    "qId": "Q_R1_6",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R2_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "課題・管理項目・理由の対応",
+          "points": 3,
+          "description": "重点管理項目、設定理由、制約条件が実際の施工状況と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、施工管理として妥当である。"
+        },
+        {
+          "name": "効果・再発防止・表現の明確性",
+          "points": 2,
+          "description": "品質、工程、安全、生産性等の効果が因果関係で説明され、読みやすい。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、構造、具体性、因果関係、施工管理上の妥当性で評価する。"
+    }
+  },
+  {
+    "qId": "Q_R2_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R2_3",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R2_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R2_5",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": []
+    }
+  },
+  {
+    "qId": "Q_R2_6",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R3_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "課題・管理項目・理由の対応",
+          "points": 3,
+          "description": "重点管理項目、設定理由、制約条件が実際の施工状況と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、施工管理として妥当である。"
+        },
+        {
+          "name": "効果・再発防止・表現の明確性",
+          "points": 2,
+          "description": "品質、工程、安全、生産性等の効果が因果関係で説明され、読みやすい。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、構造、具体性、因果関係、施工管理上の妥当性で評価する。"
+    }
+  },
+  {
+    "qId": "Q_R3_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R3_3",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": []
+    }
+  },
+  {
+    "qId": "Q_R3_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R3_5",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R3_6",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R4_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "課題・管理項目・理由の対応",
+          "points": 3,
+          "description": "重点管理項目、設定理由、制約条件が実際の施工状況と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、施工管理として妥当である。"
+        },
+        {
+          "name": "効果・再発防止・表現の明確性",
+          "points": 2,
+          "description": "品質、工程、安全、生産性等の効果が因果関係で説明され、読みやすい。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、構造、具体性、因果関係、施工管理上の妥当性で評価する。"
+    }
+  },
+  {
+    "qId": "Q_R4_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R4_3",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": []
+    }
+  },
+  {
+    "qId": "Q_R4_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R4_5",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R4_6",
+    "responseType": "cloze_or_numeric",
+    "sourceQuality": "reference_only",
+    "scoreMode": "practice_only",
+    "maxScore": 10,
+    "reviewStatus": "needs_answer_key",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "answerKeyRequired": true,
+      "gradingPolicy": "正答キーが確認できるまで自動採点しない。語句・数値は復習用として扱う。"
+    }
+  },
+  {
+    "qId": "Q_R5_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "工事概要と立場の具体性",
+          "points": 2,
+          "description": "工事名、場所、用途・構造・規模、工期、立場が具体的で一貫している。"
+        },
+        {
+          "name": "課題・管理項目・理由の対応",
+          "points": 3,
+          "description": "重点管理項目、設定理由、制約条件が実際の施工状況と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の妥当性",
+          "points": 3,
+          "description": "確認方法、記録、是正、関係者調整などが具体的で、施工管理として妥当である。"
+        },
+        {
+          "name": "効果・再発防止・表現の明確性",
+          "points": 2,
+          "description": "品質、工程、安全、生産性等の効果が因果関係で説明され、読みやすい。"
+        }
+      ],
+      "scoringNotes": "経験記述は模範解答への一致ではなく、構造、具体性、因果関係、施工管理上の妥当性で評価する。"
+    }
+  },
+  {
+    "qId": "Q_R5_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R5_3",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": [
+        {
+          "id": "1",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "2",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "3",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "4",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R5_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R5_5",
+    "responseType": "multiple_choice",
+    "sourceQuality": "answer_key_available",
+    "scoreMode": "deterministic",
+    "maxScore": 10,
+    "reviewStatus": "ready",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "correctAnswers": [
+        4,
+        3,
+        3,
+        2,
+        4,
+        5,
+        3,
+        1
+      ],
+      "gradingPolicy": "正答キーに基づくdeterministic採点。AIに正誤判定させない。",
+      "excludeFromTotal": false
+    }
+  },
+  {
+    "qId": "Q_R5_6",
+    "responseType": "multiple_choice",
+    "sourceQuality": "answer_key_available",
+    "scoreMode": "deterministic",
+    "maxScore": 10,
+    "reviewStatus": "ready",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "correctAnswers": {
+        "1-1": 3,
+        "1-2": 1,
+        "2-3": 3,
+        "2-4": 1,
+        "3-5": 5,
+        "3-6": 4
+      },
+      "gradingPolicy": "正答キーに基づくdeterministic採点。AIに正誤判定させない。",
+      "excludeFromTotal": false
+    }
+  },
+  {
+    "qId": "Q_R6_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問条件と固定工事概要への適合",
+          "points": 2,
+          "description": "右に示す工事概要を前提に、施工上必要な工種・作業を選び、除外条件、3項目の重複禁止、統括的管理の立場に沿っている。工事名・場所・規模・工期の記入は、問題文が要求していない限り減点対象にしない。"
+        },
+        {
+          "name": "現場作業軽減策・理由・品質確保の対応",
+          "points": 3,
+          "description": "3つの軽減策について、工種又は作業、軽減策、軽減に繋がる理由、確保すべき品質が一貫している。"
+        },
+        {
+          "name": "施工上の留意事項と管理方法の妥当性",
+          "points": 3,
+          "description": "軽減策の実施に当たり、品質低下を防ぐ確認、記録、是正、関係者調整などが具体的で施工管理上妥当である。"
+        },
+        {
+          "name": "時間外労働要因・組織的対策・表現の明確性",
+          "points": 2,
+          "description": "問2で時間外労働を増長させる要因、その理由、組織としての取組や工夫を具体的かつ因果関係で説明している。"
+        }
+      ],
+      "scoringNotes": "R6問1は固定工事概要を前提にした記述問題であり、受験者が工事名・場所・規模・工期・担当立場を答案内に書く問題ではない。工事概要未記載だけで減点せず、右に示す工事概要への適合、3つの軽減策の重複回避、品質確保、施工上の留意事項、時間外労働対策を評価する。"
+    }
+  },
+  {
+    "qId": "Q_R6_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R6_3",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": [
+        {
+          "id": "1",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "2",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "3",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "4",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R6_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R6_5",
+    "responseType": "multiple_choice",
+    "sourceQuality": "answer_key_available",
+    "scoreMode": "deterministic",
+    "maxScore": 10,
+    "reviewStatus": "ready",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "correctAnswers": [
+        3,
+        5,
+        2,
+        4,
+        3,
+        1,
+        2,
+        5
+      ],
+      "gradingPolicy": "正答キーに基づくdeterministic採点。AIに正誤判定させない。",
+      "excludeFromTotal": false
+    }
+  },
+  {
+    "qId": "Q_R6_6",
+    "responseType": "multiple_choice",
+    "sourceQuality": "answer_key_available",
+    "scoreMode": "deterministic",
+    "maxScore": 10,
+    "reviewStatus": "ready",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "correctAnswers": {
+        "1-1": 4,
+        "1-2": 2,
+        "2-3": 1,
+        "2-4": 3,
+        "3-5": 5,
+        "3-6": 1
+      },
+      "gradingPolicy": "正答キーに基づくdeterministic採点。AIに正誤判定させない。",
+      "excludeFromTotal": false
+    }
+  },
+  {
+    "qId": "Q_R7_1",
+    "responseType": "experience_essay",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問条件と固定工事概要への適合",
+          "points": 2,
+          "description": "右の工事概要に示す事務所ビル新築工事を前提に、施工上必要な工種・作業を3つ選び、除外条件、②③の重複禁止、統括的施工管理の立場に沿っている。工事名・場所・規模・工期の記入は、問題文が要求していない限り減点対象にしない。"
+        },
+        {
+          "name": "品質管理項目・理由の妥当性",
+          "points": 3,
+          "description": "3つの工種又は作業について、重点を置く品質管理項目とその理由が、構造耐力、耐久性、漏水防止、仕上り等の品質要求と対応している。"
+        },
+        {
+          "name": "実施内容と施工管理上の具体性",
+          "points": 3,
+          "description": "施工前・施工中・施工後の確認、検査、記録、是正、再確認、監理者・協力会社との調整などが具体的で妥当である。"
+        },
+        {
+          "name": "組織的品質管理活動・効果・表現の明確性",
+          "points": 2,
+          "description": "問2で、1③と同一内容にならない組織的品質管理活動、協力会社等への伝達方法、その良い影響を具体的かつ因果関係で説明している。"
+        }
+      ],
+      "scoringNotes": "R7問1は固定工事概要を前提にした品質管理記述問題であり、受験者が工事名・場所・規模・工期・担当立場を答案内に書く問題ではない。工事概要未記載だけで減点せず、右の工事概要への適合、3つの品質管理項目の重複回避、理由、実施内容、問2の組織的品質管理活動を評価する。"
+    }
+  },
+  {
+    "qId": "Q_R7_2",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R7_3",
+    "responseType": "mixed",
+    "sourceQuality": "reference_only",
+    "scoreMode": "ai_estimate",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "問題条件の読み取り",
+          "points": 2,
+          "description": "工程表、作業内容表、作業班制約、除外条件を正しく読み取る。"
+        },
+        {
+          "name": "計算・作業順序の根拠",
+          "points": 3,
+          "description": "先行後続関係、フロート、総所要日数などの根拠を示す。"
+        },
+        {
+          "name": "記述回答の施工妥当性",
+          "points": 3,
+          "description": "作業内容や工程見直しの説明が一般的な施工順序と整合する。"
+        },
+        {
+          "name": "答案形式と小問対応",
+          "points": 2,
+          "description": "各小問に過不足なく答え、数値・語句・理由を区別して書く。"
+        }
+      ],
+      "parts": [
+        {
+          "id": "1",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "2",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "3",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        },
+        {
+          "id": "4",
+          "scoreMode": "ai_estimate",
+          "needsAnswerKey": true
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R7_4",
+    "responseType": "technical_short_answer",
+    "sourceQuality": "reference_only",
+    "scoreMode": "rubric_ai",
+    "maxScore": 10,
+    "reviewStatus": "needs_review",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "displayNotice": "AI推定点・公式採点ではありません。",
+      "excludeFromTotal": true,
+      "criteria": [
+        {
+          "name": "設問要求と個数の充足",
+          "points": 2,
+          "description": "設問が求める対象・個数・除外条件を満たしている。"
+        },
+        {
+          "name": "必須概念の理解",
+          "points": 3,
+          "description": "工種・法令・管理項目に関する主要概念が正しく含まれている。"
+        },
+        {
+          "name": "因果関係と理由",
+          "points": 2,
+          "description": "留意事項や対策の理由が品質・安全・工程への影響と結び付いている。"
+        },
+        {
+          "name": "施工管理上の妥当性",
+          "points": 2,
+          "description": "確認方法、管理値、記録、是正など実務上の妥当性がある。"
+        },
+        {
+          "name": "簡潔性と重複回避",
+          "points": 1,
+          "description": "重複や抽象論を避け、読みやすく具体的に記述している。"
+        }
+      ]
+    }
+  },
+  {
+    "qId": "Q_R7_5",
+    "responseType": "multiple_choice",
+    "sourceQuality": "answer_key_available",
+    "scoreMode": "deterministic",
+    "maxScore": 10,
+    "reviewStatus": "ready",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "correctAnswers": [
+        4,
+        2,
+        3,
+        3,
+        5,
+        5,
+        2,
+        1
+      ],
+      "gradingPolicy": "正答キーに基づくdeterministic採点。AIに正誤判定させない。",
+      "excludeFromTotal": false
+    }
+  },
+  {
+    "qId": "Q_R7_6",
+    "responseType": "multiple_choice",
+    "sourceQuality": "answer_key_available",
+    "scoreMode": "deterministic",
+    "maxScore": 10,
+    "reviewStatus": "ready",
+    "rubricJson": {
+      "generatorModel": "gpt-5.5",
+      "correctAnswers": {
+        "1-1": 5,
+        "1-2": 3,
+        "2-3": 2,
+        "2-4": 1,
+        "3-5": 4,
+        "3-6": 2
+      },
+      "gradingPolicy": "正答キーに基づくdeterministic採点。AIに正誤判定させない。",
+      "excludeFromTotal": false
+    }
+  }
+]
