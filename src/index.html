@@ -1290,7 +1290,8 @@ function selectCurrentAnswerAiGrading_(grading, answerText) {
 }
 
 function syncCurrentQuestionGrading_(answerText) {
-  var next = selectCurrentAnswerAiGrading_(state.latestAiGrading, answerText);
+  var source = state.aiGrading || (isMiniPractice_() ? null : state.latestAiGrading);
+  var next = selectCurrentAnswerAiGrading_(source, answerText);
   if (state.aiGrading === next) return;
   state.aiGrading = next;
   refreshAiPanel_();
@@ -1527,6 +1528,7 @@ function loadQuestion(qId, idx) {
     var draft = res.draft || null;
     var answerText = hasSessionAnswer_(qId) ? String(state.sessionAnswers[String(qId)] || '') : (draft ? String(draft.draftText || '') : '');
     var latestAiGrading = res.latestAiGrading || null;
+    var initialAiGrading = isMiniPractice_() ? null : selectCurrentAnswerAiGrading_(latestAiGrading, answerText);
     navigate('question', {
       question: res.question,
       note: res.latestSubmission || res.note || null,
@@ -1535,7 +1537,7 @@ function loadQuestion(qId, idx) {
       submissionHistory: res.submissionHistory || [],
       rubricStatus: res.rubricStatus || null,
       latestAiGrading: latestAiGrading,
-      aiGrading: selectCurrentAnswerAiGrading_(latestAiGrading, answerText),
+      aiGrading: initialAiGrading,
       draftAnswer: answerText
     });
   });
