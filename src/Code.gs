@@ -1,6 +1,6 @@
 // Code.gs — doGet entry point + setup
 
-var ARCHI2JI_BUILD_VERSION_ = '2026-06-24-answer-flow-v7';
+var ARCHI2JI_BUILD_VERSION_ = '2026-06-24-user-name-home-v8';
 
 function doGet(e) {
   // Auto-setup on first access

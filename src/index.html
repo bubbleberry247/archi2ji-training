@@ -464,9 +464,8 @@ function render() {
   showLoading(false);
   var mainEl = document.getElementById('app-main');
   if (mainEl) mainEl.className = '';
-  // Update user name in header
   var userEl = document.getElementById('header-user');
-  if (userEl) userEl.textContent = state.screen === 'home' ? '' : (USER_DISPLAY ? USER_DISPLAY : '');
+  if (userEl) userEl.textContent = state.screen === 'home' ? (USER_DISPLAY ? USER_DISPLAY : '') : '';
 
   switch (state.screen) {
     case 'login':    renderLogin(); break;
