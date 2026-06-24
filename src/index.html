@@ -43,6 +43,13 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:600}
 .result-answer-box{border:1px solid var(--border);border-radius:8px;background:#fff;padding:10px;font-size:.84rem;line-height:1.75;white-space:pre-wrap;max-height:none;overflow:visible}
 .result-ai-summary{border:1px solid var(--border);border-radius:8px;background:#fff;padding:10px;font-size:.84rem;line-height:1.65}
 .result-ai-summary .ai-result{border-top:0;margin-top:0;padding-top:0}
+.practice-summary-card{border:1px solid var(--border);border-radius:12px;background:#fff;padding:14px;margin-top:12px;line-height:1.7}
+.practice-summary-headline{font-weight:800;color:var(--text-1);margin-bottom:6px}
+.practice-summary-tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.practice-summary-tag{display:inline-flex;align-items:center;border-radius:999px;background:var(--accent-lt);color:var(--accent);padding:5px 10px;font-size:.78rem;font-weight:800}
+.practice-summary-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+.practice-summary-list{margin:6px 0 0;padding-left:18px;font-size:.84rem;color:var(--text-2)}
+.practice-summary-list li{margin:4px 0}
 .stem-box{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:4vw 3.5vw;margin:2vw 1vw;font-size:.92rem;line-height:1.85;white-space:pre-wrap}
 .underline-token{display:inline;border-bottom:2px solid var(--accent);background:#fff7cc;font-weight:700;padding:0 2px}
 .underline-badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.35em;height:1.35em;border-radius:999px;background:var(--accent);color:#fff;font-size:.72em;font-weight:800;line-height:1;margin:0 2px;vertical-align:.08em}
@@ -269,6 +276,8 @@ var state = {
   admin: null
 };
 
+var PRACTICE_SESSION_STORAGE_PREFIX_ = 'archi2ji_practice_session_answers:';
+
 var USER_KEY = '';
 var USER_DISPLAY = '';
 var USER_ROLE = 'user';
@@ -458,6 +467,50 @@ function navigate(screen, params) {
   }
   render();
   scrollToPageTop_();
+}
+
+function getPracticeSessionStorageKey_() {
+  if (isMiniPractice_()) return '';
+  var ids = (state.questions || []).map(function(q) { return String(q.qId || ''); }).filter(Boolean);
+  if (!ids.length) return '';
+  return PRACTICE_SESSION_STORAGE_PREFIX_ + [
+    USER_KEY || 'anonymous',
+    String(state.practiceKind || 'practice'),
+    String(state.year || ''),
+    ids.join('|')
+  ].join(':');
+}
+
+function restorePracticeSessionAnswers_() {
+  if (isMiniPractice_()) return;
+  var key = getPracticeSessionStorageKey_();
+  if (!key) return;
+  try {
+    var raw = localStorage.getItem(key);
+    if (!raw) return;
+    var saved = JSON.parse(raw);
+    if (saved && saved.answers && typeof saved.answers === 'object') {
+      state.sessionAnswers = saved.answers;
+    }
+  } catch (e) {}
+}
+
+function savePracticeSessionAnswers_() {
+  if (isMiniPractice_()) return;
+  var key = getPracticeSessionStorageKey_();
+  if (!key) return;
+  try {
+    localStorage.setItem(key, JSON.stringify({
+      updatedAt: new Date().toISOString(),
+      answers: state.sessionAnswers || {}
+    }));
+  } catch (e) {}
+}
+
+function clearPracticeSessionAnswers_() {
+  var key = getPracticeSessionStorageKey_();
+  if (!key) return;
+  try { localStorage.removeItem(key); } catch (e) {}
 }
 
 function render() {
@@ -1207,7 +1260,10 @@ function loadYear(year) {
       showToast('読み込みに失敗しました');
       return;
     }
-    navigate('year', { year: year, questions: res });
+    state.year = year;
+    state.questions = (res && res.questions) ? res.questions : (Array.isArray(res) ? res : []);
+    restorePracticeSessionAnswers_();
+    navigate('year', { year: state.year, questions: state.questions });
   });
 }
 
@@ -1225,12 +1281,15 @@ function loadPractice(kind, key, title) {
       return;
     }
     var list = (res && res.questions) ? res.questions : (Array.isArray(res) ? res : []);
+    state.year = (res && res.title) ? res.title : title;
+    state.questions = list;
+    restorePracticeSessionAnswers_();
     if (String(kind) === 'mini' && list.length > 0) {
-      navigate('year', { year: (res && res.title) ? res.title : title, questions: list });
+      navigate('year', { year: state.year, questions: state.questions });
       loadQuestion(list[0].qId, 0);
       return;
     }
-    navigate('year', { year: (res && res.title) ? res.title : title, questions: list });
+    navigate('year', { year: state.year, questions: state.questions });
   });
 }
 
@@ -1254,6 +1313,7 @@ function loadPracticeResult_() {
         showToast((res && res.message) || '結果の読み込みに失敗しました');
         return;
       }
+      clearPracticeSessionAnswers_();
       navigate('result', { practiceResult: res });
     });
   });
@@ -1270,6 +1330,7 @@ function captureCurrentAnswer_() {
   var text = String(input.value || '');
   if (!state.sessionAnswers) state.sessionAnswers = {};
   state.sessionAnswers[String(q.qId)] = text;
+  savePracticeSessionAnswers_();
   return text;
 }
 
@@ -1413,7 +1474,7 @@ function renderYear() {
 function renderPracticeResult() {
   var result = state.practiceResult || {};
   var rows = result.rows || [];
-  setHeader('演習結果', '一覧', function() { navigate('year'); });
+  setHeader('演習結果');
   var scoreText = Number(result.aiMaxScore || 0) > 0
     ? formatAiScore_(Number(result.aiScore || 0)) + ' / ' + formatAiScore_(Number(result.aiMaxScore || 0)) + '（' + formatAiScore_(Number(result.aiScorePct || 0)) + '%）'
     : '-';
@@ -1432,6 +1493,7 @@ function renderPracticeResult() {
       '</div>' +
       '<p class="small" style="margin:10px 0 0">AI推定点・公式採点ではありません。採点観点未整備の問題は演習と合計から除外します。</p>' +
     '</div>' +
+    buildPracticeSummaryHtml_(result.practiceSummary) +
     '<div class="card">' +
       '<div class="section-title">問題別結果</div>' +
       '<p class="small" style="margin:0 0 12px">AI採点した問題の答案、採点結果、加点ポイントをまとめて確認できます。</p>';
@@ -1465,8 +1527,7 @@ function renderPracticeResult() {
   }
   html +=
       '<div class="question-actions" style="margin:14px 0 0">' +
-        '<button class="btn secondary btn-sm" id="result-list-btn">一覧へ戻る</button>' +
-        '<button class="btn secondary btn-sm" id="result-home-btn">ホームへ戻る</button>' +
+        '<button class="btn secondary btn-sm" id="result-home-btn">Homeへ戻る</button>' +
       '</div>' +
     '</div>';
   document.getElementById('app-main').innerHTML = html;
@@ -1477,10 +1538,39 @@ function renderPracticeResult() {
       if (qId) loadQuestion(qId, idx);
     });
   });
-  var listBtn = document.getElementById('result-list-btn');
-  if (listBtn) listBtn.addEventListener('click', function() { navigate('year'); });
   var homeBtn = document.getElementById('result-home-btn');
   if (homeBtn) homeBtn.addEventListener('click', function() { state.home = null; navigate('home'); });
+}
+
+function buildPracticeSummaryHtml_(summary) {
+  summary = summary || {};
+  var hasContent = summary.headline || (summary.weakTags && summary.weakTags.length) || (summary.nextActions && summary.nextActions.length);
+  if (!hasContent) return '';
+  var html = '<div class="card"><div class="section-title">今回の総評</div><div class="practice-summary-card">';
+  html += '<div class="practice-summary-headline">' + escHtml(summary.headline || 'AI採点結果をもとに今回の演習を整理しました。') + '</div>';
+  if (summary.scoreComment) html += '<div class="small">' + escHtml(summary.scoreComment) + '</div>';
+  if (summary.weakTags && summary.weakTags.length) {
+    html += '<div class="practice-summary-tags">';
+    summary.weakTags.forEach(function(tag) {
+      html += '<span class="practice-summary-tag">' + escHtml(tag) + '</span>';
+    });
+    html += '</div>';
+  }
+  html += '<div class="practice-summary-grid">';
+  html += buildPracticeSummaryListHtml_('良い点', summary.strengths);
+  html += buildPracticeSummaryListHtml_('次に直すこと', summary.nextActions);
+  html += '</div></div></div>';
+  return html;
+}
+
+function buildPracticeSummaryListHtml_(title, items) {
+  items = Array.isArray(items) ? items.filter(function(v) { return String(v || '').trim(); }) : [];
+  if (!items.length) return '';
+  var html = '<div><div class="result-detail-title">' + escHtml(title) + '</div><ul class="practice-summary-list">';
+  items.slice(0, 5).forEach(function(item) {
+    html += '<li>' + escHtml(String(item || '')) + '</li>';
+  });
+  return html + '</ul></div>';
 }
 
 function buildPracticeResultDetailHtml_(row, grading, idx) {
@@ -1516,30 +1606,57 @@ function buildPracticeResultDetailHtml_(row, grading, idx) {
 }
 
 // ─── Screen: Question detail ──────────────────────────────
+function getQuestionFallbackFromState_(qId, idx) {
+  var key = String(qId || '');
+  var qs = state.questions || [];
+  if (typeof idx === 'number' && qs[idx] && String(qs[idx].qId || '') === key) return qs[idx];
+  for (var i = 0; i < qs.length; i++) {
+    if (String(qs[i].qId || '') === key) return qs[i];
+  }
+  return null;
+}
+
+function applyLoadedQuestion_(res, qId) {
+  var draft = res.draft || null;
+  var answerText = hasSessionAnswer_(qId) ? String(state.sessionAnswers[String(qId)] || '') : (draft ? String(draft.draftText || '') : '');
+  var latestAiGrading = res.latestAiGrading || null;
+  var initialAiGrading = isMiniPractice_() ? null : selectCurrentAnswerAiGrading_(latestAiGrading, answerText);
+  navigate('question', {
+    question: res.question,
+    note: res.latestSubmission || res.note || null,
+    draft: draft,
+    latestSubmission: res.latestSubmission || res.note || null,
+    submissionHistory: res.submissionHistory || [],
+    rubricStatus: res.rubricStatus || null,
+    latestAiGrading: latestAiGrading,
+    aiGrading: initialAiGrading,
+    draftAnswer: answerText
+  });
+}
+
 function loadQuestion(qId, idx) {
   showLoading(true);
   if (idx !== undefined) state.questionIndex = idx;
   callApi('apiGetQuestion', [qId], function(err, res) {
     showLoading(false);
-    if (err || (res && res._error)) {
+    if (err || !res || (res && res._error) || !res.question) {
+      var fallbackQ = getQuestionFallbackFromState_(qId, idx);
+      if (fallbackQ && fallbackQ.stem) {
+        applyLoadedQuestion_({
+          question: fallbackQ,
+          latestSubmission: null,
+          note: null,
+          draft: null,
+          submissionHistory: [],
+          rubricStatus: fallbackQ.rubricStatus || null,
+          latestAiGrading: null
+        }, qId);
+        return;
+      }
       showToast('読み込みに失敗しました');
       return;
     }
-    var draft = res.draft || null;
-    var answerText = hasSessionAnswer_(qId) ? String(state.sessionAnswers[String(qId)] || '') : (draft ? String(draft.draftText || '') : '');
-    var latestAiGrading = res.latestAiGrading || null;
-    var initialAiGrading = isMiniPractice_() ? null : selectCurrentAnswerAiGrading_(latestAiGrading, answerText);
-    navigate('question', {
-      question: res.question,
-      note: res.latestSubmission || res.note || null,
-      draft: draft,
-      latestSubmission: res.latestSubmission || res.note || null,
-      submissionHistory: res.submissionHistory || [],
-      rubricStatus: res.rubricStatus || null,
-      latestAiGrading: latestAiGrading,
-      aiGrading: initialAiGrading,
-      draftAnswer: answerText
-    });
+    applyLoadedQuestion_(res, qId);
   });
 }
 
@@ -1613,8 +1730,8 @@ function buildAiFlowActionsHtml_() {
   if (!qs.length) return '';
   var idx = state.questionIndex;
   var hasNext = idx < qs.length - 1;
-  var primaryLabel = hasNext ? '次へ' : '結果を見る';
-  var draftLabel = hasNext ? '下書き保存して次へ' : '下書き保存して結果へ';
+  var primaryLabel = hasNext ? '次へ' : '採点・結果を見る';
+  var draftLabel = hasNext ? '下書き保存して次へ' : '下書き保存して採点・結果へ';
   return '<div class="ai-flow-actions">' +
     '<div class="ai-flow-note">AI採点済みの答案は学習履歴に保存済みです。さらに直した途中答案を残したい場合だけ下書き保存してください。</div>' +
     '<button type="button" class="btn btn-action" id="ai-next-discard-btn">' + escHtml(primaryLabel) + '</button>' +
@@ -1759,14 +1876,14 @@ function buildQuestionFlowHtml_() {
     return '<div class="card">' +
       '<div class="section-title">解答確認</div>' +
       '<p class="small">答案を書いたらAI採点を実行します。採点後に講評、加点ポイント、学習用参考答案を表示します。</p>' +
-      '<button type="button" class="btn btn-action" id="answer-ai-btn">解答してAI採点</button>' +
+      '<button type="button" class="btn btn-action" id="answer-ai-btn">AI採点する</button>' +
     '</div>';
   }
 
   return '<div class="card">' +
     '<div class="section-title">' + escHtml(isLast ? '最後の問題です' : '次の問題へ進む') + '</div>' +
-    '<p class="small">この画面では採点しません。' + escHtml(isLast ? '「結果を見る」を押すと全答案をまとめてAI採点します。' : '最後に「結果を見る」を押すと全答案をまとめてAI採点します。') + '</p>' +
-    '<button type="button" class="btn btn-action" id="answer-next-btn">' + escHtml(isLast ? '結果を見る' : '解答して次へ') + '</button>' +
+    '<p class="small">この画面では採点しません。各問の答案は一時保存され、最後に「採点・結果を見る」を押すと全答案をまとめてAI採点します。</p>' +
+    '<button type="button" class="btn btn-action" id="answer-next-btn">' + escHtml(isLast ? '採点・結果を見る' : '次の問題へ') + '</button>' +
   '</div>';
 }
 
@@ -1787,7 +1904,7 @@ function buildMiniFeedbackHtml_(q) {
     '<div class="section-title">次へ進む</div>' +
     '<p class="small">講評と参考答案を確認したら次へ進んでください。</p>' +
     '<div class="question-actions" style="margin:10px 0 0">' +
-      '<button type="button" class="btn btn-sm mini-next-btn" onclick="moveToNextQuestionOrResult_()">' + escHtml(isLast ? '演習を終える' : '次の問題へ') + '</button>' +
+      '<button type="button" class="btn btn-sm mini-next-btn" onclick="moveToNextQuestionOrResult_()">' + escHtml(isLast ? 'Homeへ戻る' : '次の問題へ') + '</button>' +
     '</div>' +
   '</div>';
   return html;
@@ -1820,7 +1937,9 @@ function saveCurrentDraftBeforeMove_(nextFn) {
     nextFn();
     return;
   }
-  var ok = window.confirm('下書き保存していない答案は消えます。保存せずに移動しますか？');
+  var ok = hasPendingSessionAnswers_()
+    ? window.confirm('「採点・結果を見る」前の答案があります。移動しても一時保存は残りますが、学習履歴には入りません。移動しますか？')
+    : window.confirm('下書き保存していない答案は消えます。保存せずに移動しますか？');
   if (!ok) return;
   nextFn();
 }
@@ -1967,7 +2086,7 @@ function moveAfterAiGrading_(saveDraft, sourceBtn) {
     if (err || (res && res._error)) {
       if (sourceBtn) {
         sourceBtn.disabled = false;
-        sourceBtn.textContent = (state.questionIndex < (state.questions || []).length - 1) ? '下書き保存して次へ' : '下書き保存して結果へ';
+        sourceBtn.textContent = (state.questionIndex < (state.questions || []).length - 1) ? '下書き保存して次へ' : '下書き保存して採点・結果へ';
       }
       showToast((res && res.message) || '下書き保存に失敗しました');
       return;
@@ -2092,13 +2211,13 @@ function gradeCurrentMiniQuestion_(sourceBtn) {
   callApi('apiGradeAnswer', [q.qId, answerVal], function(err, res) {
     if (err || (res && res._error)) {
       sourceBtn.disabled = false;
-      sourceBtn.textContent = '解答してAI採点';
+      sourceBtn.textContent = 'AI採点する';
       showToast((res && res.message) || 'AI採点に失敗しました');
       return;
     }
     if (res && res.skipped) {
       sourceBtn.disabled = false;
-      sourceBtn.textContent = '解答してAI採点';
+      sourceBtn.textContent = 'AI採点する';
       showToast(res.message || 'この問題は採点対象外です');
       return;
     }
@@ -2142,9 +2261,11 @@ function renderQuestion() {
   var hasMedia = !!mediaHtml;
   var draftStatusHtml = state.draft
     ? '<div class="draft-status">保存済みの下書きを復元しています。</div>'
-    : '<div class="draft-status">' + (isMiniPractice_()
-      ? '再挑戦は空欄から開始します。答案を書いたら「解答してAI採点」を押してください。途中で止める場合だけ下書き保存してください。'
-      : '再挑戦は空欄から開始します。各問は「解答して次へ」で進み、最後に「結果を見る」でまとめてAI採点します。途中で止める場合だけ下書き保存してください。') + '</div>';
+    : hasSessionAnswer_(q.qId) && !isMiniPractice_()
+      ? '<div class="draft-status">この演習中の一時保存答案を復元しています。「採点・結果を見る」まで学習履歴には入りません。</div>'
+      : '<div class="draft-status">' + (isMiniPractice_()
+        ? '再挑戦は空欄から開始します。答案を書いたら「AI採点する」を押してください。途中で止める場合だけ下書き保存してください。'
+        : '再挑戦は空欄から開始します。各問は「次の問題へ」で一時保存し、最後に「採点・結果を見る」でまとめてAI採点します。途中で止める場合だけ下書き保存してください。') + '</div>';
   var flowHtml = '<div id="question-flow-wrap">' + buildQuestionFlowHtml_() + '</div>';
   var feedbackHtml = '<div id="mini-feedback-wrap">' + buildMiniFeedbackHtml_(q) + '</div>';
 

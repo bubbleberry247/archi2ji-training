@@ -530,6 +530,7 @@ function apiGetPracticeResult(qIds, title, clientUserKey) {
         includeAiScore: !!includeAiScore
       };
     });
+    var practiceSummary = buildArchiPracticeSummary_(rows, scoreSum, maxScoreSum, aiGradedCount);
     return toSerializable_({
       title: String(title || '演習結果'),
       total: ids.length,
@@ -541,11 +542,104 @@ function apiGetPracticeResult(qIds, title, clientUserKey) {
       aiScorePct: maxScoreSum > 0 ? Math.round(scoreSum / maxScoreSum * 1000) / 10 : 0,
       estimatedCostUsd: roundArchiCost_(estimatedCostUsdSum, 6),
       estimatedCostJpy: roundArchiCost_(estimatedCostJpySum, 2),
+      practiceSummary: practiceSummary,
       rows: rows
     });
   } catch (e) {
     return { _error: true, message: String(e.message || e) };
   }
+}
+
+function buildArchiPracticeSummary_(rows, scoreSum, maxScoreSum, aiGradedCount) {
+  var gradedRows = (rows || []).filter(function(row) {
+    return row && row.includeAiScore && row.aiGrading;
+  });
+  if (!gradedRows.length) {
+    return {
+      headline: 'AI採点済みの答案がまだありません。',
+      scoreComment: '結果を見る前に、各問題の答案を入力してAI採点してください。',
+      weakTags: [],
+      strengths: [],
+      nextActions: []
+    };
+  }
+  var pct = maxScoreSum > 0 ? Math.round(scoreSum / maxScoreSum * 1000) / 10 : 0;
+  var headline = pct >= 90
+    ? '高得点圏です。あとは減点されやすい条件違反や記録・是正手順の追記で安定します。'
+    : (pct >= 75
+      ? '合格圏に近い答案です。理由、実施内容、評価の対応をもう一段具体化しましょう。'
+      : '骨子はあります。設問条件、具体的な管理方法、評価の因果を優先して補強しましょう。');
+
+  var improvementTexts = [];
+  var strengthTexts = [];
+  gradedRows.forEach(function(row) {
+    var grading = row.aiGrading || {};
+    var flags = grading.flags || {};
+    collectArchiSummaryTexts_(strengthTexts, flags.strengths, 4);
+    collectArchiSummaryTexts_(strengthTexts, grading.overallComment ? [grading.overallComment] : [], 2);
+    collectArchiSummaryTexts_(improvementTexts, flags.improvements, 5);
+    collectArchiSummaryTexts_(improvementTexts, flags.fullScoreHints, 5);
+    collectArchiSummaryTexts_(improvementTexts, flags.addableExamples, 4);
+    collectArchiSummaryTexts_(improvementTexts, flags.warnings, 4);
+    (grading.criteria || []).forEach(function(c) {
+      if (Number(c.score || 0) < Number(c.maxScore || 0)) {
+        collectArchiSummaryTexts_(improvementTexts, [c.comment || c.name], 4);
+      }
+    });
+  });
+
+  var tags = buildArchiPracticeWeakTags_(improvementTexts.join(' '));
+  return {
+    headline: headline,
+    scoreComment: 'AI推定合計は ' + (Math.round(scoreSum * 10) / 10) + ' / ' + (Math.round(maxScoreSum * 10) / 10) + ' 点です。採点済み ' + aiGradedCount + ' 問をもとに整理しています。',
+    weakTags: tags,
+    strengths: uniqueArchiSummaryTexts_(strengthTexts).slice(0, 3),
+    nextActions: uniqueArchiSummaryTexts_(improvementTexts).slice(0, 5)
+  };
+}
+
+function collectArchiSummaryTexts_(target, items, limit) {
+  if (!Array.isArray(items)) return;
+  items.forEach(function(item) {
+    if (target.length >= limit) return;
+    var text = String(item || '').trim();
+    if (text) target.push(text);
+  });
+}
+
+function uniqueArchiSummaryTexts_(items) {
+  var seen = {};
+  var out = [];
+  (items || []).forEach(function(item) {
+    var text = String(item || '').trim();
+    if (!text || seen[text]) return;
+    seen[text] = true;
+    out.push(text);
+  });
+  return out;
+}
+
+function buildArchiPracticeWeakTags_(text) {
+  var src = String(text || '');
+  var defs = [
+    { tag: '工事概要不足', words: ['工事概要', '構造', '規模', '工期', '担当', '立場'] },
+    { tag: '固定概要との不整合', words: ['工事概要に示す', '固定概要', '施工上必要としない', '設備工事', '不適合'] },
+    { tag: '理由不足', words: ['理由', '因果', 'なぜ', '影響'] },
+    { tag: '実施内容不足', words: ['実施内容', '管理方法', '確認方法', '具体'] },
+    { tag: '記録・是正不足', words: ['記録', '是正', '再確認', '再検査', '監理者'] },
+    { tag: '評価不足', words: ['評価', '効果', '結果', '良い影響'] },
+    { tag: '条件違反注意', words: ['条件違反', '同じ内容', '不可', '重複'] },
+    { tag: '図表・数値根拠不足', words: ['図表', '工程表', 'EST', 'LST', 'フロート', '数値', '根拠'] },
+    { tag: '組織的管理不足', words: ['組織的', '職長', '協力会社', '伝達', '標準化'] }
+  ];
+  var tags = [];
+  defs.forEach(function(def) {
+    if (tags.length >= 4) return;
+    var hit = def.words.some(function(w) { return src.indexOf(w) >= 0; });
+    if (hit) tags.push(def.tag);
+  });
+  if (!tags.length) tags.push('具体性の追加');
+  return tags;
 }
 
 function apiGradeAnswer(qId, answerText, clientUserKey) {
