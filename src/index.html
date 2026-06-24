@@ -1746,13 +1746,7 @@ function buildQuestionFlowHtml_() {
 
   if (isMiniPractice_()) {
     if (hasCurrentQuestionGrading_()) {
-      return '<div class="card">' +
-        '<div class="section-title">採点が完了しました</div>' +
-        '<p class="small">AI採点結果と学習用参考答案を確認してから次へ進んでください。</p>' +
-        '<div class="question-actions" style="margin:10px 0 0">' +
-          '<button type="button" class="btn btn-sm mini-next-btn">' + escHtml(isLast ? '演習を終える' : '次の問題へ') + '</button>' +
-        '</div>' +
-      '</div>';
+      return '';
     }
     if (status.canGrade !== true) {
       return '<div class="card">' +
