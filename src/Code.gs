@@ -1,6 +1,6 @@
 // Code.gs — doGet entry point + setup
 
-var ARCHI2JI_BUILD_VERSION_ = '2026-06-24-answer-flow-v5';
+var ARCHI2JI_BUILD_VERSION_ = '2026-06-24-answer-flow-v7';
 
 function doGet(e) {
   // Auto-setup on first access

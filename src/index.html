@@ -1786,7 +1786,7 @@ function buildMiniFeedbackHtml_(q) {
     '<div class="section-title">次へ進む</div>' +
     '<p class="small">講評と参考答案を確認したら次へ進んでください。</p>' +
     '<div class="question-actions" style="margin:10px 0 0">' +
-      '<button type="button" class="btn btn-sm mini-next-btn">' + escHtml(isLast ? '演習を終える' : '次の問題へ') + '</button>' +
+      '<button type="button" class="btn btn-sm mini-next-btn" onclick="moveToNextQuestionOrResult_()">' + escHtml(isLast ? '演習を終える' : '次の問題へ') + '</button>' +
     '</div>' +
   '</div>';
   return html;
@@ -1796,12 +1796,12 @@ function refreshQuestionFlowAndFeedback_() {
   var flow = document.getElementById('question-flow-wrap');
   if (flow) {
     flow.innerHTML = buildQuestionFlowHtml_();
-    bindQuestionFlowButtons_();
   }
   var feedback = document.getElementById('mini-feedback-wrap');
   if (feedback) {
     feedback.innerHTML = buildMiniFeedbackHtml_(state.question);
   }
+  bindQuestionFlowButtons_();
 }
 
 function hasUnsavedQuestionDraft_() {
@@ -2061,11 +2061,6 @@ function bindQuestionFlowButtons_() {
       moveToNextQuestionOrResult_();
     });
   }
-  document.querySelectorAll('.mini-next-btn').forEach(function(miniNextBtn) {
-    miniNextBtn.addEventListener('click', function() {
-      moveToNextQuestionOrResult_();
-    });
-  });
 }
 
 function moveToNextQuestionOrResult_() {
