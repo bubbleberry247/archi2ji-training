@@ -184,6 +184,7 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:600}
     @media (min-width:768px){
       html{font-size:16px}
       main{max-width:600px;margin:0 auto;padding:0 16px 24px}
+      main.admin-dashboard-screen{max-width:1120px}
       header{font-size:15px;padding:14px 24px}
       .card{margin:10px 0;padding:20px;border-radius:14px}
       .btn{width:auto;display:inline-block;padding:12px 28px;font-size:15px;min-height:44px;border-radius:12px}
@@ -895,6 +896,8 @@ function drawHome(data) {
 // ─── Screen: Admin dashboard ──────────────────────────────
 function renderAdmin() {
   setHeader(APP_TITLE_);
+  var mainEl = document.getElementById('app-main');
+  if (mainEl) mainEl.className = 'admin-dashboard-screen';
   if (state.admin) {
     drawAdmin(state.admin);
     return;
