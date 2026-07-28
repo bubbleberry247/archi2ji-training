@@ -1,6 +1,37 @@
 var __clientUserKey = '';
 var ARCHI2JI_PROGRAM_START_DATE_ = '2026-07-01';
 var ARCHI2JI_EXAM_DATE_ = '2026-10-18';
+var ARCHI2JI_MINI_COMPLETION_CUTOFF_PROPERTY_ = 'ARCHI2JI_MINI_COMPLETION_CUTOFF_AT';
+
+function getArchiMiniCompletionLegacyCutoffMs_() {
+  var props = PropertiesService.getScriptProperties();
+  var value = String(props.getProperty(ARCHI2JI_MINI_COMPLETION_CUTOFF_PROPERTY_) || '').trim();
+  if (!value) {
+    var lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      value = String(props.getProperty(ARCHI2JI_MINI_COMPLETION_CUTOFF_PROPERTY_) || '').trim();
+      if (!value) {
+        value = new Date().toISOString();
+        props.setProperty(ARCHI2JI_MINI_COMPLETION_CUTOFF_PROPERTY_, value);
+      }
+    } finally {
+      lock.releaseLock();
+    }
+  }
+  var cutoffMs = new Date(value).getTime();
+  if (isNaN(cutoffMs)) throw new Error('ミニテスト受講回数の切替時刻が不正です');
+  return cutoffMs;
+}
+
+function requireArchiActiveMiniUser_(clientUserKey) {
+  var requestedKey = String(clientUserKey || '').trim();
+  var ctx = getUserContextByKey_(requestedKey);
+  if (!requestedKey || !ctx.userKey || String(ctx.userKey) !== requestedKey || !ctx.active) {
+    throw new Error('有効なログイン情報が見つかりません');
+  }
+  return ctx;
+}
 
 function parseArchiMiniDateUtc_(value) {
   var m = String(value || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -28,6 +59,7 @@ function formatArchiMiniDateRange_(unlockWeek) {
   var weekStart = startUtc + Number(unlockWeek || 0) * 7 * 86400000;
   var weekEnd = weekStart + 6 * 86400000;
   var examUtc = parseArchiMiniDateUtc_(ARCHI2JI_EXAM_DATE_);
+  if (examUtc !== null && weekStart >= examUtc) return '';
   if (examUtc !== null && weekEnd >= examUtc) weekEnd = examUtc - 86400000;
   var s = new Date(weekStart);
   var e = new Date(weekEnd);
@@ -35,27 +67,91 @@ function formatArchiMiniDateRange_(unlockWeek) {
     (e.getUTCMonth() + 1) + '月' + e.getUTCDate() + '日';
 }
 
-function buildArchiMiniPlan_() {
-  var years = ['R7', 'R6', 'R5', 'R4', 'R3'];
-  var rows = [];
-  var idx = 1;
-  years.forEach(function(year) {
-    for (var from = 1; from <= 6; from += 2) {
-      var to = from + 1;
-      var unlockWeek = idx - 1;
-      rows.push({
-        testIndex: idx,
-        label: '第' + idx + '回 ' + year + ' 問' + from + '〜' + to,
-        key: 'range:' + year + ':' + from + '-' + to,
-        questionsPerTest: 2,
-        unlockWeek: unlockWeek,
-        recommended: false,
-        dateRange: formatArchiMiniDateRange_(unlockWeek)
-      });
-      idx++;
+function buildArchiRangeParts_(refs) {
+  var parts = [];
+  var current = null;
+  refs.forEach(function(ref) {
+    if (!current || current.year !== ref.year || current.to + 1 !== ref.number) {
+      if (current) parts.push(current);
+      current = { year: ref.year, from: ref.number, to: ref.number };
+    } else {
+      current.to = ref.number;
     }
   });
+  if (current) parts.push(current);
+  return parts;
+}
+
+function formatArchiRangePart_(part) {
+  if (Number(part.from) === Number(part.to)) return part.year + ' 問' + part.from;
+  return part.year + ' 問' + part.from + '〜' + part.to;
+}
+
+function getArchiMiniRangeTemplates_() {
+  return [
+    { from: 1, to: 1 },
+    { from: 2, to: 3 },
+    { from: 4, to: 5 },
+    { from: 6, to: 6 }
+  ];
+}
+
+function buildArchiMiniPlanFromRefs_(refs) {
+  var byYear = {};
+  (refs || []).forEach(function(ref) {
+    var year = String(ref.year || '').trim().toUpperCase();
+    var no = Number(ref.number || 0);
+    if (!year || no <= 0) return;
+    if (!byYear[year]) byYear[year] = {};
+    byYear[year][no] = true;
+  });
+
+  var templates = getArchiMiniRangeTemplates_();
+  var rows = [];
+  Object.keys(byYear).sort(function(a, b) {
+    return yearOrderForArchi_(b) - yearOrderForArchi_(a);
+  }).forEach(function(year) {
+    templates.forEach(function(range) {
+      var chunk = [];
+      for (var no = range.from; no <= range.to; no++) {
+        if (byYear[year][no]) chunk.push({ year: year, number: no });
+      }
+      if (!chunk.length) return;
+      var parts = buildArchiRangeParts_(chunk);
+      var key = parts.map(function(part) {
+        return 'range:' + part.year + ':' + part.from + '-' + part.to;
+      }).join(',');
+      var idx = rows.length + 1;
+      rows.push({
+        testIndex: idx,
+        label: '第' + idx + '回 ' + parts.map(formatArchiRangePart_).join('・'),
+        key: key,
+        questionsPerTest: chunk.length,
+        unlockWeek: idx - 1,
+        recommended: false,
+        dateRange: formatArchiMiniDateRange_(idx - 1)
+      });
+    });
+  });
   return rows;
+}
+
+function buildArchiMiniPlan_() {
+  var years = ['R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1', 'H30', 'H29', 'H28'];
+  var refs = [];
+  years.forEach(function(year) {
+    for (var no = 1; no <= 6; no++) refs.push({ year: year, number: no });
+  });
+  return buildArchiMiniPlanFromRefs_(refs);
+}
+
+function buildArchiMiniPlanForQuestions_(questions) {
+  var refs = (questions || []).map(function(q) {
+    return { year: String(q.year || ''), number: Number(q.number || 0) };
+  }).filter(function(ref) {
+    return ref.year && ref.number > 0;
+  });
+  return buildArchiMiniPlanFromRefs_(refs);
 }
 
 function markArchiMiniPlanForThisWeek_(plan) {
@@ -129,6 +225,7 @@ function apiGetAuthInfo(clientUserKey) {
 function apiGetHome(clientUserKey) {
   __clientUserKey = clientUserKey || '';
   try {
+    getArchiMiniCompletionLegacyCutoffMs_();
     var allQuestions = readRecords_(SHEETS.Questions);
     var statusMap = getArchiRubricStatusMap_();
     var excludedCount = allQuestions.filter(function(q) {
@@ -167,7 +264,7 @@ function apiGetHome(clientUserKey) {
     }
 
     var years = Object.keys(grouped).sort().reverse();
-    var miniPlan = markArchiMiniPlanForThisWeek_(filterArchiMiniPlanByQuestions_(buildArchiMiniPlan_(), qs));
+    var miniPlan = markArchiMiniPlanForThisWeek_(buildArchiMiniPlanForQuestions_(qs));
     return toSerializable_({
       auth: getCurrentAuthInfo_(clientUserKey),
       config: {
@@ -291,10 +388,196 @@ function apiGetPracticeQuestions(kind, key, title, clientUserKey) {
     }
 
     qs.sort(sortArchiPracticeQuestions_);
-    return toSerializable_({
+    var response = {
       title: String(title || getArchiPracticeTitle_(kind, key)),
       questions: qs.map(function(q) { return toArchiQuestionListItem_(q, submittedMap, statusMap); })
+    };
+    if (String(kind) === 'mini' && userKey) {
+      requireArchiActiveMiniUser_(userKey);
+      getArchiMiniCompletionLegacyCutoffMs_();
+      response.miniAttempt = startArchiMiniTestAttempt_(userKey, key);
+    }
+    return toSerializable_(response);
+  } catch (e) {
+    return { _error: true, message: String(e.message || e) };
+  }
+}
+
+function getArchiMiniPlanItemByKey_(testKey) {
+  var key = String(testKey || '').trim();
+  if (!key) return null;
+  var statusMap = getArchiRubricStatusMap_();
+  var questions = readRecords_(SHEETS.Questions).filter(function(q) {
+    return !isArchiPracticeOnlyStatus_(statusMap[String(q.qId)]);
+  });
+  var plan = buildArchiMiniPlanForQuestions_(questions);
+  for (var i = 0; i < plan.length; i++) {
+    if (String(plan[i].key || '') === key) return plan[i];
+  }
+  return null;
+}
+
+function getArchiMiniQuestionIdsForKey_(testKey) {
+  var statusMap = getArchiRubricStatusMap_();
+  return readRecords_(SHEETS.Questions)
+    .filter(function(q) {
+      return !isArchiPracticeOnlyStatus_(statusMap[String(q.qId)])
+        && matchesArchiPractice_(q, testKey);
+    })
+    .sort(sortArchiPracticeQuestions_)
+    .map(function(q) { return String(q.qId || '').trim(); })
+    .filter(function(qId) { return !!qId; });
+}
+
+function startArchiMiniTestAttempt_(userKey, testKey) {
+  var key = String(testKey || '').trim();
+  var planItem = getArchiMiniPlanItemByKey_(key);
+  if (!planItem) throw new Error('対象のミニテストが見つかりません');
+  var expected = getArchiMiniQuestionIdsForKey_(key);
+  if (!expected.length) throw new Error('ミニテストの問題が見つかりません');
+  var normalizedUserKey = String(userKey || '').trim();
+  var lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    var sh = getSheet_(SHEETS.MiniTestCompletions);
+    var openAttempt = findArchiOpenMiniAttempt_(sh, normalizedUserKey, key);
+    if (openAttempt) {
+      return {
+        completionId: String(openAttempt.completionId || ''),
+        startedAt: openAttempt.startedAt,
+        reused: true
+      };
+    }
+    var startedAt = new Date().toISOString();
+    var completionId = 'MT_' + Utilities.getUuid();
+    appendRow_(SHEETS.MiniTestCompletions, {
+      completionId: completionId,
+      userKey: normalizedUserKey,
+      testKey: key,
+      testLabel: String(planItem.label || ''),
+      questionCount: expected.length,
+      startedAt: startedAt,
+      completedAt: ''
     });
+    return {
+      completionId: completionId,
+      startedAt: startedAt,
+      reused: false
+    };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function findArchiMiniAttempt_(sheet, completionId, userKey, testKey) {
+  var values = sheet.getDataRange().getValues();
+  if (values.length <= 1) return null;
+  var headers = values[0].map(function(h) { return String(h || '').trim(); });
+  var idCol = headers.indexOf('completionId');
+  var userCol = headers.indexOf('userKey');
+  var keyCol = headers.indexOf('testKey');
+  for (var i = 1; i < values.length; i++) {
+    if (String(values[i][idCol] || '') !== String(completionId || '')) continue;
+    if (String(values[i][userCol] || '') !== String(userKey || '')) continue;
+    if (String(values[i][keyCol] || '') !== String(testKey || '')) continue;
+    var row = {};
+    headers.forEach(function(header, col) { row[header] = values[i][col]; });
+    row._rowNumber = i + 1;
+    row._completedAtCol = headers.indexOf('completedAt') + 1;
+    return row;
+  }
+  return null;
+}
+
+function findArchiOpenMiniAttempt_(sheet, userKey, testKey) {
+  var values = sheet.getDataRange().getValues();
+  if (values.length <= 1) return null;
+  var headers = values[0].map(function(h) { return String(h || '').trim(); });
+  var idCol = headers.indexOf('completionId');
+  var userCol = headers.indexOf('userKey');
+  var keyCol = headers.indexOf('testKey');
+  var startedCol = headers.indexOf('startedAt');
+  var completedCol = headers.indexOf('completedAt');
+  for (var i = values.length - 1; i >= 1; i--) {
+    if (String(values[i][userCol] || '') !== String(userKey || '')) continue;
+    if (String(values[i][keyCol] || '') !== String(testKey || '')) continue;
+    if (String(values[i][completedCol] || '').trim()) continue;
+    var completionId = String(values[i][idCol] || '').trim();
+    if (!completionId) continue;
+    return {
+      completionId: completionId,
+      startedAt: values[i][startedCol]
+    };
+  }
+  return null;
+}
+
+function hasArchiMiniAttemptSubmissions_(userKey, questionIds, startedAt) {
+  var startedMs = new Date(startedAt).getTime();
+  if (isNaN(startedMs)) return false;
+  var submitted = {};
+  var expected = {};
+  (questionIds || []).forEach(function(qId) { expected[String(qId || '')] = true; });
+  readRecords_(SHEETS.Notes).forEach(function(note) {
+    var qId = String(note.qId || '');
+    if (!expected[qId] || String(note.userKey || '') !== String(userKey || '')) return;
+    if (!String(note.note || '').trim()) return;
+    var submittedMs = new Date(note.createdAt).getTime();
+    if (!isNaN(submittedMs) && submittedMs >= startedMs) submitted[qId] = true;
+  });
+  return (questionIds || []).every(function(qId) { return !!submitted[String(qId || '')]; });
+}
+
+function countArchiCompletedMiniTests_(userKey, testKey) {
+  return readRecords_(SHEETS.MiniTestCompletions).filter(function(row) {
+    return String(row.userKey || '') === String(userKey || '')
+      && String(row.testKey || '') === String(testKey || '')
+      && !!String(row.completedAt || '').trim();
+  }).length;
+}
+
+function apiRecordMiniTestCompletion(testKey, questionIds, completionId, clientUserKey) {
+  __clientUserKey = clientUserKey || '';
+  try {
+    var userKey = String(clientUserKey || '').trim();
+    var key = String(testKey || '').trim();
+    var id = String(completionId || '').trim();
+    requireArchiActiveMiniUser_(userKey);
+    if (!key || !id) throw new Error('ミニテストの受講情報が不足しています');
+    getArchiMiniCompletionLegacyCutoffMs_();
+
+    var planItem = getArchiMiniPlanItemByKey_(key);
+    if (!planItem) throw new Error('対象のミニテストが見つかりません');
+    var expected = getArchiMiniQuestionIdsForKey_(key).sort();
+    var suppliedMap = {};
+    (Array.isArray(questionIds) ? questionIds : []).forEach(function(qId) {
+      var normalized = String(qId || '').trim();
+      if (normalized) suppliedMap[normalized] = true;
+    });
+    var supplied = Object.keys(suppliedMap).sort();
+    if (!expected.length || expected.join('\n') !== supplied.join('\n')) {
+      throw new Error('ミニテストの全問題を終了してから受講完了を記録してください');
+    }
+
+    var lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      var sh = getSheet_(SHEETS.MiniTestCompletions);
+      var attempt = findArchiMiniAttempt_(sh, id, userKey, key);
+      if (!attempt) throw new Error('サーバーで開始されたミニテストが見つかりません');
+      var sameTestCount = countArchiCompletedMiniTests_(userKey, key);
+      if (String(attempt.completedAt || '').trim()) {
+        return toSerializable_({ success: true, deduplicated: true, completionCount: sameTestCount });
+      }
+      if (!hasArchiMiniAttemptSubmissions_(userKey, expected, attempt.startedAt)) {
+        throw new Error('この受講で全問題の採点・提出が確認できません');
+      }
+      var completedAt = new Date().toISOString();
+      sh.getRange(attempt._rowNumber, attempt._completedAtCol).setValue(completedAt);
+      return toSerializable_({ success: true, deduplicated: false, completionCount: sameTestCount + 1, completedAt: completedAt });
+    } finally {
+      lock.releaseLock();
+    }
   } catch (e) {
     return { _error: true, message: String(e.message || e) };
   }
@@ -642,6 +925,20 @@ function buildArchiPracticeWeakTags_(text) {
   return tags;
 }
 
+function formatArchiGradingErrorMessage_(error) {
+  var message = String((error && error.message) || error || '');
+  if (/OpenAI API error 429|quota|insufficient_quota/i.test(message)) {
+    return '現在、AI採点の利用上限に達しているため採点できません。入力した答案は画面に保持されています。しばらくしてから再度お試しいただくか、管理者へお問い合わせください。';
+  }
+  if (/OpenAI API error 401|invalid.*api.*key|incorrect api key/i.test(message)) {
+    return 'AI採点の認証設定を確認できないため採点できません。入力した答案は画面に保持されています。管理者へお問い合わせください。';
+  }
+  if (/OpenAI API error 5\d\d|timed? ?out|timeout/i.test(message)) {
+    return 'AI採点サービスが一時的に混み合っています。入力した答案は画面に保持されています。少し時間をおいて再度お試しください。';
+  }
+  return message || 'AI採点に失敗しました';
+}
+
 function apiGradeAnswer(qId, answerText, clientUserKey) {
   __clientUserKey = clientUserKey || '';
   try {
@@ -678,7 +975,7 @@ function apiGradeAnswer(qId, answerText, clientUserKey) {
     var submission = userKey ? appendArchiSubmission_(userKey, qId, answer, 0, true) : null;
     return toSerializable_({ success: true, rubricStatus: status, grading: saved, submission: submission, autoSubmitted: !!submission });
   } catch (e) {
-    return { _error: true, message: String(e.message || e) };
+    return { _error: true, message: formatArchiGradingErrorMessage_(e) };
   }
 }
 
@@ -723,6 +1020,7 @@ function apiSubmitAnswer(qId, answerText, selfScore, clientUserKey) {
     var answer = String(answerText || '').trim();
     if (!userKey) return { _error: true, message: 'ログイン情報が見つかりません' };
     if (!answer) return { _error: true, message: '答案を入力してください' };
+    getArchiMiniCompletionLegacyCutoffMs_();
     return toSerializable_({ success: true, submission: appendArchiSubmission_(userKey, qId, answerText, selfScore, true) });
   } catch (e) {
     return { _error: true, message: String(e.message || e) };
@@ -1896,9 +2194,75 @@ function sha256Hex_(text) {
   return out.join('');
 }
 
+function buildArchiAdminMiniMeta_(questions) {
+  var plan = buildArchiMiniPlanForQuestions_(questions || []);
+  var questionIdsByKey = {};
+  var columns = plan.map(function(item) {
+    var key = String(item.key || '');
+    questionIdsByKey[key] = (questions || [])
+      .filter(function(q) { return matchesArchiPractice_(q, key); })
+      .map(function(q) { return String(q.qId || '').trim(); })
+      .filter(function(qId) { return !!qId; });
+    return {
+      key: key,
+      label: String(item.label || ''),
+      testIndex: Number(item.testIndex || 0),
+      total: questionIdsByKey[key].length
+    };
+  });
+  return { columns: columns, questionIdsByKey: questionIdsByKey };
+}
+
+function getArchiMiniCompletionTrackingByUser_() {
+  var byUser = {};
+  readRecords_(SHEETS.MiniTestCompletions).forEach(function(row) {
+    var userKey = String(row.userKey || '').trim();
+    var testKey = String(row.testKey || '').trim();
+    if (!userKey || !testKey || !String(row.completedAt || '').trim()) return;
+    if (!byUser[userKey]) byUser[userKey] = {};
+    var rec = byUser[userKey][testKey] || {
+      count: 0,
+      lastCompletedAt: ''
+    };
+    rec.count += 1;
+    var completedAt = formatAdminDate_(row.completedAt);
+    if (completedAt && completedAt > rec.lastCompletedAt) rec.lastCompletedAt = completedAt;
+    byUser[userKey][testKey] = rec;
+  });
+  return byUser;
+}
+
+function buildArchiMiniCompletionCounts_(stats, tracking, miniMeta) {
+  var result = {};
+  var totalCompletions = 0;
+  var legacyCutoffMs = getArchiMiniCompletionLegacyCutoffMs_();
+  (miniMeta.columns || []).forEach(function(col) {
+    var key = String(col.key || '');
+    var qIds = miniMeta.questionIdsByKey[key] || [];
+    var tracked = (tracking || {})[key] || { count: 0, lastCompletedAt: '' };
+    var earliest = stats.firstAnsweredAtByQid || {};
+    var legacyComplete = qIds.length > 0 && qIds.every(function(qId) {
+      var answeredAtMs = Number(earliest[qId] || 0);
+      return answeredAtMs > 0 && answeredAtMs < legacyCutoffMs;
+    });
+    var baseline = legacyComplete ? 1 : 0;
+    var count = Number(tracked.count || 0) + baseline;
+    if (count > 0) {
+      result[key] = {
+        count: count,
+        lastCompletedAt: String(tracked.lastCompletedAt || ''),
+        estimatedBaseline: baseline > 0
+      };
+      totalCompletions += count;
+    }
+  });
+  return { byTest: result, totalCompletions: totalCompletions };
+}
+
 function apiAdminDashboard(clientUserKey) {
   __clientUserKey = clientUserKey || '';
   try {
+    getArchiMiniCompletionLegacyCutoffMs_();
     var ctx = requireManager_(clientUserKey);
     var statusMap = getArchiRubricStatusMap_();
     var questions = readRecords_(SHEETS.Questions).filter(function(q) {
@@ -1926,6 +2290,9 @@ function apiAdminDashboard(clientUserKey) {
     var completionColumns = Object.keys(yearCounts).sort(function(a, b) { return yearOrder(a) - yearOrder(b); }).map(function(year) {
       return { key: year, label: year, total: Number(yearCounts[year] || 0) };
     });
+    var miniMeta = buildArchiAdminMiniMeta_(questions);
+    var miniCompletionColumns = miniMeta.columns;
+    var miniTrackingByUser = getArchiMiniCompletionTrackingByUser_();
 
     var users = readRecords_(SHEETS.Users);
     var usersByEmail = {};
@@ -1947,12 +2314,19 @@ function apiAdminDashboard(clientUserKey) {
         scorePctSum: 0,
         scoreCount: 0,
         last7DaysCount: 0,
-        typeStats: {}
+        typeStats: {},
+        firstAnsweredAtByQid: {}
       };
       var st = statsByUserKey[key];
       var hasAnswer = String(n.note || '').trim() !== '';
       if (hasAnswer) st.noteCount += 1;
       var qId = String(n.qId || '').trim();
+      if (hasAnswer && qId) {
+        var answerMs = new Date(n.createdAt).getTime();
+        if (!isNaN(answerMs) && (!st.firstAnsweredAtByQid[qId] || answerMs < st.firstAnsweredAtByQid[qId])) {
+          st.firstAnsweredAtByQid[qId] = answerMs;
+        }
+      }
       if (hasAnswer && qId && !st.answeredQids[qId]) {
         st.answeredQids[qId] = true;
         st.answeredCount += 1;
@@ -1990,7 +2364,8 @@ function apiAdminDashboard(clientUserKey) {
         scorePctSum: 0,
         scoreCount: 0,
         last7DaysCount: 0,
-        typeStats: {}
+        typeStats: {},
+        firstAnsweredAtByQid: {}
       };
       var completedByUnit = {};
       var unitProgress = {};
@@ -2002,6 +2377,11 @@ function apiAdminDashboard(clientUserKey) {
         unitProgress[colKey] = { answered: answered, total: total };
         if (total > 0 && answered >= total) completedByUnit[colKey] = true;
       });
+      var miniCounts = buildArchiMiniCompletionCounts_(
+        stats,
+        miniTrackingByUser[String(u.userKey || '')] || {},
+        miniMeta
+      );
       rows.push({
         email: email,
         displayName: String(access.displayName || u.displayName || email).trim(),
@@ -2016,11 +2396,19 @@ function apiAdminDashboard(clientUserKey) {
         last7DaysCount: stats.last7DaysCount || 0,
         typeStats: buildAdminTypeStats_(typeTotals, stats.typeStats),
         completedByUnit: completedByUnit,
-        unitProgress: unitProgress
+        unitProgress: unitProgress,
+        miniCompletionCounts: miniCounts.byTest,
+        miniCompletionTotal: miniCounts.totalCompletions
       });
     });
 
-    return toSerializable_({ auth: getCurrentAuthInfo_(clientUserKey), totalQuestions: questions.length, completionColumns: completionColumns, users: rows });
+    return toSerializable_({
+      auth: getCurrentAuthInfo_(clientUserKey),
+      totalQuestions: questions.length,
+      completionColumns: completionColumns,
+      miniCompletionColumns: miniCompletionColumns,
+      users: rows
+    });
   } catch (e) {
     return { _error: true, message: String(e.message || e) };
   }

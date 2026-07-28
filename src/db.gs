@@ -6,7 +6,8 @@ var SHEETS = {
   AnswerDrafts: 'AnswerDrafts',
   ScoringRubrics: 'ScoringRubrics',
   AiGradings: 'AiGradings',
-  UserAccess: 'UserAccess'
+  UserAccess: 'UserAccess',
+  MiniTestCompletions: 'MiniTestCompletions'
 };
 
 var HEADERS = {};
@@ -18,6 +19,7 @@ HEADERS[SHEETS.AnswerDrafts] = ['userKey', 'qId', 'draftText', 'updatedAt'];
 HEADERS[SHEETS.ScoringRubrics] = ['qId', 'responseType', 'sourceQuality', 'scoreMode', 'maxScore', 'rubricJson', 'reviewStatus', 'updatedAt'];
 HEADERS[SHEETS.AiGradings] = ['gradingId', 'userKey', 'qId', 'answerText', 'answerHash', 'score', 'maxScore', 'scoreMode', 'sourceQuality', 'reviewStatus', 'overallComment', 'criteriaJson', 'flagsJson', 'rawJson', 'model', 'createdAt', 'inputTokens', 'outputTokens', 'totalTokens', 'cachedInputTokens', 'reasoningTokens', 'estimatedCostUsd', 'estimatedCostJpy', 'pricingJson'];
 HEADERS[SHEETS.UserAccess] = ['email', 'role', 'managerEmail', 'active', 'updatedAt', 'displayName', 'showInDashboard'];
+HEADERS[SHEETS.MiniTestCompletions] = ['completionId', 'userKey', 'testKey', 'testLabel', 'questionCount', 'startedAt', 'completedAt'];
 
 function setDbId_(id) {
   PropertiesService.getScriptProperties().setProperty('DB_ID', id);

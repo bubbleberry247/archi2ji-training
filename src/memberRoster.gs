@@ -1,10 +1,8 @@
 function getCanonicalMembers_() {
   return [
-    { email: 't.hanai.tscg@gmail.com',      role: 'user',  displayName: '花井辰佳' },
     { email: 'y.shinjo.tscg@gmail.com',     role: 'user',  displayName: '新城雄一朗' },
     { email: 'h.kakegawa.tscg@gmail.com',   role: 'user',  displayName: '掛川晴喜' },
     { email: 'r.yokoi.tscg@gmail.com',      role: 'user',  displayName: '横井稜' },
-    { email: 's.ishihara.tscg@gmail.com',   role: 'user',  displayName: '石原駿太朗' },
     { email: 'y.isoda.tscg@gmail.com',      role: 'user',  displayName: '磯田百合香' },
     { email: 'k.fukushima.tscg@gmail.com',  role: 'user',  displayName: '福島楓' },
     { email: 'm.terada.tscg@gmail.com',     role: 'user',  displayName: '寺田征弘' },
@@ -13,16 +11,19 @@ function getCanonicalMembers_() {
     { email: 'y.nagasaki.tscg@gmail.com',   role: 'user',  displayName: '長崎豊' },
     { email: 'i.matumura.tscg@gmail.com',   role: 'user',  displayName: '松村巌' },
     { email: 't.masuhara.tscg@gmail.com',   role: 'user',  displayName: '増原卓也' },
+    { email: 'm.koshima.tscg@gmail.com',    role: 'user',  displayName: '河島正典' },
+    { email: 'a.seto.tscg@gmail.com',       role: 'user',  displayName: '瀬戸阿紀子' },
     { email: 'e.morikami.tscg@gmail.com',   role: 'user',  displayName: '森上栄介' },
     { email: 'm.yano.tscg@gmail.com',       role: 'user',  displayName: '矢野将也' },
     { email: 'k.anraku.tscg@gmail.com',     role: 'user',  displayName: '安樂洸介' },
+    { email: 's.ishihara.tscg@gmail.com',   role: 'user',  displayName: '石原駿太朗' },
     { email: 't.yasui.tscg@gmail.com',      role: 'user',  displayName: '安井智紀' },
+    { email: 'h.kondo.tscg@gmail.com',      role: 'user',  displayName: '近藤秀夫' },
     { email: 't.kitamura.tscg@gmail.com',   role: 'admin', displayName: '北村健' },
     { email: 'm.tsuji.tscg@gmail.com',      role: 'admin', displayName: '辻雅幸' },
     { email: 'y.otomori.tscg@gmail.com',    role: 'admin', displayName: '乙守陽介' },
     { email: 'k.fukuoka.tscg@gmail.com',    role: 'admin', displayName: '福岡健治' },
     { email: 'y.minamiwaki.tscg@gmail.com', role: 'admin', displayName: '南脇祐輔' },
-    { email: 'h.kondo.tscg@gmail.com',      role: 'user',  displayName: '近藤秀夫' },
     { email: 'a.furukawa.tscg@gmail.com',   role: 'admin', displayName: '古川あかね' },
     { email: 'm.fujita.tscg@gmail.com',     role: 'admin', displayName: '藤田美和' },
     { email: 'kalimistk@gmail.com',         role: 'admin', displayName: '開発者', showInDashboard: false }
@@ -81,6 +82,10 @@ function generateRosterRecoveryCode_() {
   return String(Utilities.getUuid()).replace(/-/g, '').slice(0, 12);
 }
 
+function syncDashboardRoster() {
+  return syncDashboardRosterForCurrentApp_();
+}
+
 function syncDashboardRosterForCurrentApp_() {
   var nowText = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd HH:mm:ss');
   var ss = getDb_();
@@ -133,7 +138,7 @@ function syncUserAccessRosterForSpreadsheet_(ss, nowText) {
       email,
       String(member.role || (existing && existing.role) || 'user').trim().toLowerCase(),
       existing ? String(existing.managerEmail || '').trim() : '',
-      existing ? normalizeUserAccessBoolean_(existing.active, true) : 'true',
+      'true',
       nowText,
       String(member.displayName || '').trim(),
       normalizeUserAccessBoolean_(member.showInDashboard, true)
@@ -146,7 +151,7 @@ function syncUserAccessRosterForSpreadsheet_(ss, nowText) {
       row.email,
       row.role || (fallback ? fallback.role : 'user'),
       row.managerEmail || '',
-      normalizeUserAccessBoolean_(row.active, true),
+      'false',
       nowText,
       row.displayName || (fallback ? fallback.displayName : row.email),
       'false'
