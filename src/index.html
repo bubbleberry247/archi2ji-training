@@ -1538,6 +1538,11 @@ function gradeSessionAnswersForResult_(qIds, title, doneFn) {
     callApi('apiGradeAnswer', [task.qId, task.answer], function(err, res) {
       if (err || (res && res._error)) {
         state.resultGradeErrors.push({ qId: task.qId, message: (res && res.message) || String(err || '採点失敗') });
+        if (res && res.stopBatch) {
+          renderResultGradingProgress_(idx + 1, tasks.length, title, state.resultGradeErrors);
+          doneFn();
+          return;
+        }
       } else if (res && res.skipped) {
         state.resultGradeErrors.push({ qId: task.qId, message: res.message || '採点対象外' });
       } else {
