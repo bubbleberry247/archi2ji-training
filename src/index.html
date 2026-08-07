@@ -72,6 +72,7 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:600}
 .question-actions .btn{flex:1;min-width:0}
 .ai-panel{background:#fff;border:1px solid var(--border);border-radius:10px;margin:1vw;padding:3.4vw 3vw}
 .ai-notice{background:var(--warn-lt);border:1px solid #facc15;color:#854d0e;border-radius:8px;padding:9px 10px;font-size:.78rem;line-height:1.55;margin-bottom:10px}
+.content-notice{background:var(--warn-lt);border:1px solid #facc15;color:#854d0e;border-radius:8px;padding:9px 10px;font-size:.78rem;line-height:1.55;margin:8px 1vw 10px}
 .ai-result{border-top:1px solid var(--border);margin-top:12px;padding-top:12px}
 .ai-score{font-size:1.35rem;font-weight:800;color:var(--accent);line-height:1.2}
 .ai-meta{font-size:.74rem;color:var(--text-2);margin-top:2px}
@@ -589,6 +590,10 @@ function setHeader(title, backLabel, backFn) {
   }
 }
 
+function renderContentNotice_() {
+  return '<div class="content-notice">本サイトの問題は、各年度の出題当時の法令・基準・試験形式に基づいています。現在の法令・基準とは異なる場合があります。</div>';
+}
+
 // ─── Screen: Login ────────────────────────────────────────
 function renderLogin() {
   setHeader(APP_TITLE_);
@@ -834,6 +839,7 @@ function drawHome(data) {
     '<span class="summary-user">' + escHtml(USER_DISPLAY ? USER_DISPLAY + ' さん' : '') + '</span>' +
     '<button type="button" class="logout-btn" onclick="logout_()">ログアウト</button>' +
     '</div>';
+  html += renderContentNotice_();
   html += renderNextActionCard_(data.nextAction, miniPlan);
   html += '<div class="card">' +
     '<div class="section-title">🧭 30-60分ミニテスト</div>' +
@@ -1626,6 +1632,7 @@ function renderPracticeResult() {
     ? formatAiCostJpy_(Number(result.estimatedCostJpy || 0), Number(result.estimatedCostUsd || 0))
     : '-';
   var html =
+    renderContentNotice_() +
     '<div class="card">' +
       '<div class="section-title">' + escHtml(result.title || '演習結果') + '</div>' +
       '<div class="kpi-grid">' +
@@ -2843,6 +2850,7 @@ function renderQuestion() {
     '</div>';
 
   var html =
+    renderContentNotice_() +
     '<div class="question-detail-layout' + (hasMedia ? ' has-media' : '') + '">' +
       leftHtml +
       (hasMedia ? '<aside class="question-media-pane">' + mediaHtml + '</aside>' : '') +

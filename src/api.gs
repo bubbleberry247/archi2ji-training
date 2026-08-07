@@ -617,10 +617,13 @@ function getArchiRubricStatusMap_() {
 }
 
 function isArchiPracticeOnlyStatus_(status) {
-  if (!status) return false;
+  if (!status) return true;
   var scoreMode = String(status.scoreMode || '').trim();
   var reviewStatus = String(status.reviewStatus || '').trim();
-  return scoreMode === 'practice_only' || reviewStatus === 'needs_answer_key';
+  return status.excludeFromTotal === true ||
+    scoreMode === 'missing' ||
+    scoreMode === 'practice_only' ||
+    reviewStatus === 'needs_answer_key';
 }
 
 function toArchiQuestionListItem_(q, submittedMap, statusMap) {
@@ -1167,6 +1170,15 @@ function toArchiSubmission_(n) {
 function apiImportQuestions(questionsJson, clientUserKey) {
   __clientUserKey = clientUserKey || '';
   try {
+    requireAdmin_(clientUserKey);
+    return apiImportQuestionsCore_(questionsJson);
+  } catch (e) {
+    return { _error: true, message: String(e.message || e) };
+  }
+}
+
+function apiImportQuestionsCore_(questionsJson) {
+  try {
     var qs = JSON.parse(questionsJson);
     var sh = getSheet_(SHEETS.Questions);
     var values = sh.getDataRange().getValues();
@@ -1218,7 +1230,15 @@ function apiImportQuestions(questionsJson, clientUserKey) {
 function apiImportRubrics(rubricsJson, clientUserKey) {
   __clientUserKey = clientUserKey || '';
   try {
-    if (String(clientUserKey || '').trim()) requireAdmin_(clientUserKey);
+    requireAdmin_(clientUserKey);
+    return apiImportRubricsCore_(rubricsJson);
+  } catch (e) {
+    return { _error: true, message: '採点ルーブリック取り込みエラー: ' + String(e.message || e) };
+  }
+}
+
+function apiImportRubricsCore_(rubricsJson) {
+  try {
     var items = typeof rubricsJson === 'string' ? JSON.parse(rubricsJson) : rubricsJson;
     if (!items || !Array.isArray(items)) {
       return { _error: true, message: 'rubricsJson は配列JSONで指定してください' };
@@ -1272,6 +1292,15 @@ function apiImportRubrics(rubricsJson, clientUserKey) {
 // Each item: { qId, modelAnswer }
 function apiUpdateModelAnswers(items, clientUserKey) {
   __clientUserKey = clientUserKey || '';
+  try {
+    requireAdmin_(clientUserKey);
+    return apiUpdateModelAnswersCore_(items);
+  } catch (e) {
+    return { _error: true, message: '模範解答更新エラー: ' + String(e.message || e) };
+  }
+}
+
+function apiUpdateModelAnswersCore_(items) {
   try {
     if (!items || !Array.isArray(items) || items.length === 0) {
       return { _error: true, message: '更新データが空です' };
@@ -1330,7 +1359,15 @@ function apiUpdateModelAnswers(items, clientUserKey) {
 function apiImportQuestionImages(imagesJson, clientUserKey, replaceExisting) {
   __clientUserKey = clientUserKey || '';
   try {
-    if (String(clientUserKey || '').trim()) requireAdmin_(clientUserKey);
+    requireAdmin_(clientUserKey);
+    return apiImportQuestionImagesCore_(imagesJson, replaceExisting);
+  } catch (e) {
+    return { _error: true, message: '問題図表画像取り込みエラー: ' + String(e.message || e) };
+  }
+}
+
+function apiImportQuestionImagesCore_(imagesJson, replaceExisting) {
+  try {
     var items = typeof imagesJson === 'string' ? JSON.parse(imagesJson) : imagesJson;
     if (!items || !Array.isArray(items)) {
       return { _error: true, message: 'imagesJson は配列JSONで指定してください' };
