@@ -108,6 +108,9 @@ h2{font-size:1rem;margin:0 0 12px;font-weight:600}
 .mock-timer-meta{font-size:.74rem;color:var(--text-2);line-height:1.45;text-align:right}
 .mock-choice-panel{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:10px}
 .mock-choice-title{font-size:.78rem;font-weight:800;color:var(--text-1);margin-bottom:8px}
+.mock-choice-groups{display:grid;gap:10px}
+.mock-choice-group{border:1px solid var(--border);border-radius:8px;background:#fff;padding:9px}
+.mock-choice-group-label{font-size:.76rem;font-weight:800;color:var(--text-2);margin-bottom:6px}
 .mock-choice-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .mock-choice-option{display:flex;align-items:center;justify-content:center;min-height:40px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:.95rem;font-weight:900;color:var(--accent);cursor:pointer}
 .mock-choice-option input{position:absolute;opacity:0;pointer-events:none}
@@ -648,6 +651,15 @@ function getHomeTotals_(years) {
   return { total: total, answered: answered, pct: total > 0 ? Math.round(answered / total * 100) : 0 };
 }
 
+function formatYearMockMeta_(yearRow) {
+  var year = String(yearRow && yearRow.year || '');
+  var count = Number(yearRow && yearRow.count || 0);
+  if (/^R[5-7]$/.test(year) && count === 6) {
+    return '記述4大問＋五肢択一2大問';
+  }
+  return '採点観点整備済み ' + count + '大問を配信';
+}
+
 function getNextYear_(years) {
   var list = getDisplayYears_(years);
   for (var i = 0; i < list.length; i++) {
@@ -832,8 +844,8 @@ function drawHome(data) {
     '</div>';
 
   html += '<div class="card">' +
-    '<div class="section-title">📝 模試（本試験形式）</div>' +
-    '<div class="section-desc">年度ごとに本試験と同じ6問題をすべて解答します。記述式と五肢択一式の時間配分を確認します。</div>';
+    '<div class="section-title">📝 年度別模試</div>' +
+    '<div class="section-desc">年度ごとに現在配信中の大問をすべて解答します。年度ごとの問題数と形式を確認してから開始してください。</div>';
   if (years.length === 0) {
     html += '<p class="small">問題データが登録されていません。</p>';
   } else {
@@ -843,7 +855,7 @@ function drawHome(data) {
       html +=
         '<div class="year-exam-card" data-year="' + escHtml(y.year) + '">' +
           '<div class="year-exam-card-label">' + escHtml(y.year) + '年度</div>' +
-          '<div class="year-exam-card-meta">' + escHtml(String(answered || 0)) + '/' + escHtml(String(y.count || 0)) + '大問</div>' +
+          '<div class="year-exam-card-meta">' + escHtml(String(answered || 0)) + '/' + escHtml(String(y.count || 0)) + '大問<br>' + escHtml(formatYearMockMeta_(y)) + '</div>' +
         '</div>';
     });
     html += '</div>';
@@ -1579,7 +1591,7 @@ function renderYear() {
         badge = '<span style="flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--ok);padding-top:2px">提出済み</span>';
       } else if (q.scoringDisabled) {
         badge = '<span style="flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--text-3);padding-top:2px">採点対象外</span>';
-      } else if (isMockPractice_() && String((state.sessionAnswers || {})[String(q.qId || '')] || '').trim()) {
+      } else if (isMockPractice_() && isMockQuestionAnswered_(q, (state.sessionAnswers || {})[String(q.qId || '')])) {
         badge = '<span style="flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--accent);padding-top:2px">入力済み</span>';
       }
       var qLabel = (q.year && String(q.year) !== String(state.year)) ? String(q.year) + ' 問' + String(q.number) : '問' + String(q.number);
@@ -2019,10 +2031,11 @@ function buildQuestionFlowHtml_() {
   }
 
   if (isMockPractice_()) {
+    var mockQuestionCount = (state.questions || []).length;
     return renderMockSectionStatusHtml_() +
       '<div class="card">' +
         '<div class="section-title">' + escHtml(isLast ? '解答数をチェックします' : '次の問題へ進む') + '</div>' +
-        '<p class="small">答案は一時保存されます。最後に6問題すべてが入力されているか確認してから、まとめてAI採点します。</p>' +
+        '<p class="small">答案は一時保存されます。最後に配信中の' + escHtml(String(mockQuestionCount)) + '大問すべてが入力されているか確認してから、まとめて採点します。</p>' +
         '<button type="button" class="btn btn-action" id="answer-next-btn">' + escHtml(isLast ? 'チェックして採点・結果へ' : '次の問題へ') + '</button>' +
       '</div>';
   }
@@ -2164,7 +2177,30 @@ function getQuestionNumber_(q) {
   return isFinite(n) ? n : 0;
 }
 
+function isFullSixQuestionMock_() {
+  var qs = state.questions || [];
+  if (qs.length !== 6) return false;
+  var numbers = qs.map(getQuestionNumber_).sort(function(a, b) { return a - b; });
+  if (numbers.join(',') !== '1,2,3,4,5,6') return false;
+  var q5 = qs.filter(function(q) { return getQuestionNumber_(q) === 5; })[0];
+  var q6 = qs.filter(function(q) { return getQuestionNumber_(q) === 6; })[0];
+  return getMockChoiceAnswerKeys_(q5).length === 8 && getMockChoiceAnswerKeys_(q6).length === 6;
+}
+
 function getMockSectionRules_() {
+  if (!isFullSixQuestionMock_()) {
+    var count = (state.questions || []).length;
+    return [{
+      label: '配信中の問題',
+      range: '全' + count + '大問',
+      noFrom: 1,
+      noTo: 99,
+      mode: 'ALL',
+      required: count,
+      time: '180分目安',
+      instruction: '採点観点が整備済みの' + count + '大問をすべて解答します。'
+    }];
+  }
   return [
     { label: '記述式', range: '問題1〜4', noFrom: 1, noTo: 4, mode: 'ALL', required: 4, time: '120分目安', instruction: '問題1〜4は全問解答します。' },
     { label: '五肢択一式', range: '問題5〜6', noFrom: 5, noTo: 6, mode: 'ALL', required: 2, time: '60分目安', instruction: '問題5・6も全問解答します。' }
@@ -2190,21 +2226,21 @@ function getMockQuestionsForRule_(rule) {
 
 function getMockRequiredCount_(rule) {
   var sectionQs = getMockQuestionsForRule_(rule);
-  var available = sectionQs.length || Number(rule.required || 0);
+  var available = sectionQs.length;
   return Math.min(Number(rule.required || available), available);
 }
 
 function getMockAnsweredCount_(rule) {
   var answers = state.sessionAnswers || {};
   return getMockQuestionsForRule_(rule).filter(function(q) {
-    return !!String(answers[String(q.qId || '')] || '').trim();
+    return isMockQuestionAnswered_(q, answers[String(q.qId || '')]);
   }).length;
 }
 
 function getMockAnsweredQIds_() {
   var answers = state.sessionAnswers || {};
   return (state.questions || []).filter(function(q) {
-    return !!String(answers[String(q.qId || '')] || '').trim();
+    return isMockQuestionAnswered_(q, answers[String(q.qId || '')]);
   }).map(function(q) {
     return q.qId;
   }).filter(Boolean);
@@ -2212,9 +2248,17 @@ function getMockAnsweredQIds_() {
 
 function renderMockRulesOverview_() {
   var rules = getMockSectionRules_();
-  var html = '<div class="section-label">本試験形式</div><div class="mock-rules-panel">' +
+  var count = (state.questions || []).length;
+  var fullSix = isFullSixQuestionMock_();
+  var intro = fullSix
+    ? '本番形式に合わせて、3時間で6大問すべてを解答します。開始すると180分タイマーが動きます。'
+    : 'この年度は、現在配信中の採点観点整備済み' + count + '大問を解答します。学習用の180分タイマーが動きます。';
+  var note = fullSix
+    ? '問題1〜4の記述式を厚めに取り、問題5・6は小問ごとに1〜5のボタンで解答して見直します。'
+    : '本試験の全6大問ではなく、現在採点可能な' + count + '大問を配信しています。';
+  var html = '<div class="section-label">' + escHtml(fullSix ? '本試験形式' : '年度別演習') + '</div><div class="mock-rules-panel">' +
     '<div class="mock-rules-title">' + escHtml(formatListTitle_(state.year)) + ' 模試の解答ルール</div>' +
-    '<p class="mock-rule-note">本番形式に合わせて、3時間で6問題すべてを解答します。開始すると180分タイマーが動きます。</p>' +
+    '<p class="mock-rule-note">' + escHtml(intro) + '</p>' +
     '<div class="mock-rules-list">';
   rules.forEach(function(rule) {
     html += '<div class="mock-rule-line">' +
@@ -2223,7 +2267,7 @@ function renderMockRulesOverview_() {
     '</div>';
   });
   html += '</div>' +
-    '<p class="mock-rule-note">平均30分で均等に割るより、問題1〜4の記述式を厚めに取り、問題5・6は短めに解いて見直します。問題5・6は1〜5のボタンで解答できます。</p>' +
+    '<p class="mock-rule-note">' + escHtml(note) + '</p>' +
     '<button type="button" class="btn btn-action" onclick="startMockFromRules_()">模試を開始する</button>' +
   '</div>';
   return html;
@@ -2337,38 +2381,113 @@ function renderMockCurrentQuestionRuleHtml_(q) {
 }
 
 function isMockChoiceQuestion_(q) {
-  var no = getQuestionNumber_(q);
-  return isMockPractice_() && no >= 5 && no <= 6;
+  return getMockChoiceAnswerKeys_(q).length > 0;
+}
+
+function getMockChoiceAnswerKeys_(q) {
+  if (!q) return [];
+  var qId = String(q.qId || '');
+  var responseType = String(q.responseType || q.questionType || '').toLowerCase();
+  if (responseType !== 'multiple_choice') return [];
+  var configuredKeys = Array.isArray(q.answerKeys) ? q.answerKeys.map(String).filter(Boolean) : [];
+  if (configuredKeys.length) return configuredKeys;
+  if (!/^Q_R[5-7]_[56]$/.test(qId)) return [];
+  if (getQuestionNumber_(q) === 5) return ['1', '2', '3', '4', '5', '6', '7', '8'];
+  if (getQuestionNumber_(q) === 6) return ['1-1', '1-2', '2-3', '2-4', '3-5', '3-6'];
+  return [];
+}
+
+function normalizeMockChoiceValue_(value) {
+  var map = {
+    '1': '1', '１': '1', '①': '1',
+    '2': '2', '２': '2', '②': '2',
+    '3': '3', '３': '3', '③': '3',
+    '4': '4', '４': '4', '④': '4',
+    '5': '5', '５': '5', '⑤': '5'
+  };
+  return map[String(value || '').trim()] || '';
+}
+
+function parseMockChoiceAnswerMap_(answerText, keys) {
+  var allowed = {};
+  (keys || []).forEach(function(key) { allowed[String(key)] = true; });
+  var out = {};
+  String(answerText || '').split(/\r?\n/).forEach(function(line) {
+    var clean = String(line || '').trim();
+    var sep = clean.search(/[:：=]/);
+    if (sep < 0) return;
+    var key = clean.slice(0, sep).trim();
+    var value = normalizeMockChoiceValue_(clean.slice(sep + 1).trim());
+    if (allowed[key] && value) out[key] = value;
+  });
+  return out;
+}
+
+function serializeMockChoiceAnswerMap_(answerMap, keys) {
+  return (keys || []).filter(function(key) {
+    return !!normalizeMockChoiceValue_(answerMap && answerMap[key]);
+  }).map(function(key) {
+    return key + ': ' + normalizeMockChoiceValue_(answerMap[key]);
+  }).join('\n');
+}
+
+function isMockQuestionAnswered_(q, answerText) {
+  var text = String(answerText || '').trim();
+  var keys = getMockChoiceAnswerKeys_(q);
+  if (!keys.length) return !!text;
+  var answerMap = parseMockChoiceAnswerMap_(text, keys);
+  return keys.every(function(key) { return !!answerMap[key]; });
+}
+
+function formatMockChoiceKeyLabel_(key) {
+  var parts = String(key || '').split('-');
+  if (parts.length === 2) return '問' + parts[0] + '・空欄' + parts[1];
+  return '小問' + String(key || '');
 }
 
 function renderMockChoiceAnswerHtml_(q) {
-  if (!isMockChoiceQuestion_(q)) return '';
+  var keys = getMockChoiceAnswerKeys_(q);
+  if (!keys.length) return '';
   var current = String(state.draftAnswer || '').trim();
-  var html = '<div class="mock-choice-panel"><div class="mock-choice-title">五肢択一の解答</div><div class="mock-choice-grid">';
-  ['1', '2', '3', '4', '5'].forEach(function(value) {
-    html += '<label class="mock-choice-option"><input type="radio" name="mock-choice-answer" value="' + escHtml(value) + '"' +
-      (current === value ? ' checked' : '') + '><span>' + escHtml(value) + '</span></label>';
+  var answerMap = parseMockChoiceAnswerMap_(current, keys);
+  var answered = Object.keys(answerMap).length;
+  var html = '<div class="mock-choice-panel"><div class="mock-choice-title">五肢択一の解答 <span id="mock-choice-progress">' +
+    escHtml(String(answered)) + ' / ' + escHtml(String(keys.length)) + '小問</span></div><div class="mock-choice-groups">';
+  keys.forEach(function(key, idx) {
+    html += '<div class="mock-choice-group"><div class="mock-choice-group-label">' + escHtml(formatMockChoiceKeyLabel_(key)) + '</div><div class="mock-choice-grid">';
+    ['1', '2', '3', '4', '5'].forEach(function(value) {
+      html += '<label class="mock-choice-option"><input type="radio" name="mock-choice-answer-' + escHtml(String(idx)) + '" data-mock-choice-key="' + escHtml(key) + '" value="' + escHtml(value) + '"' +
+        (answerMap[key] === value ? ' checked' : '') + '><span>' + escHtml(value) + '</span></label>';
+    });
+    html += '</div></div>';
   });
   return html + '</div></div>';
 }
 
 function syncMockChoiceSelectionFromText_() {
   var input = document.getElementById('note-input');
-  var value = input ? String(input.value || '').trim() : '';
-  document.querySelectorAll('input[name="mock-choice-answer"]').forEach(function(radio) {
-    radio.checked = radio.value === value;
+  var keys = getMockChoiceAnswerKeys_(state.question);
+  var answerMap = parseMockChoiceAnswerMap_(input ? input.value : '', keys);
+  document.querySelectorAll('input[data-mock-choice-key]').forEach(function(radio) {
+    radio.checked = answerMap[String(radio.getAttribute('data-mock-choice-key') || '')] === radio.value;
   });
+  var progress = document.getElementById('mock-choice-progress');
+  if (progress) progress.textContent = Object.keys(answerMap).length + ' / ' + keys.length + '小問';
 }
 
 function bindMockChoiceAnswer_() {
   var input = document.getElementById('note-input');
   if (!input) return;
-  document.querySelectorAll('input[name="mock-choice-answer"]').forEach(function(radio) {
+  var keys = getMockChoiceAnswerKeys_(state.question);
+  document.querySelectorAll('input[data-mock-choice-key]').forEach(function(radio) {
     radio.addEventListener('change', function() {
       if (!radio.checked) return;
-      input.value = radio.value;
+      var answerMap = parseMockChoiceAnswerMap_(input.value, keys);
+      answerMap[String(radio.getAttribute('data-mock-choice-key') || '')] = radio.value;
+      input.value = serializeMockChoiceAnswerMap_(answerMap, keys);
       captureCurrentAnswer_();
       syncCurrentQuestionGrading_(input.value);
+      syncMockChoiceSelectionFromText_();
       refreshMockSectionStatus_();
     });
   });
@@ -2682,6 +2801,8 @@ function renderQuestion() {
   var mainEl = document.getElementById('app-main');
   if (mainEl) mainEl.className = 'question-screen';
   var noteText = escHtml(String(state.draftAnswer !== undefined && state.draftAnswer !== null ? state.draftAnswer : ''));
+  var mockChoiceAnswer = isMockChoiceQuestion_(q);
+  var noteVisibility = mockChoiceAnswer ? ' hidden aria-hidden="true"' : '';
 
   var modelAnswerHtml = '';
   var aiPanelHtml = '';
@@ -2708,7 +2829,7 @@ function renderQuestion() {
       draftStatusHtml +
       '<div class="card" style="padding-bottom:3vw">' +
         renderMockChoiceAnswerHtml_(q) +
-        '<textarea class="note-area" id="note-input" placeholder="ここに答案を書いてください。途中で止める場合は下書き保存できます。">' + noteText + '</textarea>' +
+        '<textarea class="note-area" id="note-input"' + noteVisibility + ' placeholder="ここに答案を書いてください。途中で止める場合は下書き保存できます。">' + noteText + '</textarea>' +
         '<div class="answer-tools">' +
           '<button class="btn secondary btn-sm" id="draft-save-btn">下書き保存</button>' +
           '<button class="btn secondary btn-sm" id="clear-answer-btn">白紙にする</button>' +

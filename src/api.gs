@@ -632,6 +632,8 @@ function toArchiQuestionListItem_(q, submittedMap, statusMap) {
     year: q.year,
     number: q.number,
     questionType: q.questionType,
+    responseType: status ? String(status.responseType || '') : '',
+    answerKeys: status && Array.isArray(status.answerKeys) ? status.answerKeys.slice() : [],
     stemShort: String(q.stem || '').slice(0, 60),
     lastScore: 0,
     submitted: submitted,
@@ -725,6 +727,8 @@ function apiGetQuestion(qId, clientUserKey) {
     var rubric = getArchiRubricByQId_(qId);
     var rubricStatus = buildArchiRubricStatus_(rubric);
     rubricStatus = applyArchiQuestionMediaStatus_(rubricStatus, q);
+    q.responseType = String(rubricStatus.responseType || '');
+    q.answerKeys = Array.isArray(rubricStatus.answerKeys) ? rubricStatus.answerKeys.slice() : [];
     var latestAiGrading = getLatestArchiAiGrading_(userKey, qId);
     return toSerializable_({
       question: q,
@@ -995,19 +999,25 @@ function apiGradeAnswer(qId, answerText, clientUserKey) {
       };
     }
 
-    var props = PropertiesService.getScriptProperties();
-    if (String(props.getProperty('AI_GRADING_ENABLED') || 'true').toLowerCase() === 'false') {
-      return { _error: true, errorCode: 'AI_DISABLED', fatal: true, retryable: false, stopBatch: true, message: '現在、AI採点は管理者により一時停止されています。入力した答案は保持されています。' };
+    var result;
+    var modelLabel;
+    if (String(rubric.scoreMode || '').trim() === 'deterministic') {
+      result = gradeArchiDeterministic_(answer, rubric);
+      modelLabel = 'deterministic';
+    } else {
+      var props = PropertiesService.getScriptProperties();
+      if (String(props.getProperty('AI_GRADING_ENABLED') || 'true').toLowerCase() === 'false') {
+        return { _error: true, errorCode: 'AI_DISABLED', fatal: true, retryable: false, stopBatch: true, message: '現在、AI採点は管理者により一時停止されています。入力した答案は保持されています。' };
+      }
+      var circuit = getArchiAiCircuit_();
+      if (circuit) return { _error: true, errorCode: circuit.errorCode, fatal: !!circuit.fatal, retryable: !!circuit.retryable, stopBatch: true, message: circuit.message };
+      var apiKey = props.getProperty('OPENAI_API_KEY');
+      if (!apiKey) return { _error: true, errorCode: 'AI_AUTH', fatal: true, retryable: false, stopBatch: true, message: 'AI採点の認証設定を確認できないため採点できません。入力した答案は保持されています。管理者へお問い合わせください。' };
+      var model = String(props.getProperty('OPENAI_MODEL') || 'gpt-5.4-mini').trim();
+      result = gradeArchiWithOpenAI_(q, rubric, answer, model, apiKey);
+      modelLabel = model;
+      if (result && result.reasoningEffort) modelLabel += ' / effort:' + result.reasoningEffort;
     }
-    var circuit = getArchiAiCircuit_();
-    if (circuit) return { _error: true, errorCode: circuit.errorCode, fatal: !!circuit.fatal, retryable: !!circuit.retryable, stopBatch: true, message: circuit.message };
-    var apiKey = props.getProperty('OPENAI_API_KEY');
-    if (!apiKey) return { _error: true, errorCode: 'AI_AUTH', fatal: true, retryable: false, stopBatch: true, message: 'AI採点の認証設定を確認できないため採点できません。入力した答案は保持されています。管理者へお問い合わせください。' };
-    var model = String(props.getProperty('OPENAI_MODEL') || 'gpt-5.4-mini').trim();
-    var result = gradeArchiWithOpenAI_(q, rubric, answer, model, apiKey);
-
-    var modelLabel = model;
-    if (result && result.reasoningEffort) modelLabel += ' / effort:' + result.reasoningEffort;
     var saved = appendArchiAiGrading_(userKey, qId, answer, rubric, result, modelLabel);
     var submission = userKey ? appendArchiSubmission_(userKey, qId, answer, 0, true) : null;
     return toSerializable_({ success: true, rubricStatus: status, grading: saved, submission: submission, autoSubmitted: !!submission });
@@ -1387,6 +1397,8 @@ function buildArchiRubricStatus_(rubric) {
   if (!rubric) {
     return {
       canGrade: false,
+      responseType: '',
+      answerKeys: [],
       scoreMode: 'missing',
       sourceQuality: '',
       reviewStatus: 'missing',
@@ -1398,6 +1410,7 @@ function buildArchiRubricStatus_(rubric) {
   var scoreMode = String(rubric.scoreMode || '').trim();
   var sourceQuality = String(rubric.sourceQuality || '').trim();
   var reviewStatus = String(rubric.reviewStatus || '').trim();
+  var answerKeys = getArchiRubricAnswerKeys_(rubric);
   var displayNotice = String(rj.displayNotice || '').trim();
   if (!displayNotice && sourceQuality === 'reference_only') {
     displayNotice = 'AI推定点・公式採点ではありません。';
@@ -1413,6 +1426,8 @@ function buildArchiRubricStatus_(rubric) {
   }
   return {
     canGrade: canGrade,
+    responseType: String(rubric.responseType || '').trim(),
+    answerKeys: answerKeys,
     scoreMode: scoreMode,
     sourceQuality: sourceQuality,
     reviewStatus: reviewStatus,
@@ -1420,6 +1435,18 @@ function buildArchiRubricStatus_(rubric) {
     excludeFromTotal: rj.excludeFromTotal === true,
     maxScore: Number(rubric.maxScore || 10)
   };
+}
+
+function getArchiRubricAnswerKeys_(rubric) {
+  if (!rubric || String(rubric.scoreMode || '').trim() !== 'deterministic') return [];
+  var correct = parseArchiJson_(rubric.rubricJson, {}).correctAnswers;
+  if (Array.isArray(correct)) {
+    return correct.map(function(_, idx) { return String(idx + 1); });
+  }
+  if (correct && typeof correct === 'object') {
+    return Object.keys(correct).sort(compareArchiAnswerKeys_);
+  }
+  return [];
 }
 
 function decorateArchiQuestionMedia_(q) {
