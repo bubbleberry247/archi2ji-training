@@ -50,6 +50,7 @@ function doGet(e) {
     var qDiag = getQuestionDiag_();
     var uaDiag = getUserAccessDiag_();
     var props = PropertiesService.getScriptProperties();
+    var configuredAiProvider = String(props.getProperty('AI_PROVIDER') || 'openai').trim().toLowerCase();
     var configuredOpenAIModel = String(props.getProperty('OPENAI_MODEL') || '');
     var configuredOpenAIReasoningEffort = String(props.getProperty('OPENAI_REASONING_EFFORT') || '');
     var configuredOpenAIMaxOutputTokens = String(props.getProperty('OPENAI_MAX_OUTPUT_TOKENS') || '');
@@ -58,6 +59,7 @@ function doGet(e) {
       googleClientId: getConfigValue_(config, 'GOOGLE_CLIENT_ID', '') ? 'SET' : 'MISSING',
       appExecUrl: getAppExecUrl_(),
       buildVersion: ARCHI2JI_BUILD_VERSION_,
+      aiProvider: configuredAiProvider,
       openaiApiKey: props.getProperty('OPENAI_API_KEY') ? 'SET' : 'MISSING',
       openaiModel: configuredOpenAIModel || 'gpt-5.4-mini',
       openaiModelConfigured: configuredOpenAIModel,
@@ -65,6 +67,10 @@ function doGet(e) {
       openaiReasoningEffortConfigured: configuredOpenAIReasoningEffort,
       openaiMaxOutputTokens: configuredOpenAIMaxOutputTokens || '1800',
       openaiMaxOutputTokensConfigured: configuredOpenAIMaxOutputTokens,
+      azureOpenaiEndpoint: props.getProperty('AZURE_OPENAI_ENDPOINT') ? 'SET' : 'MISSING',
+      azureOpenaiResponsesUrl: props.getProperty('AZURE_OPENAI_RESPONSES_URL') ? 'SET' : 'MISSING',
+      azureOpenaiDeployment: props.getProperty('AZURE_OPENAI_DEPLOYMENT') ? 'SET' : 'MISSING',
+      azureOpenaiApiKey: props.getProperty('AZURE_OPENAI_API_KEY') ? 'SET' : 'MISSING',
       questionCount: qDiag.questionCount,
       duplicateCount: qDiag.duplicateCount,
       imageRequiredCount: qDiag.imageRequiredCount,

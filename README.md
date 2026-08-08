@@ -15,8 +15,12 @@
 
 ## AI採点
 - `ScoringRubrics` シートにルーブリックを投入し、`AiGradings` シートに採点履歴を保存する
-- `OPENAI_API_KEY` と `OPENAI_MODEL` はGASのScript Propertiesで管理する（標準設定: `OPENAI_MODEL=gpt-5.4-mini`, `OPENAI_REASONING_EFFORT=low`, `OPENAI_MAX_OUTPUT_TOKENS=1800`）
-- `practice_only` / `needs_answer_key` は採点対象外、`deterministic` は正答キーでローカル採点、`rubric_ai` / `ai_estimate` のみOpenAI Responses APIで採点
+- AI接続設定はGASのScript Propertiesで管理し、`AI_PROVIDER` 未設定時は従来どおり `openai` を使用する
+- OpenAI設定: `OPENAI_API_KEY`, `OPENAI_MODEL=gpt-5.4-mini`
+- Azure OpenAI設定: `AI_PROVIDER=azure`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_API_KEY`。必要な場合だけ完全URLを `AZURE_OPENAI_RESPONSES_URL` に設定する
+- 共通設定: `OPENAI_REASONING_EFFORT=low`, `OPENAI_MAX_OUTPUT_TOKENS=1800`。Azureのデプロイ名から基盤モデルを判定できない場合は `AZURE_OPENAI_MODEL=gpt-5.4-mini` を設定する
+- APIキーはソースコード・Git・READMEへ記録しない。`AI_PROVIDER=azure` でAzure設定が不足している場合、OpenAIへ自動フォールバックせず採点を停止する
+- `practice_only` / `needs_answer_key` は採点対象外、`deterministic` は正答キーでローカル採点、`rubric_ai` / `ai_estimate` のみ設定されたResponses APIで採点
 - `reference_only` は「AI推定点・公式採点ではありません」と表示し、既存の自己採点・進捗集計には反映しない
 - ルーブリック投入: `python tools/import_scoring_rubrics.py --url <exec_url> --maintenance-token <token>`
 - 問題データ再投入: `python tools/import_archi2ji.py --url <exec_url> --maintenance-token <token>`

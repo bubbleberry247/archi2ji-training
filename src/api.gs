@@ -954,26 +954,30 @@ function formatArchiGradingErrorMessage_(error) {
   return classifyArchiGradingError_(error).message;
 }
 
-function getArchiAiCircuit_() {
+function getArchiAiCircuitKey_(provider) {
+  return 'ARCHI_AI_GRADING_CIRCUIT:' + String(provider || 'openai').trim().toLowerCase();
+}
+
+function getArchiAiCircuit_(provider) {
   try {
-    var raw = CacheService.getScriptCache().get('ARCHI_AI_GRADING_CIRCUIT');
+    var raw = CacheService.getScriptCache().get(getArchiAiCircuitKey_(provider));
     return raw ? JSON.parse(raw) : null;
   } catch (e) {
     return null;
   }
 }
 
-function setArchiAiCircuit_(info) {
+function setArchiAiCircuit_(info, provider) {
   if (!info || !info.stopBatch) return;
   try {
     var ttl = info.fatal ? 900 : 60;
-    CacheService.getScriptCache().put('ARCHI_AI_GRADING_CIRCUIT', JSON.stringify(info), ttl);
+    CacheService.getScriptCache().put(getArchiAiCircuitKey_(provider), JSON.stringify(info), ttl);
   } catch (e) {}
 }
 
 function buildArchiGradingErrorResponse_(error) {
   var info = classifyArchiGradingError_(error);
-  setArchiAiCircuit_(info);
+  setArchiAiCircuit_(info, error && error.aiProvider);
   return { _error: true, errorCode: info.errorCode, fatal: info.fatal, retryable: info.retryable, stopBatch: info.stopBatch, message: info.message };
 }
 
@@ -1011,19 +1015,19 @@ function apiGradeAnswer(qId, answerText, clientUserKey) {
       if (String(props.getProperty('AI_GRADING_ENABLED') || 'true').toLowerCase() === 'false') {
         return { _error: true, errorCode: 'AI_DISABLED', fatal: true, retryable: false, stopBatch: true, message: '現在、AI採点は管理者により一時停止されています。入力した答案は保持されています。' };
       }
-      var circuit = getArchiAiCircuit_();
+      var aiConfig = getArchiAiProviderConfig_(props);
+      if (!aiConfig.ready) return { _error: true, errorCode: 'AI_AUTH', fatal: true, retryable: false, stopBatch: true, message: 'AI採点の接続設定を確認できないため採点できません。入力した答案は保持されています。管理者へお問い合わせください。' };
+      var circuit = getArchiAiCircuit_(aiConfig.provider);
       if (circuit) return { _error: true, errorCode: circuit.errorCode, fatal: !!circuit.fatal, retryable: !!circuit.retryable, stopBatch: true, message: circuit.message };
-      var apiKey = props.getProperty('OPENAI_API_KEY');
-      if (!apiKey) return { _error: true, errorCode: 'AI_AUTH', fatal: true, retryable: false, stopBatch: true, message: 'AI採点の認証設定を確認できないため採点できません。入力した答案は保持されています。管理者へお問い合わせください。' };
-      var model = String(props.getProperty('OPENAI_MODEL') || 'gpt-5.4-mini').trim();
-      result = gradeArchiWithOpenAI_(q, rubric, answer, model, apiKey);
-      modelLabel = model;
+      result = gradeArchiWithOpenAI_(q, rubric, answer, aiConfig);
+      modelLabel = aiConfig.provider + ':' + aiConfig.requestModel;
       if (result && result.reasoningEffort) modelLabel += ' / effort:' + result.reasoningEffort;
     }
     var saved = appendArchiAiGrading_(userKey, qId, answer, rubric, result, modelLabel);
     var submission = userKey ? appendArchiSubmission_(userKey, qId, answer, 0, true) : null;
     return toSerializable_({ success: true, rubricStatus: status, grading: saved, submission: submission, autoSubmitted: !!submission });
   } catch (e) {
+    if (e && typeof aiConfig !== 'undefined' && aiConfig) e.aiProvider = aiConfig.provider;
     return buildArchiGradingErrorResponse_(e);
   }
 }
@@ -1799,7 +1803,49 @@ function gradeArchiDeterministic_(answerText, rubric) {
   };
 }
 
-function gradeArchiWithOpenAI_(question, rubric, answerText, model, apiKey) {
+function getArchiAiProviderConfig_(props) {
+  props = props || PropertiesService.getScriptProperties();
+  var provider = String(props.getProperty('AI_PROVIDER') || 'openai').trim().toLowerCase();
+  if (provider !== 'openai' && provider !== 'azure') {
+    return { ready: false, provider: provider, missing: ['AI_PROVIDER'] };
+  }
+
+  if (provider === 'azure') {
+    var endpoint = String(props.getProperty('AZURE_OPENAI_ENDPOINT') || '').trim().replace(/\/+$/, '');
+    var explicitUrl = String(props.getProperty('AZURE_OPENAI_RESPONSES_URL') || '').trim().replace(/\/+$/, '');
+    var requestUrl = explicitUrl || (endpoint ? endpoint + '/openai/v1/responses' : '');
+    var deployment = String(props.getProperty('AZURE_OPENAI_DEPLOYMENT') || '').trim();
+    var azureKey = String(props.getProperty('AZURE_OPENAI_API_KEY') || '').trim();
+    var capabilityModel = String(props.getProperty('AZURE_OPENAI_MODEL') || props.getProperty('OPENAI_MODEL') || 'gpt-5.4-mini').trim();
+    var azureMissing = [];
+    if (!requestUrl || !/^https:\/\/[a-z0-9.-]+\.openai\.azure\.com\/openai\/v1\/responses$/i.test(requestUrl)) azureMissing.push(explicitUrl ? 'AZURE_OPENAI_RESPONSES_URL' : 'AZURE_OPENAI_ENDPOINT');
+    if (!deployment) azureMissing.push('AZURE_OPENAI_DEPLOYMENT');
+    if (!azureKey) azureMissing.push('AZURE_OPENAI_API_KEY');
+    return {
+      ready: azureMissing.length === 0,
+      provider: provider,
+      requestUrl: requestUrl,
+      requestModel: deployment,
+      capabilityModel: capabilityModel,
+      headers: { 'api-key': azureKey },
+      missing: azureMissing
+    };
+  }
+
+  var openaiKey = String(props.getProperty('OPENAI_API_KEY') || '').trim();
+  var openaiModel = String(props.getProperty('OPENAI_MODEL') || 'gpt-5.4-mini').trim();
+  return {
+    ready: !!openaiKey && !!openaiModel,
+    provider: provider,
+    requestUrl: 'https://api.openai.com/v1/responses',
+    requestModel: openaiModel,
+    capabilityModel: openaiModel,
+    headers: { Authorization: 'Bearer ' + openaiKey },
+    missing: openaiKey ? [] : ['OPENAI_API_KEY']
+  };
+}
+
+function gradeArchiWithOpenAI_(question, rubric, answerText, aiConfig) {
   var rj = parseArchiJson_(rubric.rubricJson, {});
   var maxScore = Number(rubric.maxScore || rj.maxScore || 10);
   var payload = {
@@ -1834,7 +1880,7 @@ function gradeArchiWithOpenAI_(question, rubric, answerText, model, apiKey) {
   });
 
   var body = {
-    model: model,
+    model: aiConfig.requestModel,
     store: false,
     max_output_tokens: getArchiOpenAIMaxOutputTokens_(),
     input: [
@@ -1873,12 +1919,12 @@ function gradeArchiWithOpenAI_(question, rubric, answerText, model, apiKey) {
       }
     }
   };
-  var reasoningEffort = getArchiOpenAIReasoningEffort_(model);
+  var reasoningEffort = getArchiOpenAIReasoningEffort_(aiConfig.capabilityModel);
   if (reasoningEffort) body.reasoning = { effort: reasoningEffort };
-  var resp = UrlFetchApp.fetch('https://api.openai.com/v1/responses', {
+  var resp = UrlFetchApp.fetch(aiConfig.requestUrl, {
     method: 'post',
     contentType: 'application/json',
-    headers: { Authorization: 'Bearer ' + apiKey },
+    headers: aiConfig.headers,
     payload: JSON.stringify(body),
     muteHttpExceptions: true
   });
@@ -1887,9 +1933,11 @@ function gradeArchiWithOpenAI_(question, rubric, answerText, model, apiKey) {
   var data = parseArchiJson_(text, {});
   if (code < 200 || code >= 300) {
     var msg = data && data.error && data.error.message ? data.error.message : text;
-    var apiError = new Error('OpenAI API error ' + code + ': ' + msg);
+    var providerLabel = aiConfig.provider === 'azure' ? 'Azure OpenAI' : 'OpenAI';
+    var apiError = new Error(providerLabel + ' API error ' + code + ': ' + msg);
     apiError.httpStatus = code;
     apiError.openaiCode = data && data.error && (data.error.code || data.error.type) || '';
+    apiError.aiProvider = aiConfig.provider;
     throw apiError;
   }
   if (data && data.status === 'incomplete') {
@@ -1902,11 +1950,11 @@ function gradeArchiWithOpenAI_(question, rubric, answerText, model, apiKey) {
   if (!parsed) throw new Error('OpenAI APIのJSON出力を解析できません: ' + summarizeArchiOutput_(outputText));
   var result = normalizeArchiAiResult_(parsed, rubric);
   result.reasoningEffort = reasoningEffort;
-  result.usage = getArchiOpenAIUsageMetrics_(data, model);
+  result.usage = getArchiOpenAIUsageMetrics_(data, aiConfig.capabilityModel, aiConfig.provider);
   return result;
 }
 
-function getArchiOpenAIUsageMetrics_(responseData, model) {
+function getArchiOpenAIUsageMetrics_(responseData, model, provider) {
   var usage = responseData && responseData.usage || {};
   var inputTokens = Number(usage.input_tokens || 0);
   var outputTokens = Number(usage.output_tokens || 0);
@@ -1915,7 +1963,7 @@ function getArchiOpenAIUsageMetrics_(responseData, model) {
   var outputDetails = usage.output_tokens_details || {};
   var cachedInputTokens = Number(inputDetails.cached_tokens || 0);
   var reasoningTokens = Number(outputDetails.reasoning_tokens || 0);
-  var pricing = getArchiOpenAIPricing_(model);
+  var pricing = getArchiOpenAIPricing_(model, provider);
   var billableInputTokens = Math.max(inputTokens - cachedInputTokens, 0);
   var costUsd =
     billableInputTokens / 1000000 * pricing.inputUsdPer1M +
@@ -1934,7 +1982,7 @@ function getArchiOpenAIUsageMetrics_(responseData, model) {
   };
 }
 
-function getArchiOpenAIPricing_(model) {
+function getArchiOpenAIPricing_(model, provider) {
   var m = String(model || '').trim().toLowerCase();
   var table = {
     'gpt-5.5-pro': { inputUsdPer1M: 30, cachedInputUsdPer1M: 0, outputUsdPer1M: 180 },
@@ -1952,19 +2000,22 @@ function getArchiOpenAIPricing_(model) {
     }
     return false;
   });
+  var isAzure = String(provider || 'openai').toLowerCase() === 'azure';
+  if (isAzure) base = { inputUsdPer1M: 0, cachedInputUsdPer1M: 0, outputUsdPer1M: 0 };
   if (!base) base = { inputUsdPer1M: 0, cachedInputUsdPer1M: 0, outputUsdPer1M: 0 };
   var props = PropertiesService.getScriptProperties();
-  var inputPrice = getArchiNumberProperty_(props, 'OPENAI_INPUT_PRICE_PER_1M_USD', base.inputUsdPer1M);
-  var cachedPrice = getArchiNumberProperty_(props, 'OPENAI_CACHED_INPUT_PRICE_PER_1M_USD', base.cachedInputUsdPer1M);
-  var outputPrice = getArchiNumberProperty_(props, 'OPENAI_OUTPUT_PRICE_PER_1M_USD', base.outputUsdPer1M);
-  var usdJpy = getArchiNumberProperty_(props, 'OPENAI_USD_JPY_RATE', getArchiNumberProperty_(props, 'USD_JPY_RATE', 160));
+  var pricePrefix = isAzure ? 'AZURE_OPENAI_' : 'OPENAI_';
+  var inputPrice = getArchiNumberProperty_(props, pricePrefix + 'INPUT_PRICE_PER_1M_USD', base.inputUsdPer1M);
+  var cachedPrice = getArchiNumberProperty_(props, pricePrefix + 'CACHED_INPUT_PRICE_PER_1M_USD', base.cachedInputUsdPer1M);
+  var outputPrice = getArchiNumberProperty_(props, pricePrefix + 'OUTPUT_PRICE_PER_1M_USD', base.outputUsdPer1M);
+  var usdJpy = getArchiNumberProperty_(props, pricePrefix + 'USD_JPY_RATE', getArchiNumberProperty_(props, 'USD_JPY_RATE', 160));
   return {
     model: String(model || ''),
     inputUsdPer1M: inputPrice,
     cachedInputUsdPer1M: cachedPrice,
     outputUsdPer1M: outputPrice,
     usdJpyRate: usdJpy,
-    source: 'openai_api_pricing_2026_06_standard_or_script_properties'
+    source: isAzure ? 'azure_openai_script_properties_or_unpriced' : 'openai_api_pricing_2026_06_standard_or_script_properties'
   };
 }
 
