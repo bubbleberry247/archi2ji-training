@@ -25,7 +25,7 @@ assert.equal(server.apiImportRubrics([], '')._error, true);
 assert.equal(server.apiUpdateModelAnswers([], '')._error, true);
 assert.equal(server.apiImportQuestionImages([], '')._error, true);
 assert.equal(server.isArchiPracticeOnlyStatus_(null), true);
-assert.equal(server.isArchiPracticeOnlyStatus_({ excludeFromTotal: true, scoreMode: 'ai', reviewStatus: 'approved' }), true);
+assert.equal(server.isArchiPracticeOnlyStatus_({ excludeFromTotal: true, scoreMode: 'ai', reviewStatus: 'approved' }), false);
 assert.equal(server.isArchiPracticeOnlyStatus_({ excludeFromTotal: false, scoreMode: 'missing', reviewStatus: 'approved' }), true);
 assert.equal(server.isArchiPracticeOnlyStatus_({ excludeFromTotal: false, scoreMode: 'practice_only', reviewStatus: 'approved' }), true);
 assert.equal(server.isArchiPracticeOnlyStatus_({ excludeFromTotal: false, scoreMode: 'ai', reviewStatus: 'needs_answer_key' }), true);

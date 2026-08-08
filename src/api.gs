@@ -620,8 +620,7 @@ function isArchiPracticeOnlyStatus_(status) {
   if (!status) return true;
   var scoreMode = String(status.scoreMode || '').trim();
   var reviewStatus = String(status.reviewStatus || '').trim();
-  return status.excludeFromTotal === true ||
-    scoreMode === 'missing' ||
+  return scoreMode === 'missing' ||
     scoreMode === 'practice_only' ||
     reviewStatus === 'needs_answer_key';
 }

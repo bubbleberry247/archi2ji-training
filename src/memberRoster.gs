@@ -82,7 +82,8 @@ function generateRosterRecoveryCode_() {
   return String(Utilities.getUuid()).replace(/-/g, '').slice(0, 12);
 }
 
-function syncDashboardRoster() {
+function syncDashboardRoster(clientUserKey) {
+  requireAdmin_(clientUserKey);
   return syncDashboardRosterForCurrentApp_();
 }
 
