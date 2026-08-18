@@ -7,7 +7,8 @@ var SHEETS = {
   ScoringRubrics: 'ScoringRubrics',
   AiGradings: 'AiGradings',
   UserAccess: 'UserAccess',
-  MiniTestCompletions: 'MiniTestCompletions'
+  MiniTestCompletions: 'MiniTestCompletions',
+  QuestionStemBackups: 'QuestionStemBackups'
 };
 
 var HEADERS = {};
@@ -20,6 +21,7 @@ HEADERS[SHEETS.ScoringRubrics] = ['qId', 'responseType', 'sourceQuality', 'score
 HEADERS[SHEETS.AiGradings] = ['gradingId', 'userKey', 'qId', 'answerText', 'answerHash', 'score', 'maxScore', 'scoreMode', 'sourceQuality', 'reviewStatus', 'overallComment', 'criteriaJson', 'flagsJson', 'rawJson', 'model', 'createdAt', 'inputTokens', 'outputTokens', 'totalTokens', 'cachedInputTokens', 'reasoningTokens', 'estimatedCostUsd', 'estimatedCostJpy', 'pricingJson'];
 HEADERS[SHEETS.UserAccess] = ['email', 'role', 'managerEmail', 'active', 'updatedAt', 'displayName', 'showInDashboard'];
 HEADERS[SHEETS.MiniTestCompletions] = ['completionId', 'userKey', 'testKey', 'testLabel', 'questionCount', 'startedAt', 'completedAt'];
+HEADERS[SHEETS.QuestionStemBackups] = ['backupId', 'createdAt', 'operatorHash', 'qId', 'rowNumber', 'headersJson', 'rowValuesJson', 'oldStemHash', 'newStemHash'];
 
 function setDbId_(id) {
   PropertiesService.getScriptProperties().setProperty('DB_ID', id);

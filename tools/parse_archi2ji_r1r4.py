@@ -13,6 +13,8 @@ from pathlib import Path
 import re
 import sys
 
+from repair_r4_choice_layout import postprocess_parser_questions
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
@@ -144,6 +146,11 @@ def main():
                   file=sys.stderr)
 
     print(f"\n合計: {len(all_questions)}問")
+
+    # The R4 PDF text layer loses table-cell boundaries and some numerals.
+    # Apply the official-PDF-verified qId-equivalent postprocess before either
+    # dry-run output or writing the generated JSON.
+    all_questions = postprocess_parser_questions(all_questions)
 
     if args.dry_run:
         print("\n[DRY RUN] ファイル書き出しをスキップ")
