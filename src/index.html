@@ -810,10 +810,10 @@ function renderExamOverview_() {
 
 function renderHomeNav_(active) {
   active = active || 'home';
-  var canAdmin = USER_ROLE === 'admin' || USER_ROLE === 'manager';
+  var canDashboard = !!USER_KEY;
   return '<nav class="tab-nav">' +
     '<button type="button" class="tab-btn' + (active === 'home' ? ' active' : '') + '" onclick="navigate(\'home\')">🏠 Home</button>' +
-    (canAdmin ? '<button type="button" class="tab-btn' + (active === 'admin' ? ' active' : '') + '" onclick="navigate(\'admin\')">📊 ダッシュボード</button>' : '<button type="button" class="tab-btn disabled" disabled>📊 ダッシュボード</button>') +
+    (canDashboard ? '<button type="button" class="tab-btn' + (active === 'admin' ? ' active' : '') + '" onclick="navigate(\'admin\')">📊 ダッシュボード</button>' : '<button type="button" class="tab-btn disabled" disabled>📊 ダッシュボード</button>') +
     '<button type="button" class="tab-btn disabled" disabled>⚙️ 管理</button>' +
     '</nav>';
 }
@@ -965,9 +965,17 @@ function getAdminDisplayName_(member) {
   return name || '氏名未設定';
 }
 
+function getAdminMemberLabel_(member) {
+  var name = getAdminDisplayName_(member);
+  return member && member.isSelf === true ? name + '（自分）' : name;
+}
+
 function shouldShowDashboardMember_(member) {
   if (!member) return false;
-  return String(member.showInDashboard || 'true').toLowerCase() !== 'false';
+  if (member.isSelf === true) return true;
+  var flag = member.showInDashboard;
+  if (flag === false) return false;
+  return String(flag === undefined || flag === null || flag === '' ? 'true' : flag).toLowerCase() !== 'false';
 }
 
 function buildCompletionMatrix_(data) {
@@ -1009,7 +1017,7 @@ function buildCompletionMatrix_(data) {
     });
     var stats = getCompletionStats_(u, cols);
     var basisColor = stats.basisPct >= 100 ? '#10b981' : stats.basisPct >= 70 ? '#4D7C0F' : '#ef4444';
-    return '<tr><td style="position:sticky;left:0;z-index:1;height:24px;padding:3px 6px;font-size:0.8rem;font-weight:700;color:#111827;border:' + gridBorder + ';background:' + nameBg + ';white-space:nowrap;text-align:left">' + escHtml(getAdminDisplayName_(u)) + '</td>' + cells + '<td style="padding:3px 6px;text-align:center;font-size:0.8rem;font-weight:700;border:' + gridBorder + ';background:#fff;color:#111827">' + stats.totalPct + '%</td><td style="padding:3px 6px;text-align:center;font-size:0.8rem;font-weight:800;border:' + gridBorder + ';background:#ffe2e2;color:' + basisColor + '">' + stats.basisPct + '%</td></tr>';
+    return '<tr><td style="position:sticky;left:0;z-index:1;height:24px;padding:3px 6px;font-size:0.8rem;font-weight:700;color:#111827;border:' + gridBorder + ';background:' + nameBg + ';white-space:nowrap;text-align:left">' + escHtml(getAdminMemberLabel_(u)) + '</td>' + cells + '<td style="padding:3px 6px;text-align:center;font-size:0.8rem;font-weight:700;border:' + gridBorder + ';background:#fff;color:#111827">' + stats.totalPct + '%</td><td style="padding:3px 6px;text-align:center;font-size:0.8rem;font-weight:800;border:' + gridBorder + ';background:#ffe2e2;color:' + basisColor + '">' + stats.basisPct + '%</td></tr>';
   }).join('');
   var avg = 0, perfect = 0, basisAvg = 0;
   list.forEach(function(u) { var stats = getCompletionStats_(u, cols); avg += stats.totalPct; basisAvg += stats.basisPct; if (stats.done === unitCount && unitCount > 0) perfect += 1; });
@@ -1051,7 +1059,7 @@ function buildMiniCompletionMatrix_(data) {
       var title = rec && rec.lastCompletedAt ? ' title="最終終了: ' + escHtml(String(rec.lastCompletedAt)) + '"' : '';
       return '<td' + title + ' style="height:28px;min-width:42px;padding:3px 2px;border:' + gridBorder + ';background:' + (count > 0 ? '#f8f5f2' : '#fff') + ';color:#6B4939;font-size:.72rem;font-weight:800;text-align:center">' + (count > 0 ? escHtml(String(count)) + '回' : '') + '</td>';
     }).join('');
-    return '<tr><td style="position:sticky;left:0;z-index:1;min-width:120px;padding:4px 7px;border:' + gridBorder + ';background:#fff6a5;color:#111827;font-size:.78rem;font-weight:700;white-space:nowrap">' + escHtml(getAdminDisplayName_(member)) + '</td>' +
+    return '<tr><td style="position:sticky;left:0;z-index:1;min-width:120px;padding:4px 7px;border:' + gridBorder + ';background:#fff6a5;color:#111827;font-size:.78rem;font-weight:700;white-space:nowrap">' + escHtml(getAdminMemberLabel_(member)) + '</td>' +
       cells +
       '<td style="padding:4px 7px;border:' + gridBorder + ';background:#fff;color:#111827;font-size:.76rem;font-weight:700;text-align:center;white-space:nowrap">' + completedTests + '/' + cols.length + '</td>' +
       '<td style="padding:4px 7px;border:' + gridBorder + ';background:#fff;color:#6B4939;font-size:.78rem;font-weight:800;text-align:center;white-space:nowrap">' + totalCompletions + '回</td></tr>';
@@ -1103,7 +1111,7 @@ function downloadCompletionCsv_() {
   var list = (data.users || []).filter(shouldShowDashboardMember_);
   var cols = getAdminCompletionColumns_();
   var header = ['氏名'].concat(cols.map(function(c) { return String(c.label || c.key) + '年度'; })).concat(['全' + String(data.totalQuestions || 0) + '問進捗率', '年度完了率']);
-  var rows = list.map(function(u) { var stats = getCompletionStats_(u, cols); var cells = cols.map(function(c) { var rec = getCompletionRecord_(u, c); return rec && rec.completed ? '○' : ''; }); return [getAdminDisplayName_(u)].concat(cells).concat([stats.totalPct + '%', stats.basisPct + '%']); });
+  var rows = list.map(function(u) { var stats = getCompletionStats_(u, cols); var cells = cols.map(function(c) { var rec = getCompletionRecord_(u, c); return rec && rec.completed ? '○' : ''; }); return [getAdminMemberLabel_(u)].concat(cells).concat([stats.totalPct + '%', stats.basisPct + '%']); });
   var csv = '\ufeff' + [header].concat(rows).map(function(row) { return row.map(csvCell_).join(','); }).join('\r\n');
   var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   var a = document.createElement('a');
@@ -1159,6 +1167,14 @@ function buildAdminStatusCards_(users, totalQuestions) {
     '<div class="kpi-card" style="border:1px solid #a7f3d0;background:#f7fffb;text-align:center"><div style="font-size:1.4rem">📈</div><div class="kpi-value" style="font-size:1.35rem;color:#10b981">' + growth + '<span style="font-size:.75rem">名</span></div><div class="kpi-label">急成長</div></div>' +
     '<div class="kpi-card" style="border:1px solid #fed7aa;background:#fffaf7;text-align:center"><div style="font-size:1.4rem">🔄</div><div class="kpi-value" style="font-size:1.35rem;color:#f97316">' + support + '<span style="font-size:.75rem">名</span></div><div class="kpi-label">要サポート</div></div>' +
     '<div class="kpi-card" style="border:1px solid #d1d5db;background:#f8fafc;text-align:center"><div style="font-size:1.4rem">💤</div><div class="kpi-value" style="font-size:1.35rem;color:#94a3b8">' + stalled + '<span style="font-size:.75rem">名</span></div><div class="kpi-label">停滞中</div></div>' +
+    '</div>' +
+    '<div id="dashboard-status-help" role="note" style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px;margin:-4px 4px 14px;font-size:.72rem;line-height:1.65;color:#475569">' +
+      '<div style="font-weight:700;color:#92400e;margin-bottom:4px">アイコンの見方（各項目を独立集計）</div>' +
+      '<div>⭐ 優秀：進捗率80%以上</div>' +
+      '<div>📈 急成長：直近7日以内に活動あり かつ 進捗率80%未満</div>' +
+      '<div>🔄 要サポート：進捗率1%以上30%未満</div>' +
+      '<div>💤 停滞中：進捗率0% または 直近7日以内に活動なし</div>' +
+      '<div style="margin-top:4px;color:#64748b">判定は独立しているため、1人が複数の項目に含まれる場合があります。</div>' +
     '</div>';
 }
 
@@ -1192,7 +1208,7 @@ function buildAdminBarSection_(title, users, mode, totalQuestions) {
       ? (value >= 75 ? '#22c55e' : value >= 60 ? '#eab308' : value > 0 ? '#ef4444' : '#94a3b8')
       : (mode === 'recent' ? '#0ea5e9' : '#6b5ca5');
     html += '<div style="display:grid;grid-template-columns:74px 1fr 38px;gap:8px;align-items:center;margin:8px 0">' +
-      '<div style="font-size:.72rem;color:#8b7cf6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(getAdminDisplayName_(u)) + '</div>' +
+      '<div style="font-size:.72rem;color:#8b7cf6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(getAdminMemberLabel_(u)) + '</div>' +
       '<div style="height:14px;background:#e2e8f0;border-radius:999px;overflow:hidden"><div style="height:100%;width:' + width + '%;background:' + barColor + ';border-radius:999px"></div></div>' +
       '<div style="font-size:.72rem;color:#334155;text-align:right">' + escHtml(shown) + suffix + '</div>' +
     '</div>';
@@ -1258,7 +1274,7 @@ function buildAdminScoreDistribution_(users) {
 function buildAdminMemberPills_(users, totalQuestions) {
   var pills = users.slice(0, 12).map(function(u) {
     var pct = getAdminProgressPct_(u, totalQuestions);
-    return '<span style="display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:7px 11px;margin:3px 4px;font-size:.82rem;color:#334155">👤 ' + escHtml(getAdminDisplayName_(u)) + ' <strong style="color:#4D7C0F">' + pct + '%</strong></span>';
+    return '<span style="display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:7px 11px;margin:3px 4px;font-size:.82rem;color:#334155">👤 ' + escHtml(getAdminMemberLabel_(u)) + ' <strong style="color:#4D7C0F">' + pct + '%</strong></span>';
   }).join('');
   return '<div style="background:#fff;border-radius:14px;padding:12px 8px;margin:10px 4px"><div class="section-title" style="margin-left:4px">👥 メンバー一覧</div>' + pills + '</div>';
 }
@@ -1288,7 +1304,7 @@ function buildAdminTypeStatsTable_(users) {
       var countText = total > 0 ? answered + '/' + total : String(answered);
       return '<td style="padding:6px;border:1px solid #e5e7eb;font-size:.72rem;color:#334155;text-align:center;white-space:nowrap"><strong>' + escHtml(scoreText) + '</strong><br><span style="color:#94a3b8">' + escHtml(countText) + '</span></td>';
     }).join('');
-    return '<tr><td style="position:sticky;left:0;z-index:1;background:#fff;padding:6px 8px;border:1px solid #e5e7eb;font-size:.74rem;font-weight:700;color:#111827;white-space:nowrap">' + escHtml(getAdminDisplayName_(u)) + '</td>' + cells + '</tr>';
+    return '<tr><td style="position:sticky;left:0;z-index:1;background:#fff;padding:6px 8px;border:1px solid #e5e7eb;font-size:.74rem;font-weight:700;color:#111827;white-space:nowrap">' + escHtml(getAdminMemberLabel_(u)) + '</td>' + cells + '</tr>';
   }).join('');
   return '<div style="background:#fff;border-radius:14px;padding:12px 8px;margin:10px 4px"><div class="section-title" style="margin-left:4px">📋 区分別 提出進捗</div><div class="small" style="margin:2px 4px 8px;color:#64748b">各区分の提出率と提出済み数</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="border-collapse:collapse;min-width:' + (130 + labels.length * 94) + 'px;width:100%"><thead><tr><th style="position:sticky;left:0;z-index:2;background:#fff;min-width:120px;padding:6px;border:1px solid #e5e7eb;font-size:.7rem;color:#475569;text-align:left">氏名</th>' + header + '</tr></thead><tbody>' + rows + '</tbody></table></div></div>';
 }
@@ -1316,9 +1332,7 @@ function drawAdmin(data) {
       '<div class="admin-kpi"><strong>' + users.length + '</strong><span class="small">表示対象</span></div>' +
       '<div class="admin-kpi"><strong>' + totalQuestions + '</strong><span class="small">問題数</span></div>' +
     '</div>' +
-    '<div style="padding:0 4px 8px">' +
-      '<button class="btn secondary btn-sm" onclick="syncRoster_()">名簿を同期</button>' +
-    '</div>';
+    (USER_ROLE === 'admin' ? '<div style="padding:0 4px 8px"><button class="btn secondary btn-sm" onclick="syncRoster_()">名簿を同期</button></div>' : '');
   if (!users.length) {
     html += '<div class="card"><p class="small">表示対象の利用者がいません。</p></div>';
   } else {
@@ -1326,7 +1340,7 @@ function drawAdmin(data) {
     users.forEach(function(u) {
       html += '<div class="admin-row">' +
         '<div>' +
-          '<div class="admin-name">' + escHtml(getAdminDisplayName_(u)) + '</div>' +
+          '<div class="admin-name">' + escHtml(getAdminMemberLabel_(u)) + '</div>' +
         '</div>' +
         '<div class="admin-progress">' +
           escHtml(String(u.answeredCount || 0)) + '/' + escHtml(String(u.totalQuestions || 0)) + '<br>' +

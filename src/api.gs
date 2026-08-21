@@ -2417,7 +2417,8 @@ function apiAdminDashboard(clientUserKey) {
   __clientUserKey = clientUserKey || '';
   try {
     getArchiMiniCompletionLegacyCutoffMs_();
-    var ctx = requireManager_(clientUserKey);
+    var ctx = requireDashboardViewer_(clientUserKey);
+    var canViewRoster = ctx.role === 'admin' || ctx.role === 'manager';
     var statusMap = getArchiRubricStatusMap_();
     var questions = readRecords_(SHEETS.Questions).filter(function(q) {
       return !isArchiPracticeOnlyStatus_(statusMap[String(q.qId)]);
@@ -2501,15 +2502,15 @@ function apiAdminDashboard(clientUserKey) {
 
     var accessRows = readRecordsFromSheet_(getUserAccessSheet_());
     var rows = [];
-    accessRows.forEach(function(access) {
-      var email = String(access.email || '').trim().toLowerCase();
-      if (!email) return;
-      var active = normalizeUserAccessBoolean_(access.active, true) !== 'false';
-      var showInDashboard = normalizeUserAccessBoolean_(access.showInDashboard, true) !== 'false';
-      if (!active || !showInDashboard) return;
-      if (ctx.role === 'manager' && String(access.managerEmail || '').trim().toLowerCase() !== ctx.email) return;
-      var u = usersByEmail[email] || {};
-      var stats = statsByUserKey[String(u.userKey || '')] || {
+    var ownEmail = String(ctx.email || '').trim().toLowerCase();
+    var ownUserKey = String(ctx.userKey || '').trim();
+    var ownRowIncluded = false;
+    var appendDashboardRow_ = function(access, knownUser, isSelf) {
+      access = access || {};
+      knownUser = knownUser || {};
+      var email = String(access.email || (isSelf ? ownEmail : '')).trim().toLowerCase();
+      var userKey = String(knownUser.userKey || (isSelf ? ownUserKey : '')).trim();
+      var stats = statsByUserKey[userKey] || {
         noteCount: 0,
         answeredCount: 0,
         answeredQids: {},
@@ -2533,14 +2534,16 @@ function apiAdminDashboard(clientUserKey) {
       });
       var miniCounts = buildArchiMiniCompletionCounts_(
         stats,
-        miniTrackingByUser[String(u.userKey || '')] || {},
+        miniTrackingByUser[userKey] || {},
         miniMeta
       );
       rows.push({
         email: email,
-        displayName: String(access.displayName || u.displayName || email).trim(),
-        role: String(access.role || 'user').trim().toLowerCase(),
-        userKey: String(u.userKey || ''),
+        displayName: String(access.displayName || knownUser.displayName || (isSelf ? ctx.displayName : '') || email).trim(),
+        role: String(access.role || (isSelf ? ctx.role : 'user')).trim().toLowerCase(),
+        userKey: userKey,
+        isSelf: !!isSelf,
+        showInDashboard: true,
         answeredCount: stats.answeredCount,
         noteCount: stats.noteCount,
         totalQuestions: questions.length,
@@ -2554,7 +2557,23 @@ function apiAdminDashboard(clientUserKey) {
         miniCompletionCounts: miniCounts.byTest,
         miniCompletionTotal: miniCounts.totalCompletions
       });
+    };
+    accessRows.forEach(function(access) {
+      var email = String(access.email || '').trim().toLowerCase();
+      if (!email) return;
+      var u = usersByEmail[email] || {};
+      var isSelf = (ownEmail && email === ownEmail) || (!ownEmail && ownUserKey && String(u.userKey || '').trim() === ownUserKey);
+      var active = normalizeUserAccessBoolean_(access.active, true) !== 'false';
+      var showInDashboard = normalizeUserAccessBoolean_(access.showInDashboard, true) !== 'false';
+      if (!active || (!showInDashboard && !isSelf)) return;
+      if (!canViewRoster && !isSelf) return;
+      if (ctx.role === 'manager' && !isSelf && String(access.managerEmail || '').trim().toLowerCase() !== ownEmail) return;
+      appendDashboardRow_(access, u, isSelf);
+      if (isSelf) ownRowIncluded = true;
     });
+    if (!ownRowIncluded && (ownEmail || ownUserKey)) {
+      appendDashboardRow_({ email: ownEmail, role: ctx.role, displayName: ctx.displayName }, usersByEmail[ownEmail] || {}, true);
+    }
 
     return toSerializable_({
       auth: getCurrentAuthInfo_(clientUserKey),

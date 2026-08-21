@@ -116,3 +116,12 @@ function requireManager_(clientUserKey) {
   if (!ctx.isManager) throw new Error('管理者権限が必要です');
   return ctx;
 }
+
+function requireDashboardViewer_(clientUserKey) {
+  var ctx = getUserContextByKey_(clientUserKey);
+  var role = String(ctx.role || '').trim().toLowerCase();
+  if (!ctx.userKey || !ctx.active || (role !== 'user' && role !== 'manager' && role !== 'admin')) {
+    throw new Error('ログインが必要です');
+  }
+  return ctx;
+}
